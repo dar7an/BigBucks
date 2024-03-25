@@ -14,4 +14,8 @@ To run VM (VM shuts down at 6 am every morning, if you can't login text Abraham 
 2. Enter netid password
 3. Sudo to serviceuser to run anything
 
+To actually run vm:
+systemctl enable stock.service
+systemctl start stock.service
+
 Flask description for VM is Stock Service, can be changed if nessecary. 
