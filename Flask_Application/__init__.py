@@ -6,16 +6,23 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     
-    app.config.from_mapping(
-        # store the database in the instance folder
-        SECRET_KEY="dev",
-        DATABASE=os.path.join(app.instance_path, "stock_database.db")
-    )
+    # Define the path to the Database folder within the Flask application directory
+    db_folder = os.path.join(app.root_path, 'Database')
     
+    # Ensure the Database folder exists
     try:
-        os.makedirs(app.instance_path)
+        os.makedirs(db_folder)
     except OSError:
         pass
+    
+    # Define the path to the database file inside the Database folder
+    db_path = os.path.join(db_folder, 'stock_database.db')
+    
+    app.config.from_mapping(
+        SECRET_KEY="dev",
+        # Use the modified database path
+        DATABASE=db_path
+    )
     
     from . import auth
     app.register_blueprint(auth.bp)
@@ -23,7 +30,7 @@ def create_app(test_config=None):
     
     from . import homepage
     app.register_blueprint(homepage.bp)
-    app.add_url_rule('/', endpoint= 'homepage')
+    app.add_url_rule('/', endpoint='homepage')
     
     from . import db
     db.init_app(app)
