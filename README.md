@@ -11,7 +11,7 @@ If so, delete database and start with step one again
 
 To run VM (VM shuts down at 6 am every morning, if you can't login text Abraham to turn VM on)
 1. run ssh YOURNETID@vcm-39911.vm.duke.edu
-2. Enter password
+2. Enter netid password
 3. Sudo to serviceuser to run anything
 
 Flask description for VM is Stock Service, can be changed if nessecary. 
