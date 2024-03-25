@@ -15,7 +15,7 @@ To run VM (VM shuts down at 6 am every morning, if you can't login text Abraham 
 3. Sudo to serviceuser to run anything
 
 To actually run vm:
-systemctl enable stock.service
-systemctl start stock.service
+1. systemctl enable stock.service
+2. systemctl start stock.service
 
 Flask description for VM is Stock Service, can be changed if nessecary. 
