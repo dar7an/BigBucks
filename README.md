@@ -2,9 +2,12 @@
 - Team Members: Luke, Shiv, Darshan, and Abraham
 
 
+To Run Application (fresh start), in terminal:
+1. flask --app bigbucks init-db
+2. flask --app bigbucks run --debug
+
 To Run Application, in terminal:
-1. flask --app Flask_Application init-db
-2. flask --app Flask_Application run --debug
+1. flask --app bigbucks run --debug
 
 Make sure no database currently exists in instance folder. 
 If so, delete database and start with step one again
