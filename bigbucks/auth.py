@@ -12,6 +12,7 @@ from .db import get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
+
 @bp.before_app_request
 def load_logged_in_user():
     """If a user id is stored in the session, load the user object from
@@ -24,7 +25,8 @@ def load_logged_in_user():
         g.user = (
             get_db().execute("SELECT * FROM Users WHERE userID = ?", (user_id,)).fetchone()
         )
-        
+
+
 @bp.route("/register", methods=("GET", "POST"))
 def register():
     """Register a new user.
@@ -58,6 +60,7 @@ def register():
         flash(error)
 
     return render_template("auth/register.html")
+
 
 @bp.route("/login", methods=("GET", "POST"))
 def login():
