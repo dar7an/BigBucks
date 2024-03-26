@@ -1,5 +1,5 @@
 CREATE TABLE Users (
-    userID INTEGER PRIMARY KEY,
+    userID PRIMARY KEY,
     firstName TEXT,
     lastName TEXT,
     email TEXT,
