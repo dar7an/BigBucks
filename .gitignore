@@ -1,1 +1,5 @@
 .idea/
+.DS_Store
+venv/
+database/stock_database.db
+Flask_Application/__pycache__/
