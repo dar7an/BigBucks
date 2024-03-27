@@ -23,5 +23,6 @@ def homepage():
     if request.method == "POST":
         deposit = request.form["deposit"]
         addToBalance(g.user['userID'], deposit)
+        return redirect(url_for('homepage.homepage'))
 
     return render_template("base.html", user=g.user)
