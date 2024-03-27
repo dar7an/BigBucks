@@ -19,4 +19,4 @@ def login_required(view):
 @bp.route("/", methods=("GET", "POST"))
 @login_required
 def homepage():
-    return render_template("base.html")
+    return render_template("base.html", user=g.user)
