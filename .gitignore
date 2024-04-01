@@ -1,5 +1,5 @@
 .idea/
 .DS_Store
 venv/
-database/stock_database.db
+bigbucks/database/stock_database.db
 bigbucks/__pycache__/
