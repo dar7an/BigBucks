@@ -39,14 +39,15 @@ def buySell():
                     add_transaction(g.user['userID'], ticker, quantity, unit_price, total_price, buySell)
             elif buySell == 'sell':
                 # check if they have enough quantity of stock
-                sufficient_stock = hasSufficientStock(g.user['userID'], ticker, quantity)
-
-                # remove portfolio objects
-                remove_portfolio_object(g.user['userID'], ticker, quantity)
-                # add cash balance
-                addToBalance(g.user['userID'], total_price)
-                # record in transactions
-                add_transaction(g.user['userID'], ticker, quantity, unit_price, total_price, buySell)
+                sufficient_stock = hasSufficientStock(g.user['userID'], ticker, quantity) 
+                
+                if sufficient_stock:
+                    # remove portfolio objects
+                    remove_portfolio_object(g.user['userID'], ticker, quantity)
+                    # add cash balance
+                    addToBalance(g.user['userID'], total_price)
+                    # record in transactions
+                    add_transaction(g.user['userID'], ticker, quantity, unit_price, total_price, buySell)
 
         return redirect(url_for("buySell.buySell"))
 
