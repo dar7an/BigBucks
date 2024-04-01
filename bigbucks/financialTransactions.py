@@ -91,7 +91,12 @@ def hasSufficientStock(userID, ticker, quantity):
     shares = db.execute(
         'SELECT * FROM PortfolioObjects WHERE userID = ? and ticker = ?',
         (userID, ticker)
-        ).fetchone()['quantity']
+        ).fetchone()
+    
+    if shares is None:
+        return False
+
+    shares = shares['quantity']
 
     if int(shares) >= int(quantity):
         return True
