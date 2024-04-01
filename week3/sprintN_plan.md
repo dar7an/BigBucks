@@ -1,1 +1,1 @@
-
+For the upcoming sprint, we plan to continue making progress on our backlog, focusing on developing the user portfolio, displaying their holdings, and providing the ability for users to see data, reports, and graphs for the stocks in their portfolio. To do this, we will need to add more functionality to get information from Alphavantage, and also begin storing historical stock data in our database. This week, we will also aim to further develop our account and home pages to make them more complete, while also adding CSS features to improve the overall UI/UX of the system.
