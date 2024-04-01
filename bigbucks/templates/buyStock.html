@@ -26,7 +26,14 @@
     <input name="ticker" id="ticker" required>
     <label for="numShares">Number of Shares</label>
     <input type="number" step="1" min=1 name="numShares" id="numShares" required>
-    <input type="submit" value="Buy Stock">
+
+    <label for="buyOrSell">Buy or Sell?</label>
+    <select name="buyOrSell" id="buyOrSell" width=100 required>
+        <option value="buy">Buy</option>
+        <option value="sell">Sell</option>
+    </select>
+    <p></p>
+    <input type="submit" value="Buy/Sell Stock">
   </form>
   <h2>Your Portfolio</h2>
   <h4>eventually show their holdings here</h4>
