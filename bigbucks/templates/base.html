@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
   <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
+  <h3><a href="{{ url_for('stock.index') }}">Stock Search Tool</a></h3>
   <ul>
     {% if g.user %}
       <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
