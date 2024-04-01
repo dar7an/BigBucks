@@ -37,9 +37,9 @@ def create_app(test_config=None):
     app.register_blueprint(stocksearch.bp)
     app.add_url_rule('/stock_search', endpoint = 'stock_search')
 
-    from . import buyStock
-    app.register_blueprint(buyStock.bp)
-    app.add_url_rule('/buyStock', endpoint = 'buyStock')
+    from . import buySell
+    app.register_blueprint(buySell.bp)
+    app.add_url_rule('/buySell', endpoint = 'buySell')
 
     from . import db
     db.init_app(app)

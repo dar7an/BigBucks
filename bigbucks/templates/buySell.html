@@ -1,5 +1,5 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - BuyStock</title>
+<title>{% block title %}{% endblock %} - BuySell</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
   <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
@@ -16,10 +16,10 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy Stock</title>
+    <title>Buy or Sell Stock</title>
 </head>
 <body>
-  <h2>Buy Stock Here!</h2>
+  <h2>Buy or Sell Stock Here!</h2>
   <h4>Cash Balance: ${{g.user.cashBalance}}</h4>
   <form method="post">
     <label for="ticker">Ticker</label>

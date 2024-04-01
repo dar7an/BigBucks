@@ -4,11 +4,11 @@ from .financialTransactions import hasSufficientBalance, addToBalance, get_last_
 from .homepage import login_required
 from .db import get_db
 
-bp = Blueprint("buyStock", __name__)
+bp = Blueprint("buySell", __name__)
 
-@bp.route("/buy", methods=("GET", "POST"))
+@bp.route("/buySell", methods=("GET", "POST"))
 @login_required
-def buy():
+def buySell():
     if request.method == "POST":
         # add error checking!
         ticker = request.form["ticker"].upper()
@@ -48,6 +48,6 @@ def buy():
 
             
 
-        return redirect(url_for("buyStock.buy"))
+        return redirect(url_for("buySell.buySell"))
 
-    return render_template("buyStock.html", user=g.user)
+    return render_template("buySell.html", user=g.user)
