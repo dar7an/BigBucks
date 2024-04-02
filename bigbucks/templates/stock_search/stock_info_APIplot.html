@@ -29,9 +29,9 @@
 </nav>
 
 <section class="content">
-    <h3><a href="{{ url_for('stock.index') }}">Back</a></h3>
-
-    <br>
+    <form action="{{ url_for('stock.index') }}" method="GET">
+        <button type="submit">Back</button>
+    </form>
 
     <h2>Stock Information</h2>
     {% if overview and corestock and news %}
