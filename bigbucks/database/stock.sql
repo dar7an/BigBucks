@@ -9,7 +9,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE PortfolioObjects (
-    userID INTEGER,
+    userID INTEGER AUTO_INCREMENT,
     ticker TEXT,
     quantity INTEGER,
     PRIMARY KEY (userID, ticker),
@@ -17,7 +17,7 @@ CREATE TABLE PortfolioObjects (
 );
 
 CREATE TABLE Transactions (
-    transactionID INTEGER PRIMARY KEY,
+    transactionID AUTO_INCREMENT PRIMARY KEY,
     userID INTEGER,
     ticker TEXT,
     amount REAL,

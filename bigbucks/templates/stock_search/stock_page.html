@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Information Page</title>
+</head>
+<body>
+    <form method="post" action="{{ url_for('stock.stock_info') }}">
+        <label for="stock_symbol">Stock Symbol:</label>
+        <input type="text" name="stock_symbol" required>
+        <button type="submit">Get Stock Info</button>
+    </form>
+</body>
+</html>

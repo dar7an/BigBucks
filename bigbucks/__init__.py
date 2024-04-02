@@ -32,6 +32,14 @@ def create_app(test_config=None):
     from . import homepage
     app.register_blueprint(homepage.bp)
     app.add_url_rule('/', endpoint='homepage')
+    
+    from . import stocksearch
+    app.register_blueprint(stocksearch.bp)
+    app.add_url_rule('/stock_search', endpoint = 'stock_search')
+
+    from . import buySell
+    app.register_blueprint(buySell.bp)
+    app.add_url_rule('/buySell', endpoint = 'buySell')
 
     from . import db
     db.init_app(app)
