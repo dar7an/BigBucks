@@ -1,19 +1,41 @@
-{% extends 'base.html' %}
+<!doctype html>
+<html>
+<head>
+    <title>Edit Account - BigBucks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav>
+    <h1>BigBucks</h1>
+    <ul>
+        {% if g.user %}
+            <li><a href="{{ url_for('homepage') }}">Home</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+        {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        {% endif %}
+    </ul>
+</nav>
 
-{% block title %}Edit Account{% endblock %}
-
-{% block content %}
-<h2>Edit Account</h2>
-<form method="post">
-    <label for="username">Username</label>
-    <input type="text" name="username" id="username" value="{{ user.username }}" required>
-    
-    <label for="email">Email</label>
-    <input type="email" name="email" id="email" value="{{ user.email }}" required>
-    
-    <label for="new_password">New Password (leave blank if you do not want to change it)</label>
-    <input type="password" name="new_password" id="new_password">
-    
-    <input type="submit" value="Update">
-</form>
-{% endblock %}
+<section class="content">
+    <h2>Edit Account</h2>
+    <form method="post">
+        <div>
+            <strong>Username:</strong> {{ user.userid }}
+        </div>
+        <div>
+            <strong>Email:</strong> {{ user.email }}
+        </div>
+        
+        <label for="email">New Email (optional)</label>
+        <input type="email" name="email" id="email">
+        
+        <label for="password">New Password (optional)</label>
+        <input type="password" name="password" id="password">
+        
+        <input type="submit" value="Update">
+    </form>
+</section>
+</body>
+</html>
