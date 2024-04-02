@@ -1,5 +1,5 @@
 html {
-    font-family: sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     background: #eee;
     padding: 1rem;
   }
@@ -11,7 +11,7 @@ html {
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: serif;
+    font-family: Helvetica, Arial, sans-serif;
     color: #377ba8;
     margin: 1rem 0;
   }
