@@ -40,6 +40,10 @@ def create_app(test_config=None):
     from . import buySell
     app.register_blueprint(buySell.bp)
     app.add_url_rule('/buySell', endpoint = 'buySell')
+    
+    from . import account
+    app.register_blueprint(account.bp)
+    app.add_url_rule('/account', endpoint = 'account')
 
     from . import db
     db.init_app(app)
