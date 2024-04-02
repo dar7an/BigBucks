@@ -2,70 +2,70 @@
 <title>{% block title %}{% endblock %} - BigBucks</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
-  <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
-  <h3><a href="{{ url_for('stock.index') }}">Stock Search Tool</a></h3>
-  <ul>
-    {% if g.user %}
-      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-    {% else %}
-      <li><a href="{{ url_for('auth.register') }}">Register</a>
-      <li><a href="{{ url_for('auth.login') }}">Log In</a>
-    {% endif %}
-  </ul>
+    <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
+    <h3><a href="{{ url_for('stock.index') }}">Stock Search Tool</a></h3>
+    <ul>
+        {% if g.user %}
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+                {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a>
+        {% endif %}
+    </ul>
 </nav>
 <section class="content">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Information: </title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Stock Information: </title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
     <h1><a href="{{ url_for('stock.index') }}">Go Back To Stock Page</a></h1>
     {% if overview and corestock and news %}
-    <p>Stock Symbol: {{ overview['Symbol'] }}</p>
-    <p>Company Name: {{ overview['Name']}}</p>
-    <p>Sector: {{ overview['Sector']}}</p>
-    <p>Industry: {{ overview['Industry']}}</p>
-    <p>Market Cap: {{ overview['MarketCapitilzation']}}</p>
-    <p>PE Ratio: {{ overview['PERatio']}}</p>
-    <p>EPS: {{ overview['EPS']}}</p>
-    <p>Dividend: {{ overview['DividendPerShare']}}</p>
-    <p>Dividend Yield: {{ overview['DividendYield']}}</p>
-    <p>Stock Exchange: {{ overview['Exchange']}}</p>
-    <p>52 Week High: {{ overview['52WeekHigh']}}</p>
-    <p>52 Week Low: {{ overview['52WeekLow']}}</p>
-    <p>Price: {{ corestock['Global Quote']['05. price']}}</p>
-    <p>Previous Close: {{ corestock['Global Quote']['08. previous close']}}</p>
-    <p>Open: {{ corestock['Global Quote']['02. open']}}</p>
-    <p>Volume: {{ corestock['Global Quote']['06. volume']}}</p>
-    <p> ------------------------------------------------------------------------------- </p>
-    <p> Relevant News: </p>
-    {% for source in news['feed'][:5] %}
-        <p>Title: <a href="{{ source['url'] }}" target="_blank">{{ source['title'] }}</a></p>
-        <p>Summary: {{ source['summary']}}</p>
-    {% endfor %}
-    <p> ------------------------------------------------------------------------------- </p>
-    <div id="myChart"></div>
+        <p>Stock Symbol: {{ overview['Symbol'] }}</p>
+        <p>Company Name: {{ overview['Name'] }}</p>
+        <p>Sector: {{ overview['Sector'] }}</p>
+        <p>Industry: {{ overview['Industry'] }}</p>
+        <p>Market Cap: {{ overview['MarketCapitilzation'] }}</p>
+        <p>PE Ratio: {{ overview['PERatio'] }}</p>
+        <p>EPS: {{ overview['EPS'] }}</p>
+        <p>Dividend: {{ overview['DividendPerShare'] }}</p>
+        <p>Dividend Yield: {{ overview['DividendYield'] }}</p>
+        <p>Stock Exchange: {{ overview['Exchange'] }}</p>
+        <p>52 Week High: {{ overview['52WeekHigh'] }}</p>
+        <p>52 Week Low: {{ overview['52WeekLow'] }}</p>
+        <p>Price: {{ corestock['Global Quote']['05. price'] }}</p>
+        <p>Previous Close: {{ corestock['Global Quote']['08. previous close'] }}</p>
+        <p>Open: {{ corestock['Global Quote']['02. open'] }}</p>
+        <p>Volume: {{ corestock['Global Quote']['06. volume'] }}</p>
+        <p> ------------------------------------------------------------------------------- </p>
+        <p> Relevant News: </p>
+        {% for source in news['feed'][:5] %}
+            <p>Title: <a href="{{ source['url'] }}" target="_blank">{{ source['title'] }}</a></p>
+            <p>Summary: {{ source['summary'] }}</p>
+        {% endfor %}
+        <p> ------------------------------------------------------------------------------- </p>
+        <div id="myChart"></div>
 
-    <script> 
-    const stockSymbolFromFlask = "{{ stock_symbol }}"
-    
-    window.onload = (event) => {
-        makePlotAPI(stockSymbolFromFlask);
-    }
-    </script>
-  
-    <script src="{{url_for('static', filename='include/stock.js')}}" ></script>
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
-    
+        <script>
+            const stockSymbolFromFlask = "{{ stock_symbol }}"
 
-{% else %}
-    <p>No stock data available</p>
-{% endif %}
+            window.onload = (event) => {
+                makePlotAPI(stockSymbolFromFlask);
+            }
+        </script>
+
+        <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
+        <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
 
 
-</body>
+    {% else %}
+        <p>No stock data available</p>
+    {% endif %}
+
+
+    </body>
 </section>
 </html>
 

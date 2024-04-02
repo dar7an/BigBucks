@@ -1,35 +1,55 @@
-<!doctype html>
-<title>{% block title %}{% endblock %} - BigBucks</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}BigBucks{% endblock %} - Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
 <nav>
-  <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
-  <ul>
-    {% if g.user %}
-      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-    {% else %}
-      <li><a href="{{ url_for('auth.register') }}">Register</a>
-      <li><a href="{{ url_for('auth.login') }}">Log In</a>
-    {% endif %}
-  </ul>
+    <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
+    <ul>
+        {% if g.user %}
+            <li><a href="{{ url_for('homepage') }}">Home</a></li>
+            <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
+            <li><a href="{{ url_for('stock.index') }}">Search</a></li>
+            <li><a href="{{ url_for('account.account') }}">Account</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+        {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        {% endif %}
+    </ul>
 </nav>
+
 <section class="content">
-    <h2>Edit Account</h2>
-    <form method="post">
+    <h2>Account</h2>
+    {% block content %}
         <div>
             <strong>Username:</strong> {{ user.userid }}
-        </div>
-        <div>
+            <br>
             <strong>Email:</strong> {{ user.email }}
         </div>
-        
-        <label for="email">New Email (optional)</label>
-        <input type="email" name="email" id="email">
-        
-        <label for="password">New Password (optional)</label>
-        <input type="password" name="password" id="password">
-        
-        <input type="submit" value="Update">
-    </form>
+
+        <br>
+
+        <h3>Change Email</h3>
+        <form method="post">
+            <label for="email">New Email</label>
+            <input type="email" name="email" id="email">
+
+            <button type="submit"> Update</button>
+
+            <br>
+
+            <h3>Change Password</h3>
+            <label for="password">New Password</label>
+            <input type="password" name="password" id="password">
+
+            <button type="submit"> Update</button>
+        </form>
+    {% endblock %}
 </section>
 </body>
 </html>
