@@ -1,27 +1,39 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - BigBucks</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BigBucks{% endblock %} - Stock Information without API</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+
 <nav>
     <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
-    <h3><a href="{{ url_for('stock.index') }}">Stock Search Tool</a></h3>
     <ul>
         {% if g.user %}
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-                {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a>
-            <li><a href="{{ url_for('auth.login') }}">Log In</a>
+            <li><a href="{{ url_for('homepage') }}">Home</a></li>
+            <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
+            <li><a href="{{ url_for('stock.index') }}">Search</a></li>
+            <li><a href="{{ url_for('account.account') }}">Account</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+        {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
         {% endif %}
     </ul>
 </nav>
+
 <section class="content">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Stock Information: </title>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </head>
-    <body>
-    <h1><a href="{{ url_for('stock.index') }}">Go Back To Stock Page</a></h1>
+    <h3><a href="{{ url_for('stock.index') }}">Back</a></h3>
+
+    <br>
+
+    <h2>Stock Information</h2>
     {% if overview and corestock and news %}
         <p>Stock Symbol: {{ overview['Symbol'] }}</p>
         <p>Company Name: {{ overview['Name'] }}</p>
@@ -39,34 +51,36 @@
         <p>Previous Close: {{ corestock['Global Quote']['08. previous close'] }}</p>
         <p>Open: {{ corestock['Global Quote']['02. open'] }}</p>
         <p>Volume: {{ corestock['Global Quote']['06. volume'] }}</p>
-        <p> ------------------------------------------------------------------------------- </p>
-        <p> Relevant News: </p>
+
+        <br>
+
+        <h2>Relevant News</h2>
         {% for source in news['feed'][:5] %}
             <p>Title: <a href="{{ source['url'] }}" target="_blank">{{ source['title'] }}</a></p>
             <p>Summary: {{ source['summary'] }}</p>
         {% endfor %}
-        <p> ------------------------------------------------------------------------------- </p>
+
+        <br>
+
+        <h2>Chart</h2>
+        <h4>under development...</h4>
         <div id="myChart"></div>
 
-        <script>
-            const stockSymbolFromFlask = "{{ stock_symbol }}"
-            const stockData = {{ stock_data | tojson | safe }};
-
-            window.onload = (event) => {
-                makePlotnonAPI(stockSymbolFromFlask, stockData);
-            }
-        </script>
-
-        <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
-        <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
-
-
     {% else %}
-        <p>No stock data available</p>
+        <p>Stock data unavailable</p>
     {% endif %}
-
-
-    </body>
 </section>
-</html>
 
+<script>
+    const stockSymbolFromFlask = "{{ stock_symbol }}";
+    const stockData = {{ stock_data | tojson | safe }};
+
+    window.onload = (event) => {
+        makePlotnonAPI(stockSymbolFromFlask, stockData);
+    };
+</script>
+
+<script src="{{ url_for('static', filename='include/stock.js') }}"></script>
+
+</body>
+</html>
