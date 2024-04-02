@@ -1,37 +1,36 @@
 <!doctype html>
 <html>
+
 <head>
-  <title>{% block title %}Flaskr{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>{% block title %}BigBucks{% endblock %} - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+
 <nav>
-  <h1><a href="{{ url_for('homepage') }}">Flaskr</a></h1>
-  <ul>
-    {% if g.user %}
-      <li><span>{{ g.user['username'] }}</span></li>
-      <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
-    {% else %}
-      <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-      <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
-    {% endif %}
-  </ul>
+    <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
+    <ul>
+        {% if g.user %}
+            <li>{{ g.user['username'] }}</li>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+        {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        {% endif %}
+    </ul>
 </nav>
 
-{% block header %}
-  <h1>Log In</h1>
-{% endblock %}
-
 <section class="content">
-  {% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
-  </form>
-{% endblock %}
+    <body>
+    <h2>Login</h2>
+    </body>
+    {% block content %}
+        <form method="post">
+            <label for="username">Username</label>
+            <input name="username" id="username" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+            <button type="submit" name="login"> Login</button>
+        </form>
+    {% endblock %}
 </section>
-</body>
 </html>
