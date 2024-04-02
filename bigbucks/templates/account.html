@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>{% block title %}BigBucks{% endblock %} - Search</title>
+    <title>{% block title %}BigBucks{% endblock %} - Account</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
@@ -24,12 +24,32 @@
 </nav>
 
 <section class="content">
-    <h2>Search</h2>
-    <form method="post" action="{{ url_for('stock.stock_info') }}">
-        <label for="stock_symbol">Ticker</label>
-        <input name="stock_symbol" id="stock_symbol" required>
-        <button type="submit">Search</button>
-    </form>
+    <h2>Account</h2>
+    {% block content %}
+        <div>
+            <strong>Username:</strong> {{ user.userid }}
+            <br>
+            <strong>Email:</strong> {{ user.email }}
+        </div>
+
+        <br>
+
+        <h3>Change Email</h3>
+        <form method="post">
+            <label for="email">New Email</label>
+            <input type="email" name="email" id="email">
+
+            <button type="submit"> Update</button>
+
+            <br>
+
+            <h3>Change Password</h3>
+            <label for="password">New Password</label>
+            <input type="password" name="password" id="password">
+
+            <button type="submit"> Update</button>
+        </form>
+    {% endblock %}
 </section>
 </body>
 </html>
