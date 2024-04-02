@@ -5,6 +5,7 @@
   <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
   <h3 class="nav-link"><a href="{{ url_for('buySell.buySell') }}">Buy or Sell Stock</a></h3>
   <h3 class="nav-link"><a href="{{ url_for('stock.index') }}">Stock Search Tool</a></h3>
+  <h3 class="nav-link"><a href="{{ url_for('account.account') }}">Account Settings</a></h3>
   <ul>
     {% if g.user %}
       <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
