@@ -23,13 +23,13 @@
     </ul>
 </nav>
 
-<form method="post" action="{{ url_for('stock.stock_info') }}">
+<section class="content">
     <h2>Search</h2>
-
-    <label for="ticker">Ticker</label>
-    <input name="ticker" id="ticker" required>
-    <button type="submit">Search</button>
-    
-</form>
+    <form method="post" action="{{ url_for('stock.stock_info') }}">
+        <label for="ticker">Ticker</label>
+        <input name="ticker" id="ticker" required>
+        <button type="submit">Search</button>
+    </form>
+</section>
 </body>
 </html>
