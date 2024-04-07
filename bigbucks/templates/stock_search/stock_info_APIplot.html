@@ -18,7 +18,7 @@
         {% if g.user %}
             <li><a href="{{ url_for('homepage') }}">Home</a></li>
             <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
-            <li><a href="{{ url_for('stock.index') }}">Search</a></li>
+            <li><a href="{{ url_for('stock.index') }}" class="current-page">Search</a></li>
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
