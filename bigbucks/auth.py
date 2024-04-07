@@ -1,13 +1,6 @@
-import functools
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from flask import Blueprint
-from flask import flash
-from flask import g
-from flask import redirect
-from flask import render_template
-from flask import request
-from flask import session
-from flask import url_for
 from .db import get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -25,9 +18,6 @@ def load_logged_in_user():
         g.user = (
             get_db().execute("SELECT * FROM Users WHERE userID = ?", (user_id,)).fetchone()
         )
-
-
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 @bp.route("/register", methods=("GET", "POST"))
@@ -60,7 +50,8 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO Users (userID, firstName, lastName, email, password, cashBalance, role) VALUES (?, ?, ?, ?, ?, 0, 'user')",
+                    "INSERT INTO Users (userID, firstName, lastName, email, password, cashBalance, role) VALUES (?, "
+                    "?, ?, ?, ?, 1000000, 'user')",
                     (username, firstname, lastname, email, generate_password_hash(password)),
                 )
                 db.commit()
