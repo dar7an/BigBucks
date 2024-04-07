@@ -27,6 +27,9 @@ def load_logged_in_user():
         )
 
 
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
 @bp.route("/register", methods=("GET", "POST"))
 def register():
     """Register a new user.
@@ -58,7 +61,7 @@ def register():
             try:
                 db.execute(
                     "INSERT INTO Users (userID, firstName, lastName, email, password, cashBalance, role) VALUES (?, ?, ?, ?, ?, 0, 'user')",
-                    (username, firstname, lastname, email, password),
+                    (username, firstname, lastname, email, generate_password_hash(password)),
                 )
                 db.commit()
             except db.IntegrityError:
@@ -85,7 +88,7 @@ def login():
 
         if user is None:
             error = "Incorrect username."
-        elif user["password"] != password:
+        elif not check_password_hash(user["password"], password):
             error = "Incorrect password."
 
         if error is None:
