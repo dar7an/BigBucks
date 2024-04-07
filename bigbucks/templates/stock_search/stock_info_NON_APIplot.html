@@ -63,22 +63,20 @@
         <br>
 
         <h2>Chart</h2>
-        <h4>under development...</h4>
+        <script>
+            const stockSymbolFromFlask = "{{ stock_symbol }}";
+            const stockData = {{ stock_data | tojson | safe }};
+        
+            window.onload = (event) => {
+                makePlotnonAPI(stockSymbolFromFlask, stockData);
+            };
+        </script>
         <div id="myChart"></div>
 
     {% else %}
         <p>Stock data unavailable</p>
     {% endif %}
 </section>
-
-<script>
-    const stockSymbolFromFlask = "{{ stock_symbol }}";
-    const stockData = {{ stock_data | tojson | safe }};
-
-    window.onload = (event) => {
-        makePlotnonAPI(stockSymbolFromFlask, stockData);
-    };
-</script>
 
 <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
 
