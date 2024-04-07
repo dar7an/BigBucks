@@ -1,16 +1,33 @@
+<<<<<<< HEAD
 <!doctype html>
 
+=======
+<!DOCTYPE html>
+<html>
+>>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
 <head>
     <title>{% block title %}BigBucks{% endblock %} - Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
+<<<<<<< HEAD
 <nav>
     <h1>BigBucks</h1>
     <ul>
         {% if g.user %}
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
             <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
+=======
+<body>
+
+<nav>
+    <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
+    <ul>
+        {% if g.user %}
+            <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
+            <li><a href="{{ url_for('stock.index') }}">Search</a></li>
+            <li><a href="{{ url_for('account.account') }}">Account</a></li>
+>>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
@@ -20,6 +37,7 @@
 </nav>
 
 <section class="content">
+<<<<<<< HEAD
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,5 +54,25 @@
     <h2>Portfolio</h2>
     <h5>holdings will be displayed here</h5>
     </body>
+=======
+    <h2>Welcome, {{ user.firstname }}</h2>
+
+    <br>
+
+    <h2>Deposit Cash</h2>
+    <h4>Cash Balance: ${{ g.user.cashBalance }}</h4>
+    <form method="post">
+        <label for="deposit">Amount</label>
+        <input type="number" step="0.01" min="0.01" name="deposit" id="deposit" required>
+        <button type="submit"> Submit</button>
+    </form>
+
+    <br>
+
+    <h2>Your Portfolio</h2>
+    <h4>eventually show their holdings here</h4>
+>>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
 
 </section>
+</body>
+</html>

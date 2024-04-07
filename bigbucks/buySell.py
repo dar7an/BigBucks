@@ -1,10 +1,12 @@
 import functools
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
-from .financialTransactions import hasSufficientBalance, addToBalance, get_last_price, add_transaction, add_portfolio_object, hasSufficientStock, remove_portfolio_object
+from .financialTransactions import hasSufficientBalance, addToBalance, get_last_price, add_transaction, \
+    add_portfolio_object, hasSufficientStock, remove_portfolio_object
 from .homepage import login_required
 from .db import get_db
 
 bp = Blueprint("buySell", __name__)
+
 
 @bp.route("/buySell", methods=("GET", "POST"))
 @login_required
@@ -19,10 +21,10 @@ def buySell():
         if unit_price is None:
             # show error on page!
             return redirect(url_for("buyStock.buy"))
-        
+
         else:
             total_price = unit_price * quantity
-            if buySell == 'buy':                
+            if buySell == 'buy':
                 # check if sufficient balance
                 sufficient_bal = hasSufficientBalance(g.user['userID'], total_price)
 
@@ -37,16 +39,14 @@ def buySell():
                     add_transaction(g.user['userID'], ticker, quantity, unit_price, total_price, buySell)
             elif buySell == 'sell':
                 # check if they have enough quantity of stock
-                sufficient_stock = hasSufficientStock(g.user['userID'], ticker, quantity) 
-                
+                sufficient_stock = hasSufficientStock(g.user['userID'], ticker, quantity)
+
                 # remove portfolio objects
                 remove_portfolio_object(g.user['userID'], ticker, quantity)
                 # add cash balance
                 addToBalance(g.user['userID'], total_price)
                 # record in transactions
                 add_transaction(g.user['userID'], ticker, quantity, unit_price, total_price, buySell)
-
-            
 
         return redirect(url_for("buySell.buySell"))
 

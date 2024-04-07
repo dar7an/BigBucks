@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -6,11 +6,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
+<<<<<<< HEAD
 <nav>
     <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
     <ul>
         {% if g.user %}
             <li>{{ g.user['username'] }}</li>
+=======
+<body>
+
+<nav>
+    <h1><a href="{{ url_for('homepage') }}">Big Bucks</a></h1>
+    <ul>
+        {% if g.user %}
+>>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
@@ -20,13 +29,21 @@
 </nav>
 
 <section class="content">
+<<<<<<< HEAD
     <body>
     <h2>Login</h2>
     </body>
+=======
+    {% block header %}
+        <h1>Log In</h1>
+    {% endblock %}
+
+>>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
     {% block content %}
         <form method="post">
             <label for="username">Username</label>
             <input name="username" id="username" required>
+<<<<<<< HEAD
             <label for="password">Password</label>
             <input type="password" name="password" id="password" required>
             <button type="submit" name="login"> Login</button>
@@ -34,3 +51,15 @@
     {% endblock %}
 </section>
 </html>
+=======
+
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+
+            <input type="submit" value="Log In">
+        </form>
+    {% endblock %}
+</section>
+</body>
+</html>
+>>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
