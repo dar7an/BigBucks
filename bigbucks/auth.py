@@ -52,7 +52,7 @@ def register():
             try:
                 db.execute(
                     "INSERT INTO Users (userID, firstName, lastName, email, password, cashBalance, role) VALUES (?, ?, ?, ?, ?, 1000000, 'user')",
-                    (username, firstname, lastname, email, password),
+                    (username, firstname, lastname, email, generate_password_hash(password)),
                 )
                 db.commit()
             except db.IntegrityError:
