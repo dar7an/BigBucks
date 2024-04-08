@@ -34,3 +34,39 @@
         <p>Chart 3 - Work in Progress</p>
     </div>
 </div>
+
+<h2>Correlation Matrix:</h2>
+<table>
+    <tr>
+        <th></th> <!-- Empty cell for the corner of the table -->
+        {% for ticker in tickers %}
+            <th>{{ ticker }}</th> <!-- Column headers -->
+        {% endfor %}
+    </tr>
+    {% for row in correlation_matrix %}
+        <tr>
+            <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
+            {% for value in row %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<h2>Covariance Matrix:</h2>
+<table>
+    <tr>
+        <th></th> <!-- Empty cell for the corner of the table -->
+        {% for ticker in tickers %}
+            <th>{{ ticker }}</th> <!-- Column headers -->
+        {% endfor %}
+    </tr>
+    {% for row in covariance_matrix %}
+        <tr>
+            <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
+            {% for value in row %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
