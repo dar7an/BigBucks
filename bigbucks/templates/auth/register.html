@@ -13,18 +13,16 @@
         {% if g.user %}
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.register') }}" class="current-page">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
         {% endif %}
     </ul>
 </nav>
 
 <section class="content">
-    {% block header %}
-        <h1>Register</h1>
-    {% endblock %}
+    <h1>Register</h1>
 
-    {% block content %}
+    <div class="section-box">
         <form method="post">
             <label for="username">Username</label>
             <input name="username" id="username" required>
@@ -43,7 +41,8 @@
 
             <input type="submit" value="Register">
         </form>
-    {% endblock %}
+    </div>
+
 </section>
 </body>
 </html>

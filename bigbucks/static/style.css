@@ -1,138 +1,165 @@
 html {
-    font-family: Helvetica, Arial, sans-serif;
-    background: #eee;
-    padding: 1rem;
-  }
-
-  body {
-    max-width: 960px;
-    margin: 0 auto;
-    background: white;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: Helvetica, Arial, sans-serif;
-    color: #377ba8;
-    margin: 1rem 0;
-  }
-
-  a {
-    color: #377ba8;
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid lightgray;
-  }
-
-  nav {
-    background: lightgray;
-    display: flex;
-    align-items: center;
-    padding: 0 0.5rem;
-  }
-
-  nav h1 {
-    flex: auto;
-    margin: 0;
-  }
-
-  nav h1 a {
-    text-decoration: none;
-    padding: 0.25rem 0.5rem;
-  }
-
-  nav ul  {
-    display: flex;
-    list-style: none;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #ecf0f3; /* Light grey background for a modern look */
+    color: #333;
     margin: 0;
     padding: 0;
-  }
+    -webkit-font-smoothing: antialiased; /* Enhances text rendering */
+}
 
-  nav ul li a, nav ul li span, header .action {
+body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+h1 {
+    font-size: xx-large; /* Larger font size for headings */
+    font-weight: 600;
+    color: #21ce99; /* Green color for headings, similar to Robinhood's branding */
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+h2, h3, h4, h5, h6 {
+    font-weight: 600; /* Adds weight to headings */
+    color: #21ce99; /* Green color for headings, similar to Robinhood's branding */
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+nav {
+    background: #21ce99; /* Green background for navbar */
+    color: #fff; /* White text color */
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between; /* Aligns nav items to the sides */
+    align-items: center;
+}
+
+nav h1 {
+    font-size: 2rem;
+    font-weight: 700; /* Bold font for brand */
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav a, nav a:visited {
+    color: #fff; /* Ensures nav links are white */
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    transition: color 0.2s ease-in-out;
+}
+
+nav a.current-page {
+    text-decoration: none; /* No underline on hover */
+    font-weight: bold; /* Bold font for hover state */
+}
+
+nav a:hover {
+    color: #a3f9b9; /* Light green color for hover state */
+    text-decoration: none; /* No underline on hover */
+}
+
+nav a.hover-logout:hover {
+    color: #e74c3c; /* Red color for logout link on hover */
+}
+
+.content {
+    padding: 2rem; /* Spacious padding for content */
+    background: #fff; /* White background for content */
+    margin: 1rem; /* Adds margin around the content */
+    border-radius: 8px; /* Rounds the corners of the content boxes */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.section-box {
+    background: #fff; /* White background for sections */
+    padding: 2rem; /* Spacious padding for sections */
+    margin: 1rem 0; /* Vertical spacing between sections */
+    border-radius: 8px; /* Rounds the corners of the boxes */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.flash {
+    padding: 1rem;
+    background: #a3f9b9; /* Light green background for flash messages */
+    border: none; /* Removes border */
+    color: #333;
+    margin: 1rem 0; /* Spacing above and below the flash message */
+    border-radius: 4px;
+}
+
+input, textarea, select, button {
+    font-family: inherit;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit], button {
+    cursor: pointer;
+    background-color: #21ce99; /* Green background for buttons */
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    margin-top: 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600; /* Bold font for button text */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Consistent shadow as the content boxes */
+}
+
+input[type=submit]:hover, button:hover {
+    background-color: #1bad86; /* Slightly darker green for button hover */
+}
+
+button.danger, input[type=submit].danger {
+    background-color: #e74c3c; /* Red color for dangerous actions */
+}
+
+button.danger:hover, input[type=submit].danger:hover {
+    background-color: #c0392b; /* Darker shade for hover state */
+}
+
+/* Enhanced form layout */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.label {
     display: block;
-    padding: 0.5rem;
-  }
+    margin-bottom: 0.5rem;
+}
 
-  .content {
-    padding: 0 1rem 1rem;
-  }
+/* Styles for dropdowns */
+select {
+    padding: 0.75rem 1rem;
+    border: 1px solid #dcdfe6;
+    background-color: #fff;
+    border-radius: 4px;
+    font-size: 1rem;
+    appearance: none; /* Removes default system styling */
+}
 
-  .content > header {
-    border-bottom: 1px solid lightgray;
-    display: flex;
-    align-items: flex-end;
-  }
-
-  .content > header h1 {
-    flex: auto;
-    margin: 1rem 0 0.25rem 0;
-  }
-
-  .flash {
-    margin: 1em 0;
-    padding: 1em;
-    background: #cae6f6;
-    border: 1px solid #377ba8;
-  }
-
-  .post > header {
-    display: flex;
-    align-items: flex-end;
-    font-size: 0.85em;
-  }
-
-  .post > header > div:first-of-type {
-    flex: auto;
-  }
-
-  .post > header h1 {
-    font-size: 1.5em;
-    margin-bottom: 0;
-  }
-
-  .post .about {
-    color: slategray;
-    font-style: italic;
-  }
-
-  .post .body {
-    white-space: pre-line;
-  }
-
-  .content:last-child {
-    margin-bottom: 0;
-  }
-
-  .content form {
-    margin: 1em 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .content label {
-    font-weight: bold;
-    margin-bottom: 0.5em;
-  }
-
-  .content input, .content textarea {
-    margin-bottom: 1em;
-  }
-
-  .content textarea {
-    min-height: 12em;
-    resize: vertical;
-  }
-
-  input.danger {
-    color: #cc2f2e;
-  }
-
-  input[type=submit] {
-    align-self: start;
-    min-width: 10em;
-  }
-
-  .nav-link {
-    margin-right: 20px;
-  }
+/* Sticky navbar */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
