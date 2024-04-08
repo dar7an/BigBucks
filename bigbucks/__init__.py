@@ -45,6 +45,10 @@ def create_app(test_config=None):
     app.register_blueprint(account.bp)
     app.add_url_rule('/account', endpoint='account')
 
+    from . import admin
+    app.register_blueprint(admin.bp)
+    app.add_url_rule('/admin', endpoint='admin')
+
     from . import db
     db.init_app(app)
 

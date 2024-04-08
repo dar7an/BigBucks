@@ -164,3 +164,51 @@ nav {
     top: 0;
     z-index: 100;
 }
+
+.table-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #fff;
+}
+
+th, td {
+    text-align: left; /* Aligns text to the left */
+    padding: 12px 16px; /* Spacious padding for table cells */
+    border-bottom: 1px solid #dcdfe6; /* Light gray border for cell separation */
+}
+
+th {
+    background-color: #21ce99; /* Green background for table headers */
+    color: #fff; /* White text for headers */
+    font-weight: 600; /* Adds weight to header text */
+}
+
+tr:hover {
+    background-color: #ecf0f3; /* Light grey background for row hover for better interaction */
+}
+
+tr:nth-child(even) {
+    background-color: #f7f9fa; /* Slightly different background for even rows */
+}
+
+td {
+    color: #333; /* Dark text for contrast and readability */
+}
+
+.caption {
+    caption-side: top; /* Positions table caption above the table */
+    padding: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+    margin-top: 1rem;
+}
+
