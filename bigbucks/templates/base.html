@@ -37,17 +37,13 @@
 </nav>
 
 <section class="content">
-    <h2>Welcome, {{ user.firstname }}</h2>
-
-    <br>
-
-    <h2>Deposit Cash</h2>
+    <h2>Welcome, {{ user.firstname }}!</h2>
     <h4>Cash Balance: ${{ g.user.cashBalance }}</h4>
-    <form method="post">
+    <!-- <form method="post">
         <label for="deposit">Amount</label>
         <input type="number" step="0.01" min="0.01" name="deposit" id="deposit" required>
         <button type="submit"> Submit</button>
-    </form>
+    </form> -->
 
     <br>
 

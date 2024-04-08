@@ -57,7 +57,7 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO Users (userID, firstName, lastName, email, password, cashBalance, role) VALUES (?, ?, ?, ?, ?, 0, 'user')",
+                    "INSERT INTO Users (userID, firstName, lastName, email, password, cashBalance, role) VALUES (?, ?, ?, ?, ?, 1000000, 'user')",
                     (username, firstname, lastname, email, password),
                 )
                 db.commit()

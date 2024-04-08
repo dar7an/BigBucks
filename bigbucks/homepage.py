@@ -23,10 +23,10 @@ def homepage():
     portfolio = get_current_portfolio(g.user['userID'])
     portfolio = format_portfolio(portfolio)
 
-    if request.method == "POST":
-        deposit = request.form["deposit"]
-        addToBalance(g.user['userID'], deposit)
-        return redirect(url_for('homepage.homepage'))
+    # if request.method == "POST":
+    #     deposit = request.form["deposit"]
+    #     addToBalance(g.user['userID'], deposit)
+    #     return redirect(url_for('homepage.homepage'))
 
     return render_template("base.html", user=g.user, portfolio=portfolio)
 
