@@ -13,38 +13,36 @@
         {% if g.user %}
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.register') }}" class="current-page">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
         {% endif %}
     </ul>
 </nav>
 
 <section class="content">
+    <h1>Register</h1>
+
     <div class="section-box">
-        <h1>Register</h1>
+        <form method="post">
+            <label for="username">Username</label>
+            <input name="username" id="username" required>
 
-        <div class="section-box">
-            <form method="post">
-                <label for="username">Username</label>
-                <input name="username" id="username" required>
+            <label for="firstname">First Name</label>
+            <input name="firstname" id="firstname" required>
 
-                <label for="firstname">First Name</label>
-                <input name="firstname" id="firstname" required>
+            <label for="lastname">Last Name</label>
+            <input name="lastname" id="lastname" required>
 
-                <label for="lastname">Last Name</label>
-                <input name="lastname" id="lastname" required>
+            <label for="email">Email</label>
+            <input name="email" id="email" required>
 
-                <label for="email">Email</label>
-                <input name="email" id="email" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
 
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" required>
-
-                <input type="submit" value="Register">
-            </form>
-        </div>
-
+            <input type="submit" value="Register">
+        </form>
     </div>
+
 </section>
 </body>
 </html>

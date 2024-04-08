@@ -12,10 +12,10 @@
     <ul>
         {% if g.user %}
             <li><a href="{{ url_for('homepage') }}">Home</a></li>
-            <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
+            <li><a href="{{ url_for('buySell.buySell') }}" class="current-page">Trade</a></li>
             <li><a href="{{ url_for('stock.index') }}">Search</a></li>
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
@@ -24,36 +24,31 @@
 </nav>
 
 <section class="content">
+    <h1>Trade</h1>
+
     <div class="section-box">
-        <h2>Trade</h2>
+        <h2>Invest</h2>
+        <h4>Cash Balance: ${{ g.user.cashBalance }}</h4>
+        <form method="post">
+            <label for="ticker">Ticker</label>
+            <input name="ticker" id="ticker" required>
 
-        <div class="section-box">
-            <h4>Cash Balance: ${{ g.user.cashBalance }}</h4>
-        </div>
+            <label for="numShares">Number of Shares</label>
+            <input type="number" name="numShares" id="numShares" min="1" step="1" required>
 
-        <div class="section-box">
-            <form method="post">
-                <label for="ticker">Ticker</label>
-                <input name="ticker" id="ticker" required>
+            <label for="buyOrSell">Order Type</label>
+            <select name="buyOrSell" id="buyOrSell" required>
+                <option value="buy">Buy</option>
+                <option value="sell">Sell</option>
+            </select>
 
-                <label for="numShares">Number of Shares</label>
-                <input type="number" name="numShares" id="numShares" min="1" step="1" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 
-                <label for="buyOrSell">Order Type</label>
-                <select name="buyOrSell" id="buyOrSell" required>
-                    <option value="buy">Buy</option>
-                    <option value="sell">Sell</option>
-                </select>
-
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-
-        <div class="section-box">
-            <h2>Your Portfolio</h2>
-            <h4>under development...</h4>
-        </div>
-
+    <div class="section-box">
+        <h2>Your Portfolio</h2>
+        <h4>under development...</h4>
     </div>
 
 </section>
