@@ -28,14 +28,26 @@ def addToBalance(userID, amount):
 
 
 def get_last_price(stock_symbol):
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + stock_symbol + '&apikey=' + API_KEY
+    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + stock_symbol + '&outputsize=compact&apikey=' + API_KEY
     response = requests.get(url)
     if response.status_code == 200:
-        data = response.json().get('Time Series (Daily)')
+        data = response.json()
         if data is None:
             return None
-        current_day = sorted(data.keys(), reverse=True)[0]
-        return float(data.get(current_day).get("4. close"))
+        day = data.get("Meta Data").get("3. Last Refreshed")
+        data = data.get('Time Series (Daily)')
+        return float(data.get(day).get("4. close"))
+    return None
+
+
+def get_company_name(stock_symbol):
+    url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + stock_symbol + '&apikey=' + API_KEY
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        if data is None:
+            return None
+        return data.get("Name")
     return None
 
 

@@ -3,6 +3,20 @@
 <head>
     <title>{% block title %}BigBucks{% endblock %} - Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 
 <body>
@@ -38,7 +52,22 @@
     <br>
 
     <h2>Your Portfolio</h2>
-    <h4>eventually show their holdings here</h4>
+    <table>
+        <tr>
+          <th>Ticker</th>
+          <th>Name</th>
+          <th>Number of Shares</th>
+          <th>Price Per Share</th>
+        </tr>
+        {% for entry in portfolio %}
+        <tr>
+          <td>{{ entry.ticker }}</td>
+          <td>{{ entry.name }}</td>
+          <td>{{ entry.quantity }}</td>
+          <td>${{ entry.price }}</td>
+        </tr>
+        {% endfor %}
+      </table>
 
 </section>
 </body>
