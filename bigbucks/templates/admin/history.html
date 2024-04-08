@@ -14,7 +14,8 @@
         {% if g.user %}
             <li><a href="{{ url_for('admin.summary') }}">Summary</a></li>
             <li><a href="{{ url_for('admin.history') }}" class="current-page">History</a></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('admin.risk_return') }}">Analysis</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>

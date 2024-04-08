@@ -2,7 +2,7 @@ import requests
 from .config import API_KEY
 from flask import Blueprint, render_template, g
 from werkzeug.exceptions import abort
-from datetime import datetime  # Import the datetime module to get the current date
+from datetime import datetime, timedelta
 from .db import get_db
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -70,3 +70,47 @@ def summary():
         })
 
     return render_template('admin/summary.html', summary_data=summary_data, current_date=current_date)
+
+
+@bp.route('/risk_return')
+def risk_return():
+    check_admin()
+    db = get_db()
+    stocks = db.execute("""
+    SELECT DISTINCT ticker
+    FROM PortfolioObjects;
+    """).fetchall()
+
+    # Convert stock records to ticker symbols
+    ticker_symbols = [stock['ticker'] for stock in stocks]
+    ticker_string = ','.join(ticker_symbols)
+
+    # Prepare date range for API call
+    end_date = datetime.now().strftime('%Y-%m-%d')
+    start_date = (datetime.now() - timedelta(days=5 * 365)).strftime('%Y-%m-%d')
+
+    # Fetch data from AlphaVantage API for all stocks
+    url = (
+        f'https://alphavantageapi.co/timeseries/analytics?SYMBOLS={ticker_string}&RANGE={start_date}&RANGE={end_date}&INTERVAL=DAILY&OHLC=close&CALCULATIONS=MEAN,STDDEV&apikey={API_KEY}'
+    )
+    response = requests.get(url)
+    data = response.json()
+    # print(data)
+
+    # Initialize list to hold risk-return data
+    risk_return_data = []
+
+    # Iterate over stocks to extract their mean return and standard deviation
+    for stock in stocks:
+        mean_return = data['payload']['RETURNS_CALCULATIONS']['MEAN'].get(stock['ticker'])
+        risk = data['payload']['RETURNS_CALCULATIONS']['STDDEV'].get(stock['ticker'])
+
+        if mean_return is not None and risk is not None:
+            risk_return_data.append({
+                'ticker': stock['ticker'],
+                'return': mean_return,
+                'risk': risk,
+            })
+
+    print(risk_return_data)
+    return render_template('admin/risk_return.html', risk_return_data=risk_return_data)

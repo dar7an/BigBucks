@@ -191,11 +191,15 @@ th {
 }
 
 tr:hover {
-    background-color: #ecf0f3; /* Light grey background for row hover for better interaction */
+    background-color: rgba(70, 249, 185, 0.5); /* Light grey background for row hover for better interaction */
 }
 
 tr:nth-child(even) {
     background-color: #f7f9fa; /* Slightly different background for even rows */
+}
+
+tr:nth-child(even):hover {
+    background-color: rgba(70, 249, 185, 0.5); /* Light grey background for row hover for better interaction */
 }
 
 td {
