@@ -3,20 +3,6 @@
 <head>
     <title>{% block title %}BigBucks{% endblock %} - Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
 </head>
 
 <body>
@@ -38,8 +24,9 @@
 </nav>
 
 <section class="content">
-    <h2>Welcome, {{ user.firstname }}!</h2>
-    <h4>Cash Balance: ${{ g.user.cashBalance }}</h4>
+    <h1>Welcome, {{ user.firstname }}!</h1>
+    <h3>Cash Balance: ${{ g.user.cashBalance }}</h3>
+
     <!-- <form method="post">
         <label for="deposit">Amount</label>
         <input type="number" step="0.01" min="0.01" name="deposit" id="deposit" required>
@@ -49,22 +36,22 @@
     <br>
 
     <h2>Your Portfolio</h2>
-    <table>
+    <table class="table-wrapper">
         <tr>
-          <th>Ticker</th>
-          <th>Name</th>
-          <th>Number of Shares</th>
-          <th>Price Per Share</th>
+            <th>Ticker</th>
+            <th>Name</th>
+            <th>Number of Shares</th>
+            <th>Price Per Share</th>
         </tr>
         {% for entry in portfolio %}
-        <tr>
-          <td>{{ entry.ticker }}</td>
-          <td>{{ entry.name }}</td>
-          <td>{{ entry.quantity }}</td>
-          <td>${{ entry.price }}</td>
-        </tr>
+            <tr>
+                <td>{{ entry.ticker }}</td>
+                <td>{{ entry.name }}</td>
+                <td>{{ entry.quantity }}</td>
+                <td>${{ entry.price }}</td>
+            </tr>
         {% endfor %}
-      </table>
+    </table>
 
 </section>
 </body>
