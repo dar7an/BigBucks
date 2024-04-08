@@ -14,11 +14,8 @@ def check_admin():
 
 
 def get_stock_name(stock_symbol):
-    url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=demo'
-    url_with_apikey = url.replace('demo', API_KEY)
-    url_with_symbol = url_with_apikey.replace('IBM', stock_symbol)
-    r = requests.get(url_with_symbol)
-    data = r.json()
+    url = requests.get(f'https://www.alphavantage.co/query?function=OVERVIEW&symbol={stock_symbol}&apikey={API_KEY}')
+    data = url.json()
     return data.get('Name')
 
 
