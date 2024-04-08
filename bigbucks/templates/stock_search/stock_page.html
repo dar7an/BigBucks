@@ -24,12 +24,18 @@
 </nav>
 
 <section class="content">
-    <h2>Search</h2>
-    <form method="post" action="{{ url_for('stock.stock_info') }}">
-        <label for="stock_symbol">Ticker</label>
-        <input name="stock_symbol" id="stock_symbol" required>
-        <button type="submit">Search</button>
-    </form>
+    <div class="section-box">
+        <h2>Search</h2>
+
+        <div class="section-box">
+            <form method="post" action="{{ url_for('stock.stock_info') }}">
+                <label for="stock_symbol">Ticker</label>
+                <input name="stock_symbol" id="stock_symbol" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+    </div>
 </section>
 </body>
 </html>
