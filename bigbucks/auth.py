@@ -96,4 +96,5 @@ def login():
 def logout():
     """Clear the current session, including the stored user id."""
     session.clear()
+    g.user = None
     return redirect(url_for("auth.login"))
