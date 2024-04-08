@@ -33,6 +33,7 @@ def register():
         lastname = request.form["lastname"]
         email = request.form["email"]
         password = request.form["password"]
+
         db = get_db()
         error = None
 
@@ -70,8 +71,9 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+
         db = get_db()
-        error = None
+
         user = db.execute(
             "SELECT * FROM Users WHERE userID = ?", (username,)
         ).fetchone()
@@ -80,11 +82,20 @@ def login():
             error = "Incorrect username."
         elif not check_password_hash(user["password"], password):
             error = "Incorrect password."
-
-        if error is None:
+        else:
             session.clear()
+            g.user = None
+            g.role = None
+
             session["userID"] = user["userID"]
-            return redirect(url_for("homepage.homepage"))
+            session["role"] = user["role"]  # Store the user's role in the session
+
+            # Redirect based on the user's role
+            if user["role"] == 'admin':
+                return redirect(
+                    url_for("admin.summary"))
+            else:
+                return redirect(url_for("homepage.homepage"))  # Redirect regular users to the homepage
 
         flash(error)
 
@@ -95,4 +106,6 @@ def login():
 def logout():
     """Clear the current session, including the stored user id."""
     session.clear()
+    g.user = None
+    g.role = None
     return redirect(url_for("auth.login"))

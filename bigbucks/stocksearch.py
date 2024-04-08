@@ -105,7 +105,7 @@ def get_stock_data_db(stock_symbol):
 def insert_stock_data_db(stock_symbol):
     db = get_db()
     data = get_trading_history_daily(stock_symbol)
-    if (data):
+    if data:
         for date, date_data in data["Time Series (Daily)"].items():
             close_price = date_data["4. close"]
             db.execute(
