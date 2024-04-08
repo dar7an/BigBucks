@@ -7,7 +7,7 @@ fetch('/config')
     });
 
 function makePlotAPI(stockSymbol) {;
-    fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockSymbol}&apikey=${apiKey}`)
+    fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`)
         .then(response => response.json())
         .then(data => {
             console.log("using API")
