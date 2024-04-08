@@ -23,35 +23,14 @@
     </ul>
 </nav>
 
-<section class="content">
-    <h2>Account</h2>
-    {% block content %}
-        <div>
-            <strong>Username:</strong> {{ user.userid }}
-            <br>
-            <strong>Email:</strong> {{ user.email }}
-        </div>
-
-        <br>
-
-        <h3>Change Email</h3>
-        <form method="post">
-            <label for="email">New Email</label>
-            <input type="email" name="email" id="email">
-
-            <button type="submit"> Update</button>
-
-            <br>
-
-            <h3>Change Password</h3>
-            <label for="password">New Password</label>
-            <input type="password" name="password" id="password">
-
-            <button type="submit"> Update</button>
-
-            <a href="{{ url_for('metrics.display_metrics') }}">Portfolio Performance</a>
-        </form>
-    {% endblock %}
-</section>
-</body>
-</html>
+<div class="charts">
+    <div class="chart">
+        <p>Chart 1 - Work in Progress</p>
+    </div>
+    <div class="chart">
+        <p>Chart 2 - Work in Progress</p>
+    </div>
+    <div class="chart">
+        <p>Chart 3 - Work in Progress</p>
+    </div>
+</div>

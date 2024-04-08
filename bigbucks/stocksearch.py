@@ -28,7 +28,11 @@ def stock_info():
                                corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
                                news=get_news(stock_symbol), stock_data=get_stock_data_db(stock_symbol))
     else:
-        insert_stock_data_db(stock_symbol)
+        if stock_exists(stock_symbol):
+            pass
+        else:
+            insert_stock_data_db(stock_symbol)
+
         return render_template('stock_search/stock_info_APIplot.html', stock_symbol=stock_symbol,
                                corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
                                news=get_news(stock_symbol))
@@ -62,7 +66,7 @@ def get_news(stock_symbol):
 
 
 def get_trading_history_daily(stock_symbol):
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo'
+    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&outputsize=full&apikey=demo'
     url_with_apikey = url.replace('demo', API_KEY)
     url_with_symbol = url_with_apikey.replace('IBM', stock_symbol)
     r = requests.get(url_with_symbol)
@@ -122,3 +126,8 @@ def insert_stock_data_db(stock_symbol):
         db.commit()
     else:
         print(f"Error: 'Time Series (Daily)' key not found in data for stock symbol {stock_symbol}")
+
+def stock_exists(stock_symbol):
+    db = get_db()
+    result = db.execute('SELECT * FROM HistoricPriceData WHERE ticker = ?', (stock_symbol,))
+    return result.fetchone() is not None
