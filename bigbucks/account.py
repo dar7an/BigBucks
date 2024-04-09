@@ -2,11 +2,8 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 from .db import get_db
 
 bp = Blueprint("account", __name__, url_prefix="/account")
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
 @bp.route("/", methods=["GET", "POST"])
 def account():
     if request.method == "POST":
@@ -34,8 +31,4 @@ def account():
 
         flash(error)
 
-<<<<<<< HEAD
     return render_template("account.html", user=g.user)
-=======
-    return render_template("account.html", user=g.user)
->>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74

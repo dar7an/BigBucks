@@ -6,20 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<<<<<<< HEAD
-<nav>
-    <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
-    <ul>
-        {% if g.user %}
-            <li>{{ g.user['username'] }}</li>
-=======
 <body>
 
 <nav>
     <h1><a href="{{ url_for('homepage') }}">Big Bucks</a></h1>
     <ul>
         {% if g.user %}
->>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
@@ -29,23 +21,12 @@
 </nav>
 
 <section class="content">
-    {% block header %}
-        <h1>Log In</h1>
-    {% endblock %}
+    <h1>Log In</h1>
 
-    {% block content %}
+    <div class="section-box">
         <form method="post">
             <label for="username">Username</label>
             <input name="username" id="username" required>
-<<<<<<< HEAD
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
-            <button type="submit" name="login"> Login</button>
-        </form>
-    {% endblock %}
-</section>
-</html>
-=======
 
             <label for="password">Password</label>
             <input type="password" name="password" id="password" required>
@@ -56,4 +37,4 @@
 </section>
 </body>
 </html>
->>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
+

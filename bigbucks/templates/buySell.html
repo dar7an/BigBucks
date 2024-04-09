@@ -1,51 +1,3 @@
-<<<<<<< HEAD
-<!doctype html>
-
-<head>
-    <title>{% block title %}{% endblock %} - BuySell</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<nav>
-    <h1>BigBucks</h1>
-    <ul>
-        {% if g.user %}
-            <li><a href="{{ url_for('homepage') }}">Home</a>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-                {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a>
-            <li><a href="{{ url_for('auth.login') }}">Log In</a>
-        {% endif %}
-    </ul>
-</nav>
-
-<section class="content">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Trade</title>
-    </head>
-    <body>
-    <h2>Trade</h2>
-    <h4>Balance: ${{ g.user.cashBalance }}</h4>
-    <form method="post">
-        <label for="ticker">Ticker</label>
-        <input name="ticker" id="ticker" required>
-        <label for="numShares">Number of Shares</label>
-        <input type="number" step="1" min=1 name="numShares" id="numShares" required>
-
-        <label for="buyOrSell">Buy or Sell?</label>
-        <select name="buyOrSell" id="buyOrSell" width=100 required>
-            <option value="buy">Buy</option>
-            <option value="sell">Sell</option>
-        </select>
-        <br>
-        <input type="submit" value="Submit">
-    </form>
-    <h2>Your Portfolio</h2>
-    <h4>eventually show their holdings here</h4>
-    </body>
-=======
 <!DOCTYPE html>
 <html>
 
@@ -99,7 +51,6 @@
         <h4>under development...</h4>
     </div>
 
->>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
 </section>
 </body>
 </html>
