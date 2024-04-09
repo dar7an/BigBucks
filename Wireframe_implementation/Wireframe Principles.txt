@@ -1,0 +1,9 @@
+In designing the wireframe prototype for our class project, we applied several key UX design principles to enhance the user experience from login/registration to trading stocks and viewing portfolio statistics. 
+
+Consistency - We ensured a uniform appearance across different pages by maintaining consistent format and headers, which develops a sense of familiarity and ease of navigation for the user. To further enhance navigability, we incorporated hyperlinks allowing users to jump seamlessly from page to page, ensuring that despite the consistency in design, flexibility and efficiency in user flow were not compromised.
+
+Simplicity - We aimed to make the interface intuitive, where the purpose of each page and the actions required by the user are clearly defined and straightforward. This principle helped us avoid overwhelming users with excessive information or complex navigation paths, making the experience of logging in, trading stocks, or reviewing portfolio statistics as straightforward as possible.
+
+Usability - By designing with usability in mind, we ensured that it is immediately clear what each button or page is intended for. Whether a user is making a trade or exploring their portfolio, the intended action and outcome are always evident, minimizing user confusion and enhancing the overall effectiveness of the platform.
+
+Feedback - We incorporated real-time feedback mechanisms to reflect changes based on user actions. For instance, when a user purchases a stock, their cash balance updates immediately to reflect the transaction. This instant feedback not only keeps the user informed but also adds to the dynamic and interactive nature of the platform, making the experience more engaging and responsive to user actions
