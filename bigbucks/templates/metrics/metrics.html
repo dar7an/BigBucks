@@ -79,7 +79,7 @@ var myChart = new Chart(ctx, {
     type: 'scatter',
     data: {
         datasets: [{
-            label: 'Return vs Volatility',
+            label: 'Efficient Frontier',
             data: [
                 {% for return, volatility in returns_volatilities %}
                     {x: {{ volatility }}, y: {{ return }}},
@@ -87,7 +87,9 @@ var myChart = new Chart(ctx, {
             ],
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
+            borderWidth: 1,
+            showLine: true,
+            fill: false
         }]
     },
     options: {

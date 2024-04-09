@@ -20,9 +20,9 @@ def display_matrices():
         data = pd.read_sql_query("SELECT closing_date, close_price FROM HistoricPriceData WHERE ticker = ?"
                                  , db, params=(ticker,))
         data.set_index('closing_date', inplace=True)
-        data = pd.DataFrame(data)
+        data = pd.DataFrame(data)   
         price_data.append(data)
-        asset = Asset(ticker,data)
+        asset = Asset(ticker,data)  # This is the Asset class from solver.py
         asset_vector.append(asset)
 
     df = pd.concat(price_data, axis=1, keys=[asset.ticker for asset in asset_vector])

@@ -5,13 +5,14 @@ class Asset:
     def __init__(self, ticker, data):
         self.ticker = ticker
         self.data = data
-        self.returns = self.data.pct_change() 
+        self.returns = 100*(self.data.pct_change())
 
     def get_rate(self):
         return self.returns.mean()
 
     def get_dev(self):
         return self.returns.std()
+
     
 class Solver():
     def compute(self, covariance_matrix, asset_vector, portfolio_return):
