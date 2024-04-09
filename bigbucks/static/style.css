@@ -212,3 +212,8 @@ td {
     margin-top: 1rem;
 }
 
+#myChart {
+    /* Add your styles here */
+    width: 100%;
+    height: 400px;
+}

@@ -70,3 +70,56 @@
         </tr>
     {% endfor %}
 </table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="myChart"></canvas>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: 'Return vs Volatility',
+            data: [
+                {% for return, volatility in returns_volatilities %}
+                    {x: {{ volatility }}, y: {{ return }}},
+                {% endfor %}
+            ],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Volatility',
+                    color: '#333' // Change color to match your page's styling
+                },
+                grid: {
+                    color: '#999' // Change grid color to match your page's styling
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Return',
+                    color: '#333' // Change color to match your page's styling
+                },
+                grid: {
+                    color: '#999' // Change grid color to match your page's styling
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#333' // Change legend color to match your page's styling
+                }
+            }
+        }
+    }
+});
+</script>
