@@ -23,22 +23,16 @@
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+            <li><a href="{{ url_for('auth.login') }}" class="current-page">Log In</a></li>
         {% endif %}
     </ul>
 </nav>
 
 <section class="content">
-<<<<<<< HEAD
-    <body>
-    <h2>Login</h2>
-    </body>
-=======
     {% block header %}
         <h1>Log In</h1>
     {% endblock %}
 
->>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
     {% block content %}
         <form method="post">
             <label for="username">Username</label>
@@ -58,7 +52,7 @@
 
             <input type="submit" value="Log In">
         </form>
-    {% endblock %}
+    </div>
 </section>
 </body>
 </html>

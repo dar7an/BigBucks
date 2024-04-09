@@ -29,7 +29,6 @@
             <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
             <li><a href="{{ url_for('stock.index') }}">Search</a></li>
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
->>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
@@ -39,25 +38,6 @@
 </nav>
 
 <section class="content">
-<<<<<<< HEAD
-    <h2>Edit Account</h2>
-    <form method="post">
-        <div>
-            <strong>Username:</strong> {{ user.userid }}
-        </div>
-        <div>
-            <strong>Email:</strong> {{ user.email }}
-        </div>
-        
-        <label for="email">New Email (optional)</label>
-        <input type="email" name="email" id="email">
-        
-        <label for="password">New Password (optional)</label>
-        <input type="password" name="password" id="password">
-        
-        <input type="submit" value="Update">
-    </form>
-=======
     <h2>Account</h2>
     {% block content %}
         <div>
@@ -65,26 +45,25 @@
             <br>
             <strong>Email:</strong> {{ user.email }}
         </div>
+    </div>
 
-        <br>
-
+    <div class="section-box">
         <h3>Change Email</h3>
         <form method="post">
             <label for="email">New Email</label>
             <input type="email" name="email" id="email">
+            <button type="submit">Update</button>
+        </form>
+    </div>
 
-            <button type="submit"> Update</button>
-
-            <br>
-
-            <h3>Change Password</h3>
+    <div class="section-box">
+        <h3>Change Password</h3>
+        <form method="post">
             <label for="password">New Password</label>
             <input type="password" name="password" id="password">
-
-            <button type="submit"> Update</button>
+            <button type="submit">Update</button>
         </form>
     {% endblock %}
->>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
 </section>
 </body>
 </html>

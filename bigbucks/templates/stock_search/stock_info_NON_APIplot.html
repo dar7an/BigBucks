@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -18,9 +18,9 @@
         {% if g.user %}
             <li><a href="{{ url_for('homepage') }}">Home</a></li>
             <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
-            <li><a href="{{ url_for('stock.index') }}">Search</a></li>
+            <li><a href="{{ url_for('stock.index') }}" class="current-page">Search</a></li>
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
@@ -29,56 +29,58 @@
 </nav>
 
 <section class="content">
+
     <form action="{{ url_for('stock.index') }}" method="GET">
         <button type="submit">Back</button>
     </form>
 
-    <h2>Stock Information</h2>
     {% if overview and corestock and news %}
-        <p>Stock Symbol: {{ overview['Symbol'] }}</p>
-        <p>Company Name: {{ overview['Name'] }}</p>
-        <p>Sector: {{ overview['Sector'] }}</p>
-        <p>Industry: {{ overview['Industry'] }}</p>
-        <p>Market Cap: {{ overview['MarketCapitilzation'] }}</p>
-        <p>PE Ratio: {{ overview['PERatio'] }}</p>
-        <p>EPS: {{ overview['EPS'] }}</p>
-        <p>Dividend: {{ overview['DividendPerShare'] }}</p>
-        <p>Dividend Yield: {{ overview['DividendYield'] }}</p>
-        <p>Stock Exchange: {{ overview['Exchange'] }}</p>
-        <p>52 Week High: {{ overview['52WeekHigh'] }}</p>
-        <p>52 Week Low: {{ overview['52WeekLow'] }}</p>
-        <p>Price: {{ corestock['Global Quote']['05. price'] }}</p>
-        <p>Previous Close: {{ corestock['Global Quote']['08. previous close'] }}</p>
-        <p>Open: {{ corestock['Global Quote']['02. open'] }}</p>
-        <p>Volume: {{ corestock['Global Quote']['06. volume'] }}</p>
 
-        <br>
+        <div class="section-box">
+            <h2>Stock Information</h2>
+            <p>Stock Symbol: {{ overview['Symbol'] }}</p>
+            <p>Company Name: {{ overview['Name'] }}</p>
+            <p>Sector: {{ overview['Sector'] }}</p>
+            <p>Industry: {{ overview['Industry'] }}</p>
+            <p>Market Cap: {{ overview['MarketCapitilzation'] }}</p>
+            <p>PE Ratio: {{ overview['PERatio'] }}</p>
+            <p>EPS: {{ overview['EPS'] }}</p>
+            <p>Dividend: {{ overview['DividendPerShare'] }}</p>
+            <p>Dividend Yield: {{ overview['DividendYield'] }}</p>
+            <p>Stock Exchange: {{ overview['Exchange'] }}</p>
+            <p>52 Week High: {{ overview['52WeekHigh'] }}</p>
+            <p>52 Week Low: {{ overview['52WeekLow'] }}</p>
+            <p>Price: {{ corestock['Global Quote']['05. price'] }}</p>
+            <p>Previous Close: {{ corestock['Global Quote']['08. previous close'] }}</p>
+            <p>Open: {{ corestock['Global Quote']['02. open'] }}</p>
+            <p>Volume: {{ corestock['Global Quote']['06. volume'] }}</p>
+        </div>
 
-        <h2>Relevant News</h2>
-        {% for source in news['feed'][:5] %}
-            <p>Title: <a href="{{ source['url'] }}" target="_blank">{{ source['title'] }}</a></p>
-            <p>Summary: {{ source['summary'] }}</p>
-        {% endfor %}
+        <div class="section-box">
+            <h2>Relevant News</h2>
+            {% for source in news['feed'][:5] %}
+                <p>Title: <a href="{{ source['url'] }}" target="_blank">{{ source['title'] }}</a></p>
+                <p>Summary: {{ source['summary'] }}</p>
+            {% endfor %}
+        </div>
 
-        <br>
-
-        <h2>Chart</h2>
-        <h4>under development...</h4>
-        <div id="myChart"></div>
+        <div class="section-box">
+            <h2>Chart</h2>
+            <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
+            <script>
+                const stockSymbolFromFlask = "{{ stock_symbol }}";
+                window.onload = (event) => {
+                    makePlotAPI(stockSymbolFromFlask);
+                };
+            </script>
+            <div id="myChart"></div>
+        </div>
 
     {% else %}
         <p>Stock data unavailable</p>
     {% endif %}
+
 </section>
-
-<script>
-    const stockSymbolFromFlask = "{{ stock_symbol }}";
-    const stockData = {{ stock_data | tojson | safe }};
-
-    window.onload = (event) => {
-        makePlotnonAPI(stockSymbolFromFlask, stockData);
-    };
-</script>
 
 <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
 

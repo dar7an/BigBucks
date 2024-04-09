@@ -53,6 +53,14 @@ def create_app(test_config=None):
     app.add_url_rule('/account', endpoint='account')
 >>>>>>> 965e0618d926d6d8712a95cec22ba91f52ed1d74
 
+    from . import admin
+    app.register_blueprint(admin.bp)
+    app.add_url_rule('/admin', endpoint='admin')
+
+    from . import metrics
+    app.register_blueprint(metrics.bp)
+    app.add_url_rule('/metrics', endpoint='metrics')
+    
     from . import db
     db.init_app(app)
 

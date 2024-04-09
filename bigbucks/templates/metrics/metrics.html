@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}BigBucks{% endblock %} - Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<nav>
+    <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
+    <ul>
+        {% if g.user %}
+            <li><a href="{{ url_for('homepage') }}">Home</a></li>
+            <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
+            <li><a href="{{ url_for('stock.index') }}">Search</a></li>
+            <li><a href="{{ url_for('account.account') }}">Account</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+        {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<div class="charts">
+    <div class="chart">
+        <p>Chart 1 - Work in Progress</p>
+    </div>
+    <div class="chart">
+        <p>Chart 2 - Work in Progress</p>
+    </div>
+    <div class="chart">
+        <p>Chart 3 - Work in Progress</p>
+    </div>
+</div>
+
+<h2>Correlation Matrix:</h2>
+<table>
+    <tr>
+        <th></th> <!-- Empty cell for the corner of the table -->
+        {% for ticker in tickers %}
+            <th>{{ ticker }}</th> <!-- Column headers -->
+        {% endfor %}
+    </tr>
+    {% for row in correlation_matrix %}
+        <tr>
+            <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
+            {% for value in row %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<h2>Covariance Matrix:</h2>
+<table>
+    <tr>
+        <th></th> <!-- Empty cell for the corner of the table -->
+        {% for ticker in tickers %}
+            <th>{{ ticker }}</th> <!-- Column headers -->
+        {% endfor %}
+    </tr>
+    {% for row in covariance_matrix %}
+        <tr>
+            <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
+            {% for value in row %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<table>
+<h2>Sharpe Ratios:</h2>
+<ul>
+        <li>{{ sharpe_ratio }}</li>
+</ul>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="myChart"></canvas>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: 'Efficient Frontier',
+            data: [
+                {% for return, volatility in returns_volatilities %}
+                    {x: {{ volatility }}, y: {{ return }}},
+                {% endfor %}
+            ],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+            showLine: true,
+            fill: false
+        }]
+    },
+    options: {
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Volatility',
+                    color: '#333' // Change color to match your page's styling
+                },
+                grid: {
+                    color: '#999' // Change grid color to match your page's styling
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Return',
+                    color: '#333' // Change color to match your page's styling
+                },
+                grid: {
+                    color: '#999' // Change grid color to match your page's styling
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#333' // Change legend color to match your page's styling
+                }
+            }
+        }
+    }
+});
+</script>
