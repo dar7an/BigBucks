@@ -1,9 +1,18 @@
-In designing the wireframe prototype for our class project, we applied several key UX design principles to enhance the user experience from login/registration to trading stocks and viewing portfolio statistics. 
 
-Consistency - We ensured a uniform appearance across different pages by maintaining consistent format and headers, which develops a sense of familiarity and ease of navigation for the user. To further enhance navigability, we incorporated hyperlinks allowing users to jump seamlessly from page to page, ensuring that despite the consistency in design, flexibility and efficiency in user flow were not compromised.
+Proximity
 
-Simplicity - We aimed to make the interface intuitive, where the purpose of each page and the actions required by the user are clearly defined and straightforward. This principle helped us avoid overwhelming users with excessive information or complex navigation paths, making the experience of logging in, trading stocks, or reviewing portfolio statistics as straightforward as possible.
+The proximity principle was applied to organize elements that are functionally related, enhancing user understanding and navigation. For example, in the portfolio view, individual stocks along with their respective statistics and charting options are placed closely together. This grouping naturally suggests a relationship among the items, making it easier for users to process information related to their investments efficiently.
 
-Usability - By designing with usability in mind, we ensured that it is immediately clear what each button or page is intended for. Whether a user is making a trade or exploring their portfolio, the intended action and outcome are always evident, minimizing user confusion and enhancing the overall effectiveness of the platform.
+Similarity
 
-Feedback - We incorporated real-time feedback mechanisms to reflect changes based on user actions. For instance, when a user purchases a stock, their cash balance updates immediately to reflect the transaction. This instant feedback not only keeps the user informed but also adds to the dynamic and interactive nature of the platform, making the experience more engaging and responsive to user actions
+We used the similarity principle to create a cohesive design language throughout the platform. By designing buttons, links, and interactive elements with consistent visual cues such as color, shape, and typography, users can quickly identify actionable items across the login, trade execution, and portfolio pages. This consistency reduces cognitive load, allowing users to navigate and interact with the platform more intuitively.
+
+Common Region
+
+Leveraging the common region principle, we visually grouped related elements within defined boundaries. For instance, the trade execution section on the trading page is visually separated from the rest of the content, using a distinct border. This visual enclosure helps users focus on the task at hand, whether buying or selling, by indicating that these elements are part of a coherent functional group.
+
+Continuity
+
+The principle of continuity is evident in the layout and navigational flow of the platform. We designed the user journey—from logging in, to navigating to the trade section, and finally reviewing the portfolio—to follow a logical and uninterrupted path. Visual elements such as navigation bars and directional cues ensure that users experience a smooth transition between tasks, maintaining their orientation and focus throughout their interaction with the platform.
+
+
