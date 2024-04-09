@@ -48,7 +48,7 @@ Reports: Code review
 
 Advanced Charting: Code review
 
-Wireframe (Balsamiq, Figma, or similar tool): Code review
+Wireframe (Balsamiq, Figma, or similar tool): Code review - issue completed. Reviewed by Luke. We built out the wireframe prototype using balsamiq in adherence to everything needed in our requirements, made some adjustments to the formatting. Looks ready to start actual implementation around our code. 
 
 Wireframe Implementation: Code review
 
