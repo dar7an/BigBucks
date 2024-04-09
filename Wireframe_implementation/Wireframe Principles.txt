@@ -1,18 +1,18 @@
 
 Proximity
 
-The proximity principle was applied to organize elements that are functionally related, enhancing user understanding and navigation. For example, in the portfolio view, individual stocks along with their respective statistics and charting options are placed closely together. This grouping naturally suggests a relationship among the items, making it easier for users to process information related to their investments efficiently.
+We employed the proximity principle to group related information and controls closely together. For example, on the portfolio page, stocks owned are listed closely together with their respective statistics and charting options, indicating their relationship and making it easier for users to assess their investments at a glance. Along with that navigation is all close together, at the top right of the screen we pair logout with other similar account related actions. 
 
 Similarity
 
 We used the similarity principle to create a cohesive design language throughout the platform. By designing buttons, links, and interactive elements with consistent visual cues such as color, shape, and typography, users can quickly identify actionable items across the login, trade execution, and portfolio pages. This consistency reduces cognitive load, allowing users to navigate and interact with the platform more intuitively.
 
-Common Region
+Figure-Ground
 
-Leveraging the common region principle, we visually grouped related elements within defined boundaries. For instance, the trade execution section on the trading page is visually separated from the rest of the content, using a distinct border. This visual enclosure helps users focus on the task at hand, whether buying or selling, by indicating that these elements are part of a coherent functional group.
+In our design, we utilized the figure-ground principle to help users easily distinguish between actionable items (figure) and the background. For instance, buttons for logging in, registering, and executing trades are designed with distinct colors and shadows to stand out against the background, ensuring users can quickly identify interactive elements, they are either hyperlinked or shaded in. Along with that the buy vs sell button is shaded different colors to show the status. Finally, we have a picker between charting vs scatter plot that allows the user to know how to interact with the statistics page. 
 
 Continuity
 
-The principle of continuity is evident in the layout and navigational flow of the platform. We designed the user journey—from logging in, to navigating to the trade section, and finally reviewing the portfolio—to follow a logical and uninterrupted path. Visual elements such as navigation bars and directional cues ensure that users experience a smooth transition between tasks, maintaining their orientation and focus throughout their interaction with the platform.
+The principle of continuity is evident in the layout and navigational flow of the platform. We designed the user journey—from logging in, to navigating to the trade section, and finally reviewing the portfolio—to follow a logical and uninterrupted path. Visual elements such as navigation bars ensure that users experience a smooth transition between tasks, maintaining their orientation and focus throughout their interaction with the platform.
 
 
