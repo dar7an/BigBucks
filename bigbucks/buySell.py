@@ -4,6 +4,7 @@ from .financialTransactions import hasSufficientBalance, addToBalance, get_last_
     add_portfolio_object, hasSufficientStock, remove_portfolio_object
 from .homepage import login_required
 from .db import get_db
+from .stocksearch import insert_stock_data_db, stock_exists
 
 bp = Blueprint("buySell", __name__)
 
@@ -16,13 +17,17 @@ def buySell():
         ticker = request.form["ticker"].upper()
         quantity = int(request.form["numShares"])
         buySell = request.form['buyOrSell']
-
         unit_price = get_last_price(ticker)
         if unit_price is None:
             # show error on page!
             return redirect(url_for("buyStock.buy"))
 
         else:
+            if stock_exists(ticker):
+                pass
+            else: 
+                insert_stock_data_db(ticker)
+                
             total_price = unit_price * quantity
             if buySell == 'buy':
                 # check if sufficient balance

@@ -15,7 +15,7 @@
             <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
             <li><a href="{{ url_for('stock.index') }}">Search</a></li>
             <li><a href="{{ url_for('account.account') }}" class="current-page">Account</a></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
@@ -24,32 +24,40 @@
 </nav>
 
 <section class="content">
-    <h2>Account</h2>
-    {% block content %}
+
+    <h1>Account</h1>
+
+    <div class="section-box">
         <div>
             <strong>Username:</strong> {{ user.userid }}
             <br>
             <strong>Email:</strong> {{ user.email }}
         </div>
+    </div>
 
-        <br>
-
+    <div class="section-box">
         <h3>Change Email</h3>
         <form method="post">
             <label for="email">New Email</label>
             <input type="email" name="email" id="email">
+            <button type="submit">Update</button>
+        </form>
+    </div>
 
-            <button type="submit"> Update</button>
-
-            <br>
-
-            <h3>Change Password</h3>
+    <div class="section-box">
+        <h3>Change Password</h3>
+        <form method="post">
             <label for="password">New Password</label>
             <input type="password" name="password" id="password">
-
-            <button type="submit"> Update</button>
+            <button type="submit">Update</button>
         </form>
-    {% endblock %}
+    </div>
+
+    <div class="section-box">
+        <h3><a href="{{ url_for('metrics.display_matrices') }}">Portfolio Performance</a></h3>
+
+
 </section>
 </body>
 </html>
+

@@ -21,11 +21,9 @@
 </nav>
 
 <section class="content">
-    {% block header %}
-        <h1>Log In</h1>
-    {% endblock %}
+    <h1>Log In</h1>
 
-    {% block content %}
+    <div class="section-box">
         <form method="post">
             <label for="username">Username</label>
             <input name="username" id="username" required>
@@ -35,7 +33,8 @@
 
             <input type="submit" value="Log In">
         </form>
-    {% endblock %}
+    </div>
 </section>
 </body>
 </html>
+

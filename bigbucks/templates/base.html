@@ -15,7 +15,7 @@
             <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
             <li><a href="{{ url_for('stock.index') }}">Search</a></li>
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('auth.login') }}" class="hover-logout">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
@@ -24,23 +24,36 @@
 </nav>
 
 <section class="content">
-    <h2>Welcome, {{ user.firstname }}</h2>
+    <h1>Welcome, {{ user.firstname }}!</h1>
+    <h3>Cash Balance: ${{ g.user.cashBalance }}</h3>
 
-    <br>
-
-    <h2>Deposit Cash</h2>
-    <h4>Cash Balance: ${{ g.user.cashBalance }}</h4>
-    <form method="post">
+    <!-- <form method="post">
         <label for="deposit">Amount</label>
         <input type="number" step="0.01" min="0.01" name="deposit" id="deposit" required>
         <button type="submit"> Submit</button>
-    </form>
+    </form> -->
 
     <br>
 
     <h2>Your Portfolio</h2>
-    <h4>eventually show their holdings here</h4>
+    <table class="table-wrapper">
+        <tr>
+            <th>Ticker</th>
+            <th>Name</th>
+            <th>Number of Shares</th>
+            <th>Price Per Share</th>
+        </tr>
+        {% for entry in portfolio %}
+            <tr>
+                <td>{{ entry.ticker }}</td>
+                <td>{{ entry.name }}</td>
+                <td>{{ entry.quantity }}</td>
+                <td>${{ entry.price }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 
 </section>
 </body>
 </html>
+

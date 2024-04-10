@@ -15,7 +15,7 @@
             <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
             <li><a href="{{ url_for('stock.index') }}" class="current-page">Search</a></li>
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
@@ -24,12 +24,16 @@
 </nav>
 
 <section class="content">
-    <h2>Search</h2>
-    <form method="post" action="{{ url_for('stock.stock_info') }}">
-        <label for="stock_symbol">Ticker</label>
-        <input name="stock_symbol" id="stock_symbol" required>
-        <button type="submit">Search</button>
-    </form>
+    <h1>Search</h1>
+
+    <div class="section-box">
+        <form method="post" action="{{ url_for('stock.stock_info') }}">
+            <label for="stock_symbol">Ticker</label>
+            <input name="stock_symbol" id="stock_symbol" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
 </section>
 </body>
 </html>
