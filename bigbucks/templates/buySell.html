@@ -23,6 +23,12 @@
     </ul>
 </nav>
 
+{% if error %}
+    <script>
+        alert('{{ error }}');
+    </script>
+{% endif %}
+
 <section class="content">
     <h1>Trade</h1>
 
