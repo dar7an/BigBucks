@@ -8,6 +8,12 @@
 
 <body>
 
+{% if error %}
+    <script>
+        alert('{{ error }}');
+    </script>
+{% endif %}
+
 <nav>
     <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
     <ul>

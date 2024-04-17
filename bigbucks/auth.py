@@ -67,7 +67,7 @@ def register():
 
 @bp.route("/login", methods=("GET", "POST"))
 def login():
-    """Log in a registered user by adding the user id to the session."""
+    error = None
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -88,18 +88,16 @@ def login():
             g.role = None
 
             session["userID"] = user["userID"]
-            session["role"] = user["role"]  # Store the user's role in the session
+            session["role"] = user["role"]
 
-            # Redirect based on the user's role
             if user["role"] == 'admin':
-                return redirect(
-                    url_for("admin.summary"))
+                return redirect(url_for("admin.summary"))
             else:
-                return redirect(url_for("homepage.homepage"))  # Redirect regular users to the homepage
+                return redirect(url_for("homepage.homepage"))
 
         flash(error)
 
-    return render_template("auth/login.html")
+    return render_template("auth/login.html", error=error)
 
 
 @bp.route("/logout")
