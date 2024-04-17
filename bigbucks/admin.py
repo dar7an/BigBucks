@@ -91,7 +91,7 @@ def risk_return():
 
     # Fetch data from AlphaVantage API for all stocks
     url = (
-        f'https://alphavantageapi.co/timeseries/analytics?SYMBOLS={ticker_string}&RANGE={start_date}&RANGE={end_date}&INTERVAL=DAILY&OHLC=close&CALCULATIONS=MEAN,STDDEV&apikey={API_KEY}'
+        f'https://alphavantage.co/timeseries/analytics?SYMBOLS={ticker_string}&RANGE={start_date}&RANGE={end_date}&INTERVAL=DAILY&OHLC=close&CALCULATIONS=MEAN,STDDEV&apikey={API_KEY}'
     )
     response = requests.get(url)
     data = response.json()
