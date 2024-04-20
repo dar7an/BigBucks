@@ -23,112 +23,123 @@
     </ul>
 </nav>
 
-<div class="charts">
-    <div class="chart">
-        <p>Chart 1 - Work in Progress</p>
+<section class="content">
+    <form action="{{ url_for('homepage') }}" method="GET">
+        <button type="submit">Back</button>
+    </form>
+
+    <div class="content">
+        <h2>Under Progress</h2>
+        <h3>Chart 1</h3>
+        <h3>Chart 2</h3>
+        <h3>Chart 3</h3>
     </div>
-    <div class="chart">
-        <p>Chart 2 - Work in Progress</p>
-    </div>
-    <div class="chart">
-        <p>Chart 3 - Work in Progress</p>
-    </div>
-</div>
 
-<h2>Correlation Matrix:</h2>
-<table>
-    <tr>
-        <th></th> <!-- Empty cell for the corner of the table -->
-        {% for ticker in tickers %}
-            <th>{{ ticker }}</th> <!-- Column headers -->
-        {% endfor %}
-    </tr>
-    {% for row in correlation_matrix %}
-        <tr>
-            <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
-            {% for value in row %}
-                <td>{{ value }}</td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-</table>
-
-<h2>Covariance Matrix:</h2>
-<table>
-    <tr>
-        <th></th> <!-- Empty cell for the corner of the table -->
-        {% for ticker in tickers %}
-            <th>{{ ticker }}</th> <!-- Column headers -->
-        {% endfor %}
-    </tr>
-    {% for row in covariance_matrix %}
-        <tr>
-            <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
-            {% for value in row %}
-                <td>{{ value }}</td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-</table>
-
-<table>
-<h2>Sharpe Ratios:</h2>
-<ul>
-        <li>{{ sharpe_ratio }}</li>
-</ul>
-</table>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<canvas id="myChart"></canvas>
-<script>
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'scatter',
-    data: {
-        datasets: [{
-            label: 'Efficient Frontier',
-            data: [
-                {% for return, volatility in returns_volatilities %}
-                    {x: {{ volatility }}, y: {{ return }}},
+    <div class="content">
+        <h2>Correlation Matrix</h2>
+        <table class="table-wrapper">
+            <tr>
+                <th></th> <!-- Empty cell for the corner of the table -->
+                {% for ticker in tickers %}
+                    <th>{{ ticker }}</th> <!-- Column headers -->
                 {% endfor %}
-            ],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-            showLine: true,
-            fill: false
-        }]
-    },
-    options: {
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Volatility',
-                    color: '#333' // Change color to match your page's styling
-                },
-                grid: {
-                    color: '#999' // Change grid color to match your page's styling
-                }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Return',
-                    color: '#333' // Change color to match your page's styling
-                },
-                grid: {
-                    color: '#999' // Change grid color to match your page's styling
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#333' // Change legend color to match your page's styling
-                }
-            }
-        }
-    }
-});
-</script>
+            </tr>
+            {% for row in correlation_matrix %}
+                <tr>
+                    <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="content">
+        <h2>Covariance Matrix</h2>
+        <table class="table-wrapper">
+            <tr>
+                <th></th> <!-- Empty cell for the corner of the table -->
+                {% for ticker in tickers %}
+                    <th>{{ ticker }}</th> <!-- Column headers -->
+                {% endfor %}
+            </tr>
+            {% for row in covariance_matrix %}
+                <tr>
+                    <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="content">
+        <h2>Sharpe Ratios</h2>
+        {% for ratio in sharpe_ratio %}
+            <h4>{{ ratio }}</h4>
+        {% endfor %}
+    </div>
+
+    <div class="content">
+        <h2>Efficient Frontier</h2>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <canvas id="myChart">
+            <script>
+                const ctx = document.getElementById('myChart').getContext('2d');
+                const myChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Efficient Frontier',
+                            data: [
+                                {% for return, volatility in returns_volatilities %}
+                                    {x: {{ volatility }}, y: {{ return }}},
+                                {% endfor %}
+                            ],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            showLine: true,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Volatility',
+                                    color: '#333' // Change color to match your page's styling
+                                },
+                                grid: {
+                                    color: '#999' // Change grid color to match your page's styling
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Return',
+                                    color: '#333' // Change color to match your page's styling
+                                },
+                                grid: {
+                                    color: '#999' // Change grid color to match your page's styling
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#333' // Change legend color to match your page's styling
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+        </canvas>
+    </div>
+</section>
+</body>
+</html>

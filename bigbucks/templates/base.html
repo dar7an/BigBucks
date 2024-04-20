@@ -33,26 +33,31 @@
         <button type="submit"> Submit</button>
     </form> -->
 
-    <br>
-
-    <h2>Your Portfolio</h2>
-    <table class="table-wrapper">
-        <tr>
-            <th>Ticker</th>
-            <th>Name</th>
-            <th>Number of Shares</th>
-            <th>Price Per Share</th>
-        </tr>
-        {% for entry in portfolio %}
+    <div class="content">
+        <h2>Your Portfolio</h2>
+        <table class="table-wrapper">
             <tr>
-                <td>{{ entry.ticker }}</td>
-                <td>{{ entry.name }}</td>
-                <td>{{ entry.quantity }}</td>
-                <td>${{ entry.price }}</td>
+                <th>Ticker</th>
+                <th>Name</th>
+                <th>Number of Shares</th>
+                <th>Price Per Share</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for entry in portfolio %}
+                <tr>
+                    <td>{{ entry.ticker }}</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.quantity }}</td>
+                    <td>${{ entry.price }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="content">
+        <h2><a href="{{ url_for('metrics.display_matrices') }}">Portfolio Metrics</a></h2>
+    </div>
 
 </section>
 </body>
 </html>
+
