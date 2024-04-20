@@ -1,223 +1,224 @@
 html {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background: #ecf0f3; /* Light grey background for a modern look */
-    color: #333;
-    margin: 0;
-    padding: 0;
-    -webkit-font-smoothing: antialiased; /* Enhances text rendering */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #ecf0f3; /* Light grey background for a modern look */
+  color: #333;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased; /* Enhances text rendering */
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background: transparent;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
 h1 {
-    font-size: xx-large; /* Larger font size for headings */
-    font-weight: 600;
-    color: #21ce99; /* Green color for headings, similar to Robinhood's branding */
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
+  font-size: xx-large; /* Larger font size for headings */
+  font-weight: 600;
+  color: #21ce99; /* Green color for headings, similar to Robinhood's branding */
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 h2, h3, h4, h5, h6 {
-    font-weight: 600; /* Adds weight to headings */
-    color: #21ce99; /* Green color for headings, similar to Robinhood's branding */
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
+  font-weight: 600; /* Adds weight to headings */
+  color: #21ce99; /* Green color for headings, similar to Robinhood's branding */
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 nav {
-    background: #21ce99; /* Green background for navbar */
-    color: #fff; /* White text color */
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between; /* Aligns nav items to the sides */
-    align-items: center;
+  background: #21ce99; /* Green background for navbar */
+  color: #fff; /* White text color */
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between; /* Aligns nav items to the sides */
+  align-items: center;
 }
 
 nav h1 {
-    font-size: 2rem;
-    font-weight: 700; /* Bold font for brand */
-    margin: 0;
+  font-size: 2rem;
+  font-weight: 700; /* Bold font for brand */
+  margin: 0;
 }
 
 nav ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 nav ul li {
-    margin: 0 1rem;
+  margin: 0 1rem;
 }
 
 nav a, nav a:visited {
-    color: #fff; /* Ensures nav links are white */
-    text-decoration: none;
-    padding: 0.75rem 1rem;
-    transition: color 0.2s ease-in-out;
+  color: #fff; /* Ensures nav links are white */
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  transition: color 0.2s ease-in-out;
 }
 
 nav a.current-page {
-    text-decoration: none; /* No underline on hover */
-    font-weight: bold; /* Bold font for hover state */
+  text-decoration: none; /* No underline on hover */
+  font-weight: bold; /* Bold font for hover state */
 }
 
 nav a:hover {
-    color: #a3f9b9; /* Light green color for hover state */
-    text-decoration: none; /* No underline on hover */
+  color: #a3f9b9; /* Light green color for hover state */
+  text-decoration: none; /* No underline on hover */
 }
 
 nav a.hover-logout:hover {
-    color: #e74c3c; /* Red color for logout link on hover */
+  color: #e74c3c; /* Red color for logout link on hover */
 }
 
 .content {
-    padding: 2rem; /* Spacious padding for content */
-    background: #fff; /* White background for content */
-    margin: 1rem; /* Adds margin around the content */
-    border-radius: 8px; /* Rounds the corners of the content boxes */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 2rem; /* Spacious padding for content */
+  background: #fff; /* White background for content */
+  margin: 1rem; /* Adds margin around the content */
+  border-radius: 8px; /* Rounds the corners of the content boxes */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .section-box {
-    background: #fff; /* White background for sections */
-    padding: 2rem; /* Spacious padding for sections */
-    margin: 1rem 0; /* Vertical spacing between sections */
-    border-radius: 8px; /* Rounds the corners of the boxes */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background: #fff; /* White background for sections */
+  padding: 2rem; /* Spacious padding for sections */
+  margin: 1rem 0; /* Vertical spacing between sections */
+  border-radius: 8px; /* Rounds the corners of the boxes */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .flash {
-    padding: 1rem;
-    background: #a3f9b9; /* Light green background for flash messages */
-    border: none; /* Removes border */
-    color: #333;
-    margin: 1rem 0; /* Spacing above and below the flash message */
-    border-radius: 4px;
+  padding: 1rem;
+  background: #a3f9b9; /* Light green background for flash messages */
+  border: none; /* Removes border */
+  color: #333;
+  margin: 1rem 0; /* Spacing above and below the flash message */
+  border-radius: 4px;
 }
 
 input, textarea, select, button {
-    font-family: inherit;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #dcdfe6;
-    border-radius: 4px;
-    box-sizing: border-box;
+  font-family: inherit;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 input[type=submit], button {
-    cursor: pointer;
-    background-color: #21ce99; /* Green background for buttons */
-    color: white;
-    border: none;
-    padding: 1rem 1.5rem;
-    margin-top: 1rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 600; /* Bold font for button text */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Consistent shadow as the content boxes */
+  cursor: pointer;
+  background-color: #21ce99; /* Green background for buttons */
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  margin-top: 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600; /* Bold font for button text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Consistent shadow as the content boxes */
 }
 
 input[type=submit]:hover, button:hover {
-    background-color: #1bad86; /* Slightly darker green for button hover */
+  background-color: #1bad86; /* Slightly darker green for button hover */
 }
 
 button.danger, input[type=submit].danger {
-    background-color: #e74c3c; /* Red color for dangerous actions */
+  background-color: #e74c3c; /* Red color for dangerous actions */
 }
 
 button.danger:hover, input[type=submit].danger:hover {
-    background-color: #c0392b; /* Darker shade for hover state */
+  background-color: #c0392b; /* Darker shade for hover state */
 }
 
 /* Enhanced form layout */
 .form-group {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .label {
-    display: block;
-    margin-bottom: 0.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 /* Styles for dropdowns */
 select {
-    padding: 0.75rem 1rem;
-    border: 1px solid #dcdfe6;
-    background-color: #fff;
-    border-radius: 4px;
-    font-size: 1rem;
-    appearance: none; /* Removes default system styling */
+  padding: 0.75rem 1rem;
+  border: 1px solid #dcdfe6;
+  background-color: #fff;
+  border-radius: 4px;
+  font-size: 1rem;
+  appearance: none; /* Removes default system styling */
 }
 
 /* Sticky navbar */
 nav {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .table-wrapper {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    background-color: #fff;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #fff;
 }
 
 th, td {
-    text-align: left; /* Aligns text to the left */
-    padding: 12px 16px; /* Spacious padding for table cells */
-    border-bottom: 1px solid #dcdfe6; /* Light gray border for cell separation */
+  text-align: left; /* Aligns text to the left */
+  padding: 12px 16px; /* Spacious padding for table cells */
+  border-bottom: 1px solid #dcdfe6; /* Light gray border for cell separation */
 }
 
 th {
-    background-color: #21ce99; /* Green background for table headers */
-    color: #fff; /* White text for headers */
-    font-weight: 600; /* Adds weight to header text */
+  background-color: #21ce99; /* Green background for table headers */
+  color: #fff; /* White text for headers */
+  font-weight: 600; /* Adds weight to header text */
 }
 
 tr:hover {
-    background-color: rgba(70, 249, 185, 0.5); /* Light grey background for row hover for better interaction */
+  background-color: rgba(70, 249, 185, 0.5); /* Light grey background for row hover for better interaction */
 }
 
 tr:nth-child(even) {
-    background-color: #f7f9fa; /* Slightly different background for even rows */
+  background-color: #f7f9fa; /* Slightly different background for even rows */
 }
 
 tr:nth-child(even):hover {
-    background-color: rgba(70, 249, 185, 0.5); /* Light grey background for row hover for better interaction */
+  background-color: rgba(70, 249, 185, 0.5); /* Light grey background for row hover for better interaction */
 }
 
 td {
-    color: #333; /* Dark text for contrast and readability */
+  color: #333; /* Dark text for contrast and readability */
 }
 
 .caption {
-    caption-side: top; /* Positions table caption above the table */
-    padding: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #333;
-    text-align: left;
-    margin-top: 1rem;
+  caption-side: top; /* Positions table caption above the table */
+  padding: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+  margin-top: 1rem;
 }
 
 #myChart {
-    /* Add your styles here */
-    width: 100%;
-    height: 400px;
+  /* Add your styles here */
+  width: 100%;
+  height: 400px;
 }
+

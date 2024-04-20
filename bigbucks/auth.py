@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from .stocksearch import update_SPY
 from .db import get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -67,7 +68,7 @@ def register():
 
 @bp.route("/login", methods=("GET", "POST"))
 def login():
-    error = None
+    """Log in a registered user by adding the user id to the session."""
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -88,16 +89,20 @@ def login():
             g.role = None
 
             session["userID"] = user["userID"]
-            session["role"] = user["role"]
+            session["role"] = user["role"]  # Store the user's role in the session
 
+            update_SPY()
+            
+            # Redirect based on the user's role
             if user["role"] == 'admin':
-                return redirect(url_for("admin.summary"))
+                return redirect(
+                    url_for("admin.summary"))
             else:
-                return redirect(url_for("homepage.homepage"))
+                return redirect(url_for("homepage.homepage"))  # Redirect regular users to the homepage
 
         flash(error)
 
-    return render_template("auth/login.html", error=error)
+    return render_template("auth/login.html")
 
 
 @bp.route("/logout")
