@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from .stocksearch import update_SPY
 from .db import get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -90,6 +91,8 @@ def login():
             session["userID"] = user["userID"]
             session["role"] = user["role"]  # Store the user's role in the session
 
+            update_SPY()
+            
             # Redirect based on the user's role
             if user["role"] == 'admin':
                 return redirect(

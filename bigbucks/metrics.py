@@ -2,15 +2,16 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 from .db import get_db
 from .homepage import login_required
 from .solver import Solver, Asset
+from .stocksearch import get_10_year_treasury
 import pandas as pd
-import numpy as np
 
 bp = Blueprint("metrics", __name__, url_prefix="/metrics")
 
 @bp.route("/metrics", methods=("GET", "POST"))
 @login_required
 def display_matrices():
-    risk_free_rate = 0.0439
+    risk_free_rate = get_10_year_treasury()
+    risk_free_rate = float(risk_free_rate['data'][0]['value'])*.01
     db = get_db()
     portfolio = pd.read_sql_query("SELECT ticker, quantity FROM PortfolioObjects WHERE userID = ?"
                                   , db, params=(g.user['userID'],))

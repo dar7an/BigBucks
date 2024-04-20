@@ -108,6 +108,10 @@ def insert_stock_data_db(stock_symbol):
     if data:
         for date, date_data in data["Time Series (Daily)"].items():
             close_price = date_data["4. close"]
+            print(stock_symbol)
+            print(date)
+            print(close_price)
+            db.execute("DELETE FROM HistoricPriceData WHERE ticker = ?", (stock_symbol,))
             db.execute(
                 "INSERT INTO HistoricPriceData (ticker, closing_date, open_price, "
                 "high_price, low_price, close_price, adj_close_price, volume) "
@@ -115,7 +119,7 @@ def insert_stock_data_db(stock_symbol):
                 (
                     stock_symbol,
                     date,
-                    0,  # Replace these in the future for BigBucks
+                    0,  
                     0,
                     0,
                     close_price,
@@ -131,3 +135,23 @@ def stock_exists(stock_symbol):
     db = get_db()
     result = db.execute('SELECT * FROM HistoricPriceData WHERE ticker = ?', (stock_symbol,))
     return result.fetchone() is not None
+
+def get_10_year_treasury():
+    url = 'https://www.alphavantage.co/query?function=TREASURY_YIELD&interval=monthly&maturity=10year&apikey=demo'
+    url_with_apikey = url.replace('demo', API_KEY)
+    r = requests.get(url_with_apikey)
+    data = r.json()
+    return data
+
+def get_SPY():
+    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SPY&outputsize=full&apikey=demo'
+    url_with_apikey = url.replace('demo', API_KEY)
+    r = requests.get(url_with_apikey)
+    data = r.json()
+    return data
+
+def update_SPY():
+    insert_stock_data_db('SPY')
+    return None
+    
+    
