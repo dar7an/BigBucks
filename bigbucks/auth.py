@@ -1,8 +1,7 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlite3 import IntegrityError
-
-from .search import update_SPY
+from .transactions import update_portfolio_data, update_stock_data
 from .db import get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -64,8 +63,8 @@ def login():
         if user and check_password_hash(user["password"], password):
             session.clear()
             session.update(userID=user["userID"], role=user["role"])
-            update_SPY()
-
+            update_portfolio_data(user["userID"])
+            update_stock_data("SPY")
             redirect_route = "admin.summary" if user["role"] == "admin" else "home.home"
             return redirect(url_for(redirect_route))
 

@@ -168,3 +168,10 @@ def delete_stock_data(ticker):
         # Delete all historical data for the given ticker
         cursor.execute("DELETE FROM HistoricPriceData WHERE ticker = ?", (ticker,))
         db.commit()
+
+
+def update_portfolio_data(user_id: int):
+    """Update stock data for all stocks in the user's portfolio."""
+    portfolio = get_current_portfolio(user_id)
+    for stock in portfolio:
+        update_stock_data(stock['ticker'])
