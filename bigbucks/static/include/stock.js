@@ -7,30 +7,57 @@ function fetchConfigAndMakePlotAPI(stockSymbol) {
         });
 }
 
+function fetchConfigAndMakeDailyChangeScatterPlot(stockSymbol) {
+    fetch('/config')
+        .then(response => response.json())
+        .then(config => {
+            apiKey = config.API_KEY;
+            makeDailyChangeScatterPlot(stockSymbol);
+        });
+}
+
+function fetchConfigAndPlotAutocorrelation(stockSymbol) {
+    fetch('/config')
+        .then(response => response.json())
+        .then(config => {
+            apiKey = config.API_KEY;
+            makeAutocorrelation(stockSymbol);
+        });
+}
+
+function fetchConfigAndMakeReturnHistogram(stockSymbol) {
+    fetch('/config')
+        .then(response => response.json())
+        .then(config => {
+            apiKey = config.API_KEY;
+            makeReturnHistogram(stockSymbol);
+        });
+}
+
 function fetchConfigAndMakePlotCompSPY(stockSymbol, spysymbol) {
     fetch('/config')
         .then(response => response.json())
         .then(config => {
             apiKey = config.API_KEY;
-            makeComparisonPlot(stockSymbol, spysymbol);
+            makeComparisonPlotSPY(stockSymbol, spysymbol);
         });
 }
 
-function fetchConfigAndMakeDailyChangePlot(stocksymbol, spysymbol) {
+function fetchConfigAndMakeDailyChangePlotSPY(stocksymbol, spysymbol) {
     fetch('/config')
         .then(response => response.json())
         .then(config => {
             apiKey = config.API_KEY;
-            makeDailyChangePlot(stocksymbol, spysymbol);
+            makeDailyChangePlotSPY(stocksymbol, spysymbol);
         });
 }
 
-function fetchConfigAndMakeScatterPlot(stocksymbol, spysymbol) {
+function fetchConfigAndMakeDailyChangeScatterPlotSPY(stocksymbol, spysymbol) {
     fetch('/config')
         .then(response => response.json())
         .then(config => {
             apiKey = config.API_KEY;
-            makeScatterPlot(stocksymbol, spysymbol);
+            makeDailyChangeScatterPlotSPY(stocksymbol, spysymbol);
         });
 }
 
@@ -83,14 +110,156 @@ function makePlotAPI(stockSymbol) {
                 }
             };
             console.log('Creating Plotly chart');
-            Plotly.newPlot('myChart', chartData, layout);
+            Plotly.newPlot('plotchart', chartData, layout);
         })
         .catch(error => {
             console.error('Error fetching data from Alpha Vantage:', error);
         });
 }
 
-function makeComparisonPlot(stockSymbol, spysymbol) {
+function makeDailyChangeScatterPlot(stockSymbol) {
+    let stockUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`;
+    fetch(stockUrl)
+        .then(response => response.json())
+        .then(stockData => {
+            if (!stockData['Time Series (Daily)']) {
+                console.error('Time Series (Daily) data is not available');
+                return;
+            }
+            let dates = [];
+            let stockReturns = [];
+            let previousStockClose = null;
+            for (let date in stockData['Time Series (Daily)']) {
+                let stockClose = parseFloat(stockData['Time Series (Daily)'][date]['5. adjusted close']);
+                if (previousStockClose !== null) {
+                    let stockReturn = (stockClose - previousStockClose) / previousStockClose;
+                    dates.push(date);
+                    stockReturns.push(stockReturn);
+                }
+                previousStockClose = stockClose;
+            }
+            let trace = {
+                x: dates,
+                y: stockReturns,
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Return'
+            };
+            let layout = {
+                title: `Scatter Graph of ${stockSymbol} Returns`,
+                xaxis: {
+                    title: 'Date'
+                },
+                yaxis: {
+                    title: `${stockSymbol} Return`
+                }
+            };
+            let data = [trace];
+            Plotly.newPlot('DailyChangeScatterChart', data, layout);
+        })
+        .catch(error => {
+            console.error('Error fetching data from Alpha Vantage:', error);
+        });
+}
+function makeAutocorrelation(stockSymbol) {
+    let stockUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`;
+    fetch(stockUrl)
+        .then(response => response.json())
+        .then(stockData => {
+            if (!stockData['Time Series (Daily)']) {
+                console.error('Time Series (Daily) data is not available');
+                return;
+            }
+            let dates = [];
+            let stockReturns = [];
+            let previousStockClose = null;
+            for (let date in stockData['Time Series (Daily)']) {
+                let stockClose = parseFloat(stockData['Time Series (Daily)'][date]['5. adjusted close']);
+                if (previousStockClose !== null) {
+                    let stockReturn = (stockClose - previousStockClose) / previousStockClose;
+                    dates.push(date);
+                    stockReturns.push(stockReturn);
+                }
+                previousStockClose = stockClose;
+            }
+            let todayReturns = stockReturns.slice(1);
+            let yesterdayReturns = stockReturns.slice(0, -1);
+            let trace = {
+                x: yesterdayReturns,
+                y: todayReturns,
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Return'
+            };
+            let layout = {
+                title: `Scatter Graph of ${stockSymbol} Returns (Today vs Yesterday)`,
+                xaxis: {
+                    title: 'Yesterday Return'
+                },
+                yaxis: {
+                    title: 'Today Return'
+                }
+            };
+            let data = [trace];
+            Plotly.newPlot('autocorrelationChart', data, layout);
+        })
+        .catch(error => {
+            console.error('Error fetching data from Alpha Vantage:', error);
+        });
+}
+
+function makeReturnHistogram(stockSymbol) {
+    let stockUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`;
+    fetch(stockUrl)
+        .then(response => response.json())
+        .then(stockData => {
+            if (!stockData['Time Series (Daily)']) {
+                console.error('Time Series (Daily) data is not available');
+                return;
+            }
+            let stockReturns = [];
+            let previousStockClose = null;
+            for (let date in stockData['Time Series (Daily)']) {
+                let stockClose = parseFloat(stockData['Time Series (Daily)'][date]['5. adjusted close']);
+                if (previousStockClose !== null) {
+                    let stockReturn = (stockClose - previousStockClose) / previousStockClose;
+                    stockReturns.push(stockReturn);
+                }
+                previousStockClose = stockClose;
+            }
+            let trace = {
+                x: stockReturns,
+                type: 'histogram',
+                opacity: 0.7,
+                autobinx: false,
+                xbins: {
+                    start: -0.1,
+                    end: 0.1,
+                    size: 0.01
+                },
+                marker: {
+                    color: 'green',
+                },
+            };
+            let layout = {
+                title: `Histogram of ${stockSymbol} Returns`,
+                xaxis: {
+                    title: 'Return',
+                    tickformat: '.0%'
+                },
+                yaxis: {
+                    title: 'Frequency'
+                }
+            };
+            let data = [trace];
+            Plotly.newPlot('returnHistogram', data, layout);
+        })
+        .catch(error => {
+            console.error('Error fetching data from Alpha Vantage:', error);
+        });
+}
+
+function makeComparisonPlotSPY(stockSymbol, spysymbol) {
     let stockUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`;
     let spyUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${spysymbol}&outputsize=full&apikey=${apiKey}`;
 
@@ -141,7 +310,7 @@ function makeComparisonPlot(stockSymbol, spysymbol) {
                 }
             };
 
-            Plotly.newPlot('comparisonChart', data, layout);
+            Plotly.newPlot('comparisonChartSPY', data, layout);
         })
         .catch(error => {
             console.error('Error fetching data from Alpha Vantage:', error);
@@ -149,7 +318,7 @@ function makeComparisonPlot(stockSymbol, spysymbol) {
 
 }
 
-function makeDailyChangePlot(stockSymbol, spysymbol) {
+function makeDailyChangePlotSPY(stockSymbol, spysymbol) {
     let stockUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`;
     let spyUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${spysymbol}&outputsize=full&apikey=${apiKey}`;
 
@@ -212,14 +381,14 @@ function makeDailyChangePlot(stockSymbol, spysymbol) {
                 }
             };
 
-            Plotly.newPlot('dailyChangeChart', data, layout);
+            Plotly.newPlot('dailyChangeChartSPY', data, layout);
         })
         .catch(error => {
             console.error('Error fetching data from Alpha Vantage:', error);
         });
 }
 
-function makeScatterPlot(stockSymbol, spysymbol) {
+function makeScatterPlotSPY(stockSymbol, spysymbol) {
     let stockUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`;
     let spyUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${spysymbol}&outputsize=full&apikey=${apiKey}`;
     Promise.all([fetch(stockUrl).then(response => response.json()), fetch(spyUrl).then(response => response.json())])
@@ -265,7 +434,7 @@ function makeScatterPlot(stockSymbol, spysymbol) {
                 }
             };
             let data = [trace];
-            Plotly.newPlot('scatterChart', data, layout);
+            Plotly.newPlot('scatterChartSPY', data, layout);
             Plotly.addTraces('scatterChart', {
                 x: SPYReturns,
                 y: regressionLine(SPYReturns, stockReturns),

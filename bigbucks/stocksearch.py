@@ -23,20 +23,23 @@ def index():
 @bp.route('/stock_info', methods=('GET', 'POST'))
 def stock_info():
     stock_symbol = request.form['stock_symbol']
-    if get_stock_data_db(stock_symbol) != "null":
-        return render_template('stock_search/stock_info_NON_APIplot.html', stock_symbol=stock_symbol,
-                               corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
-                               news=get_news(stock_symbol), stock_data=get_stock_data_db(stock_symbol), spy_symbol = 'SPY')
-    else:
-        if stock_exists(stock_symbol):
-            pass
+    action = request.form['action']
+    if action == 'search':
+        if get_stock_data_db(stock_symbol) != "null":
+            return render_template('stock_search/stock_info_NON_APIplot.html', stock_symbol=stock_symbol,
+                                   corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
+                                   news=get_news(stock_symbol), stock_data=get_stock_data_db(stock_symbol), spy_symbol = 'SPY')
         else:
-            insert_stock_data_db(stock_symbol)
+            if stock_exists(stock_symbol):
+                pass
+            else:
+                insert_stock_data_db(stock_symbol)
 
-        return render_template('stock_search/stock_info_APIplot.html', stock_symbol=stock_symbol,
-                               corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
-                               news=get_news(stock_symbol), spy_symbol = 'SPY')
-
+            return render_template('stock_search/stock_info_APIplot.html', stock_symbol=stock_symbol,
+                                   corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
+                                   news=get_news(stock_symbol), spy_symbol = 'SPY')
+    else:
+        return render_template('stock_search/stock_SPY.html', stock_symbol=stock_symbol, spy_symbol = 'SPY')
 
 def get_global_quote(stock_symbol):
     url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo'

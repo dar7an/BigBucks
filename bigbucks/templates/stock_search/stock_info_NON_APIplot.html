@@ -66,19 +66,19 @@
 
         <div class="section-box">
             <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
-            <div id="myChart"></div>
+            <div id="plotchart"></div>
         </div>
         <div class="section-box">
             <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
-            <div id="comparisonChart"></div>
+            <div id="DailyChangeScatterChart"></div>
         </div>
         <div class="section-box">
             <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
-            <div id="dailyChangeChart"></div>
+            <div id="autocorrelationChart"></div>
         </div>
         <div class="section-box">
             <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
-            <div id="scatterChart">
+            <div id="returnHistogram"></div>
         </div>
 
         <script>
@@ -86,9 +86,9 @@
             const SPYSymbolFromFlask= "{{ spy_symbol }}";
             window.onload = (event) => {
                 fetchConfigAndMakePlotAPI(stockSymbolFromFlask);
-                fetchConfigAndMakePlotCompSPY(stockSymbolFromFlask, SPYSymbolFromFlask);
-                fetchConfigAndMakeDailyChangePlot(stockSymbolFromFlask, SPYSymbolFromFlask);
-                fetchConfigAndMakeScatterPlot(stockSymbolFromFlask, SPYSymbolFromFlask);
+                fetchConfigAndMakeDailyChangeScatterPlot(stockSymbolFromFlask);
+                fetchConfigAndPlotAutocorrelation(stockSymbolFromFlask);
+                fetchConfigAndMakeReturnHistogram(stockSymbolFromFlask)
             };
         </script>
 

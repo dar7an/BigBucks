@@ -222,3 +222,10 @@ td {
   height: 400px;
 }
 
+.loading-message {
+  color: #000; /* Change this to a color that is visible on your background */
+  font-size: 20px;
+  text-align: center;
+  padding: 50px;
+  z-index: 9999; /* This will make sure the loading message is above the charts */
+}
