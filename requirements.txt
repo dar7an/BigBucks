@@ -4,3 +4,4 @@ pytest
 Werkzeug
 numpy
 pandas
+click
