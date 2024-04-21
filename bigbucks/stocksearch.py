@@ -35,7 +35,7 @@ def stock_info():
             else:
                 insert_stock_data_db(stock_symbol)
 
-            return render_template('stock_search/stock_info_APIplot.html', stock_symbol=stock_symbol,
+            return render_template('stock_search/stock_info_NON_APIplot.html', stock_symbol=stock_symbol,
                                    corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
                                    news=get_news(stock_symbol), spy_symbol = 'SPY')
     else:

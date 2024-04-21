@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
 </head>
-
 <body>
     <nav>
         <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
@@ -34,24 +32,16 @@
     </section>
     
     <div class="section-box">
-        <div id="comparisonChartSPY">
-            <p class="loading-message">Loading chart...</p>
-        </div>
+        <div id="comparisonChartSPY"></div>
     </div>
     <div class="section-box">
-        <div id="dailyChangeChartSPY">
-            <p class="loading-message">Loading chart...</p>
-        </div>
+        <div id="dailyChangeChartSPY"></div>
     </div>
     <div class="section-box">
-        <div id="scatterChartSPY">
-            <p class="loading-message">Loading chart...</p>
-        </div>
+        <div id="scatterChartSPY"></div>
     </div>
     <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
-
     <section class="content">
-
         <script>
             const stockSymbolFromFlask = "{{ stock_symbol }}";
             const SPYSymbolFromFlask= "{{ spy_symbol }}";
@@ -59,14 +49,10 @@
                 Promise.all([
                     fetchConfigAndMakePlotCompSPY(stockSymbolFromFlask, SPYSymbolFromFlask),
                     fetchConfigAndMakeDailyChangePlotSPY(stockSymbolFromFlask, SPYSymbolFromFlask),
-                    fetchConfigAndMakeScatterPlotSPY(stockSymbolFromFlask, SPYSymbolFromFlask)
-                ]).then(() => {
-                    const loadingMessages = document.querySelectorAll('.loading-message');
-                    loadingMessages.forEach(message => message.style.display = 'none');
-                });
+                    fetchConfigAndMakeDailyChangeScatterPlotSPY(stockSymbolFromFlask, SPYSymbolFromFlask)
+                ]);
             };
         </script>
     </section>
-
 </body>
 </html>

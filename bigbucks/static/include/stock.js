@@ -151,7 +151,8 @@ function makeDailyChangeScatterPlot(stockSymbol) {
                     title: 'Date'
                 },
                 yaxis: {
-                    title: `${stockSymbol} Return`
+                    title: `${stockSymbol} Return`,
+                    range: [-1,1]
                 }
             };
             let data = [trace];
@@ -182,6 +183,7 @@ function makeAutocorrelation(stockSymbol) {
                 }
                 previousStockClose = stockClose;
             }
+
             let todayReturns = stockReturns.slice(1);
             let yesterdayReturns = stockReturns.slice(0, -1);
             let trace = {
@@ -197,7 +199,8 @@ function makeAutocorrelation(stockSymbol) {
                     title: 'Yesterday Return'
                 },
                 yaxis: {
-                    title: 'Today Return'
+                    title: 'Today Return',
+                    range: [-1 , 1]
                 }
             };
             let data = [trace];
@@ -388,7 +391,7 @@ function makeDailyChangePlotSPY(stockSymbol, spysymbol) {
         });
 }
 
-function makeScatterPlotSPY(stockSymbol, spysymbol) {
+function makeDailyChangeScatterPlotSPY(stockSymbol, spysymbol) {
     let stockUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`;
     let spyUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${spysymbol}&outputsize=full&apikey=${apiKey}`;
     Promise.all([fetch(stockUrl).then(response => response.json()), fetch(spyUrl).then(response => response.json())])
@@ -417,30 +420,32 @@ function makeScatterPlotSPY(stockSymbol, spysymbol) {
                     previousSPYClose = SPYClose;
                 }
             }
-            let trace = {
+            let trace1 = {
                 x: SPYReturns,
                 y: stockReturns,
                 mode: 'markers',
                 type: 'scatter',
                 name: 'Return'
             };
+            let regressionY = regressionLine(SPYReturns, stockReturns);
+            let trace2 = {
+                x: SPYReturns,
+                y: regressionY,
+                mode: 'lines',
+                name: 'Regression Line'
+            };
             let layout = {
-                title: `Scatter Graph of ${stockSymbol} vs SPY Returns, with Regression Line`,
+                title: `Scatter Graph of ${stockSymbol} Returns vs SPY`,
                 xaxis: {
                     title: 'SPY Return'
                 },
                 yaxis: {
-                    title: `${stockSymbol} Return`
+                    title: `${stockSymbol} Return`,
+                    range: [-1,1]
                 }
             };
-            let data = [trace];
+            let data = [trace1, trace2];
             Plotly.newPlot('scatterChartSPY', data, layout);
-            Plotly.addTraces('scatterChart', {
-                x: SPYReturns,
-                y: regressionLine(SPYReturns, stockReturns),
-                mode: 'lines',
-                name: 'Fit'
-            });
         })
         .catch(error => {
             console.error('Error fetching data from Alpha Vantage:', error);
