@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}BigBucks{% endblock %} - Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='alerts.js') }}"></script>
+</head>
+
+<body>
+
+<div id="flash-messages" style="display: none;">
+    {{ get_flashed_messages() | tojson }}
+</div>
+
+<nav>
+    <h1><a href="{{ url_for('home') }}">BigBucks</a></h1>
+    <ul>
+        {% if g.user %}
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('metrics.display_matrices') }}">Metrics</a></li>
+            <li><a href="{{ url_for('trade') }}">Trade</a></li>
+            <li><a href="{{ url_for('search') }}" class="current-page">Search</a></li>
+            <li><a href="{{ url_for('account.account') }}">Account</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
+        {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<section class="content">
+    <h1>Search</h1>
+
+    <div class="section-box">
+        <form method="post" action="{{ url_for('search.stock_info') }}">
+            <label for="stock_symbol">Ticker</label>
+            <input name="stock_symbol" id="stock_symbol" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+</section>
+</body>
+</html>

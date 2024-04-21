@@ -10,6 +10,13 @@ To Run Application (fresh start), in terminal:
 To Run Application, in terminal:
 1. flask --app bigbucks run --debug
 
+To get admin role:
+1. In CLI, cd into database directory
+2. Run this command:
+    sqlite3 stock_database.db
+3. Run this command:
+    UPDATE Users SET role = 'admin' WHERE userID = '<target_user_ID>';
+
 To use stock search tool, in URL bar, enter "http://127.0.0.1:5000/stock_search". 
 
 Make sure no database currently exists in instance folder. 

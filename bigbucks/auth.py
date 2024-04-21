@@ -1,105 +1,80 @@
-import functools
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlite3 import IntegrityError
 
-from flask import Blueprint
-from flask import flash
-from flask import g
-from flask import redirect
-from flask import render_template
-from flask import request
-from flask import session
-from flask import url_for
+from .search import update_SPY
 from .db import get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
-@bp.before_app_request
 def load_logged_in_user():
-    """If a user id is stored in the session, load the user object from
-    the database into ``g.user``."""
+    """Load the logged-in user's details into `g.user` from the session."""
     user_id = session.get("userID")
+    g.user = get_db().execute(
+        "SELECT * FROM Users WHERE userID = ?", (user_id,)
+    ).fetchone() if user_id else None
 
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = (
-            get_db().execute("SELECT * FROM Users WHERE userID = ?", (user_id,)).fetchone()
+
+bp.before_app_request(load_logged_in_user)
+
+
+def register_user(db, username: str, firstname: str, lastname: str, email: str, password: str) -> None:
+    """Attempt to register a new user and handle database insertion."""
+    try:
+        db.execute(
+            "INSERT INTO Users (userID, firstName, lastName, email, password, cashBalance, role) VALUES (?, ?, ?, ?, "
+            "?, 1000000, 'user')",
+            (username, firstname, lastname, email, generate_password_hash(password))
         )
+        db.commit()
+    except IntegrityError:
+        raise ValueError(f"User {username} is already registered.")
 
 
-@bp.route("/register", methods=("GET", "POST"))
+@bp.route("/register", methods=["GET", "POST"])
 def register():
-    """Register a new user.
-
-    Validates that the username is not already taken. Hashes the
-    password for security.
-    """
+    """Handle user registration."""
     if request.method == "POST":
-        username = request.form["username"]
-        firstname = request.form["firstname"]
-        lastname = request.form["lastname"]
-        email = request.form["email"]
-        password = request.form["password"]
+        form_data = {key: request.form[key] for key in ["username", "firstname", "lastname", "email", "password"]}
+        if any(not form_data[key] for key in form_data):
+            flash("All fields are required.")
+            return render_template("auth/register.html")
+
         db = get_db()
-        error = None
-
-        if not username:
-            error = "Username is required."
-        elif not password:
-            error = "Password is required."
-        elif not firstname:
-            error = "First Name is required."
-        elif not lastname:
-            error = "Last Name is required."
-        elif not email:
-            error = "Email is required."
-
-        if error is None:
-            try:
-                db.execute(
-                    "INSERT INTO Users (userID, firstName, lastName, email, password, cashBalance, role) VALUES (?, ?, ?, ?, ?, 0, 'user')",
-                    (username, firstname, lastname, email, password),
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"User {username} is already registered."
-            else:
-                return redirect(url_for("auth.login"))
-
-        flash(error)
-
+        try:
+            register_user(db, **form_data)
+            flash("Registration successful. Please log in.")
+            return redirect(url_for("auth.login"))
+        except ValueError as e:
+            flash(str(e))
     return render_template("auth/register.html")
 
 
-@bp.route("/login", methods=("GET", "POST"))
+@bp.route("/login", methods=["GET", "POST"])
 def login():
-    """Log in a registered user by adding the user id to the session."""
+    """Handle user login."""
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        db = get_db()
-        error = None
-        user = db.execute(
+        user = get_db().execute(
             "SELECT * FROM Users WHERE userID = ?", (username,)
         ).fetchone()
 
-        if user is None:
-            error = "Incorrect username."
-        elif user["password"] != password:
-            error = "Incorrect password."
-
-        if error is None:
+        if user and check_password_hash(user["password"], password):
             session.clear()
-            session["userID"] = user["userID"]
-            return redirect(url_for("homepage.homepage"))
+            session.update(userID=user["userID"], role=user["role"])
+            update_SPY()
 
-        flash(error)
+            redirect_route = "admin.summary" if user["role"] == "admin" else "home.home"
+            return redirect(url_for(redirect_route))
 
+        flash("Incorrect username or password.")
     return render_template("auth/login.html")
 
 
 @bp.route("/logout")
 def logout():
-    """Clear the current session, including the stored user id."""
+    """Log out the current user by clearing the session."""
     session.clear()
     return redirect(url_for("auth.login"))

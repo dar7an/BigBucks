@@ -29,17 +29,29 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
     app.add_url_rule('/auth', endpoint='auth')
 
-    from . import homepage
-    app.register_blueprint(homepage.bp)
-    app.add_url_rule('/', endpoint='homepage')
-    
-    from . import stocksearch
-    app.register_blueprint(stocksearch.bp)
-    app.add_url_rule('/stock_search', endpoint = 'stock_search')
+    from . import home
+    app.register_blueprint(home.bp)
+    app.add_url_rule('/', endpoint='home')
 
-    from . import buySell
-    app.register_blueprint(buySell.bp)
-    app.add_url_rule('/buySell', endpoint = 'buySell')
+    from . import search
+    app.register_blueprint(search.bp)
+    app.add_url_rule('/search', endpoint='search')
+
+    from . import trade
+    app.register_blueprint(trade.bp)
+    app.add_url_rule('/trade', endpoint='trade')
+
+    from . import account
+    app.register_blueprint(account.bp)
+    app.add_url_rule('/account', endpoint='account')
+
+    from . import admin
+    app.register_blueprint(admin.bp)
+    app.add_url_rule('/admin', endpoint='admin')
+
+    from . import metrics
+    app.register_blueprint(metrics.bp)
+    app.add_url_rule('/metrics', endpoint='metrics')
 
     from . import db
     db.init_app(app)
