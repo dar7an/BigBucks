@@ -1,4 +1,7 @@
 from typing import Optional, List, Dict
+
+import numpy as np
+
 from .db import get_db
 from .config import API_KEY
 import requests
@@ -175,3 +178,72 @@ def update_portfolio_data(user_id: int):
     portfolio = get_current_portfolio(user_id)
     for stock in portfolio:
         update_stock_data(stock['ticker'])
+
+
+def calculate_stock_metrics(db, stock):
+    ticker = stock['ticker']
+    quantity = stock['quantity']
+
+    # Retrieve historical price data for the stock (last 3 years)
+    historical_data = db.execute("""
+        SELECT closing_date, adj_close_price
+        FROM HistoricPriceData
+        WHERE ticker = ? AND closing_date >= DATE('now', '-3 years')
+        ORDER BY closing_date
+    """, (ticker,)).fetchall()
+
+    if not historical_data:
+        return None
+
+    adj_close_prices = np.array([data['adj_close_price'] for data in historical_data])
+
+    # Calculate daily returns
+    returns = np.diff(adj_close_prices) / adj_close_prices[:-1]
+
+    # Market returns (placeholder)
+    market_returns = np.mean(returns)
+
+    # Calculate beta
+    beta = np.cov(returns, np.full(len(returns), market_returns))[0][1] / np.var(np.full(len(returns), market_returns))
+
+    # Calculate Sharpe and Treynor ratios
+    risk_free_rate = get_federal_funds_rate()
+    mean_returns = np.mean(returns)
+    excess_returns = returns - risk_free_rate
+    sharpe_ratio = np.mean(excess_returns) / np.std(returns)
+    treynor_ratio = mean_returns / beta
+
+    return {
+        'user_id': stock['userID'],
+        'ticker': ticker,
+        'quantity': quantity,
+        'federal_funds_rate': risk_free_rate,
+        'beta': beta,
+        'sharpe_ratio': sharpe_ratio,
+        'treynor_ratio': treynor_ratio
+    }
+
+
+def get_federal_funds_rate():
+    """Fetch the Federal Funds Rate from Alpha Vantage API and calculate the average over the last three years."""
+    url = f"https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&interval=daily&apikey={API_KEY}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        current_year = datetime.now().year
+
+        # Filter and calculate the average of the last three years
+        rates = []
+        for item in data['data']:
+            year = datetime.strptime(item['date'], "%Y-%m-%d").year
+            if current_year - 3 <= year <= current_year:
+                rates.append(float(item['value']))
+
+        if rates:
+            average_rate = sum(rates) / len(rates)
+            return average_rate / 100  # Convert percent to decimal
+        else:
+            return None
+    else:
+        return None

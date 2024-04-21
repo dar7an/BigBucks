@@ -1,10 +1,10 @@
-import numpy as np
 from flask import Blueprint, render_template, g
 from werkzeug.exceptions import abort
 from datetime import datetime
+
 from .db import get_db
 from .home import login_required
-from .transactions import get_company_name, update_portfolio_data, get_current_portfolio
+from .transactions import get_company_name, update_portfolio_data, get_current_portfolio, calculate_stock_metrics
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -96,46 +96,3 @@ def risk_return():
             risk_return_data.append(stock_data)
 
     return render_template('admin/risk_return.html', risk_return_data=risk_return_data)
-
-
-def calculate_stock_metrics(db, stock):
-    ticker = stock['ticker']
-    quantity = stock['quantity']
-
-    # Retrieve historical price data for the stock (last 3 years)
-    historical_data = db.execute("""
-        SELECT closing_date, adj_close_price
-        FROM HistoricPriceData
-        WHERE ticker = ? AND closing_date >= DATE('now', '-3 years')
-        ORDER BY closing_date
-    """, (ticker,)).fetchall()
-
-    if not historical_data:
-        return None
-
-    adj_close_prices = np.array([data['adj_close_price'] for data in historical_data])
-
-    # Calculate daily returns
-    returns = np.diff(adj_close_prices) / adj_close_prices[:-1]
-
-    # Market returns (placeholder)
-    market_returns = np.mean(returns)
-
-    # Calculate beta
-    beta = np.cov(returns, np.full(len(returns), market_returns))[0][1] / np.var(np.full(len(returns), market_returns))
-
-    # Calculate Sharpe and Treynor ratios
-    risk_free_rate = 0.02
-    mean_returns = np.mean(returns)
-    excess_returns = returns - risk_free_rate
-    sharpe_ratio = np.mean(excess_returns) / np.std(returns)
-    treynor_ratio = mean_returns / beta
-
-    return {
-        'user_id': stock['userID'],
-        'ticker': ticker,
-        'quantity': quantity,
-        'beta': beta,
-        'sharpe_ratio': sharpe_ratio,
-        'treynor_ratio': treynor_ratio
-    }
