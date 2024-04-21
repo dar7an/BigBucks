@@ -1,5 +1,5 @@
 # Generative AI Tool Use Examples
-### Example #1
+### Example 1
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -13,7 +13,7 @@ In this case, the tool was helpful because it helped us develop an approach for 
 
 
 
-### Example #2
+### Example 2
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -27,7 +27,7 @@ The tool helped us in designing our user interface, because we had considered th
 
 
 
-### Example #3
+### Example 3
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -41,7 +41,7 @@ This information was helpful, because it led to us inserting additional constrai
 
 
 
-### Example #4
+### Example 4
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -55,7 +55,7 @@ ChatGPT’s response was very helpful, because it gave us a list of possible cau
 
 
 
-### Example #5
+### Example 5
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -69,7 +69,7 @@ In this case, ChatGPT was helpful because it helped us identify the root cause o
 
 
 
-### Example #6
+### Example 6
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -83,7 +83,7 @@ I thought it helped a lot because it gave a definitive and understandable answer
 
 
 
-### Example #7
+### Example 7
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -97,7 +97,7 @@ The tool helped quite a bit actually, it was useful to see applied ideas of the 
 
 
 
-### Example #8
+### Example 8
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -111,7 +111,7 @@ The AI tool wasn’t as helpful in this situation, it really just returned infor
 
 
 
-### Example #9
+### Example 9
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
@@ -125,7 +125,7 @@ The tool was helpful because it gave us a step-by-step approach of one way to co
 
 
 
-### Example #10
+### Example 10
 1. Name of the tool you used:
 ChatGPT
 2. A description of the problem or question you were seeking to solve:
