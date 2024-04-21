@@ -32,7 +32,7 @@ def get_last_price(stock_symbol):
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
-        if data is None:
+        if data is None or data.get("Error Message") is not None:
             return None
         day = data.get("Meta Data").get("3. Last Refreshed")
         data = data.get('Time Series (Daily)')
