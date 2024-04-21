@@ -1,4 +1,5 @@
 import json
+from .home import login_required
 
 import requests
 from flask import (
@@ -11,7 +12,7 @@ from .db import get_db
 
 bp = Blueprint('search', __name__)
 
-
+@login_required
 @bp.route('/config')
 def config():
     return jsonify({'API_KEY': API_KEY})
