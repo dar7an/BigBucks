@@ -1,8 +1,8 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
-from .financialTransactions import (
-    get_last_price, hasSufficientBalance, addToBalance,
-    add_transaction, add_portfolio_object, hasSufficientStock,
-    ticker_in_portfolio, remove_portfolio_object
+from .transactions import (
+    get_last_price, has_sufficient_balance, add_to_balance,
+    add_transaction, add_portfolio_object, has_sufficient_stock,
+    ticker_in_portfolio, remove_portfolio_object, update_stock_data, delete_stock_data
 )
 from .home import login_required
 from .search import insert_stock_data_db, stock_exists
@@ -45,24 +45,26 @@ def trade():
 
 
 def handle_buy(ticker, quantity, unit_price, total_price):
-    if not hasSufficientBalance(g.user['userID'], total_price):
+    if not has_sufficient_balance(g.user['userID'], total_price):
         flash("Insufficient balance", 'error')
         return redirect(url_for("trade"))
 
-    addToBalance(g.user['userID'], -total_price)
+    add_to_balance(g.user['userID'], -total_price)
     add_portfolio_object(g.user['userID'], ticker, quantity)
     add_transaction(g.user['userID'], ticker, quantity, unit_price, total_price, 'buy')
+    update_stock_data(ticker)
     flash("Purchase successful!", 'info')
     return redirect(url_for("trade"))
 
 
 def handle_sell(ticker, quantity, unit_price, total_price):
-    if not (hasSufficientStock(g.user['userID'], ticker, quantity) and ticker_in_portfolio(g.user['userID'], ticker)):
+    if not (has_sufficient_stock(g.user['userID'], ticker, quantity) and ticker_in_portfolio(g.user['userID'], ticker)):
         flash("Insufficient stock or you do not own this stock", 'error')
         return redirect(url_for("trade"))
 
     remove_portfolio_object(g.user['userID'], ticker, quantity)
-    addToBalance(g.user['userID'], total_price)
+    add_to_balance(g.user['userID'], total_price)
     add_transaction(g.user['userID'], ticker, quantity, unit_price, total_price, 'sell')
+    delete_stock_data(ticker)
     flash("Sale successful!", 'info')
     return redirect(url_for("trade"))

@@ -26,70 +26,37 @@
 <section class="content">
 
     <div class="content">
-        <h2>Sharpe Ratios</h2>
-        {% for ratio in sharpe_ratio %}
-            <h4>{{ ratio }}</h4>
-        {% endfor %}
+        <h2>Risk-Return Analysis</h2>
+        <p>Time Period of 3 years</p>
+
+        <table class="table-wrapper">
+            <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Ticker</th>
+                <th>Quantity</th>
+                <th>Federal Funds Rate</th>
+                <th>Beta</th>
+                <th>Sharpe Ratio</th>
+                <th>Treynor Ratio</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for data in risk_return_data %}
+                <tr>
+                    <td>{{ data.user_id }}</td>
+                    <td>{{ data.ticker }}</td>
+                    <td>{{ data.quantity }}</td>
+                    <td>{{ data.federal_funds_rate }}</td>
+                    <td>{{ data.beta }}</td>
+                    <td>{{ data.sharpe_ratio }}</td>
+                    <td>{{ data.treynor_ratio }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <div class="content">
-        <h2>Efficient Frontier</h2>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <canvas id="myChart">
-            <script>
-                const ctx = document.getElementById('myChart').getContext('2d');
-                const myChart = new Chart(ctx, {
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            label: 'Efficient Frontier',
-                            data: [
-                                {% for return, volatility in returns_volatilities %}
-                                    {x: {{ volatility }}, y: {{ return }}},
-                                {% endfor %}
-                            ],
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1,
-                            showLine: true,
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Volatility',
-                                    color: '#333' // Change color to match your page's styling
-                                },
-                                grid: {
-                                    color: '#999' // Change grid color to match your page's styling
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: 'Return',
-                                    color: '#333' // Change color to match your page's styling
-                                },
-                                grid: {
-                                    color: '#999' // Change grid color to match your page's styling
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    color: '#333' // Change legend color to match your page's styling
-                                }
-                            }
-                        }
-                    }
-                });
-            </script>
-        </canvas>
-    </div>
 </section>
 
 </body>

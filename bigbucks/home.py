@@ -5,7 +5,7 @@ from flask import (
     Blueprint, g, redirect, render_template, url_for
 )
 
-from .financialTransactions import (
+from .transactions import (
     get_current_portfolio,
     get_last_price, get_company_name
 )

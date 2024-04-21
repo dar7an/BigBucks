@@ -6,7 +6,7 @@ from flask import (
     Blueprint, jsonify, render_template, request, flash, redirect, url_for
 )
 
-from .financialTransactions import get_last_price
+from .transactions import get_last_price
 from .config import API_KEY
 from .db import get_db
 
@@ -30,7 +30,7 @@ def stock_info():
     if get_last_price(stock_symbol) is None:
         flash("Ticker does not exist", 'error')
         return redirect(url_for("search"))
-    
+
     if get_stock_data_db(stock_symbol) != "null":
         return render_template('search/search_with_api.html', stock_symbol=stock_symbol,
                                corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),

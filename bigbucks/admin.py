@@ -1,13 +1,10 @@
-import requests
-from .config import API_KEY
 from flask import Blueprint, render_template, g
 from werkzeug.exceptions import abort
-from datetime import datetime, timedelta
+from datetime import datetime
+
 from .db import get_db
 from .home import login_required
-import pandas as pd
-from .solver import Solver, Asset
-from .search import get_10_year_treasury
+from .transactions import get_company_name, update_portfolio_data, get_current_portfolio, calculate_stock_metrics
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -15,13 +12,6 @@ bp = Blueprint('admin', __name__, url_prefix='/admin')
 def check_admin():
     if g.user is None or g.user['role'] != 'admin':
         abort(403)
-
-
-def get_stock_name(stock_symbol):
-    url = f'https://www.alphavantage.co/query?function=OVERVIEW&symbol={stock_symbol}&apikey={API_KEY}'
-    response = requests.get(url)
-    data = response.json()
-    return data.get('Name')
 
 
 def get_users():
@@ -45,7 +35,7 @@ def history():
 
     history_data = []
     for portfolio_object in portfolio_objects:
-        stock_name = get_stock_name(portfolio_object['ticker'])
+        stock_name = get_company_name(portfolio_object['ticker'])
         history_data.append({
             'ticker': portfolio_object['ticker'],
             'name': stock_name,
@@ -74,7 +64,7 @@ def summary():
 
     summary_data = []
     for transaction in transactions:
-        stock_name = get_stock_name(transaction['ticker'])
+        stock_name = get_company_name(transaction['ticker'])
         summary_data.append({
             'ticker': transaction['ticker'],
             'name': stock_name,
@@ -88,61 +78,21 @@ def summary():
 @bp.route('/risk_return')
 @login_required
 def risk_return():
-    risk_free_rate = get_10_year_treasury()
-    risk_free_rate = float(risk_free_rate['data'][0]['value']) * 0.01
+    check_admin()
     db = get_db()
+
+    # Get all users
     users = get_users()
-    aggregated_portfolio = pd.DataFrame()
+
+    # Calculate risk-return metrics for each user's portfolio
+    risk_return_data = []
     for user in users:
-        portfolio = pd.read_sql_query("SELECT ticker, quantity FROM PortfolioObjects WHERE userID = ?",
-                                      db, params=(user['UserID'],))
-        aggregated_portfolio = pd.concat([aggregated_portfolio, portfolio], ignore_index=True)
+        user_id = user['userID']
+        update_portfolio_data(user_id)  # Update stock data for the user's portfolio
+        portfolio = get_current_portfolio(user_id)
 
-    aggregated_portfolio = aggregated_portfolio.groupby('ticker').sum().reset_index()
+        for stock in portfolio:
+            stock_data = calculate_stock_metrics(db, stock)
+            risk_return_data.append(stock_data)
 
-    price_data = []
-    asset_vector = []
-    five_years_ago = datetime.now() - timedelta(days=5 * 365)
-
-    for ticker in aggregated_portfolio['ticker']:
-        data = pd.read_sql_query(
-            "SELECT closing_date, close_price FROM HistoricPriceData WHERE ticker = ? AND closing_date >= ?",
-            db, params=(ticker, five_years_ago))
-        data.set_index('closing_date', inplace=True)
-        data = pd.DataFrame(data)
-        price_data.append(data)
-        asset = Asset(ticker, data)
-        asset_vector.append(asset)
-
-    df = pd.concat(price_data, axis=1, keys=[asset.ticker for asset in asset_vector])
-
-    returns = df.pct_change()
-    correlation_matrix = pd.DataFrame(returns.corr())
-    covariance_matrix = pd.DataFrame(returns.cov())
-    correlation_matrix_list = correlation_matrix.values.tolist()
-    covariance_matrix_list = covariance_matrix.values.tolist()
-
-    totalvalue = 0
-    totalvalue_vector = []
-    for ticker in aggregated_portfolio['ticker']:
-        transaction_value_temp = pd.read_sql_query("SELECT totalPrice FROM Transactions WHERE ticker = ?", db,
-                                                   params=(ticker,))
-        totalvalue += transaction_value_temp.iloc[0, 0]
-        totalvalue_vector.append(transaction_value_temp.iloc[0, 0])
-
-    weight_vector = [transaction_value / totalvalue for transaction_value in totalvalue_vector]
-
-    total_portfolio_return = sum([a * b for a, b in zip(returns.mean(), weight_vector)])
-    portfolio_vol = Solver()
-    portfolio_volatility = portfolio_vol.compute(covariance_matrix, asset_vector, total_portfolio_return)
-
-    sharpe_ratio = (total_portfolio_return - risk_free_rate) / portfolio_volatility
-
-    solver = Solver()
-    returns_vector = [i / 100 for i in range(1, 27)]
-    volatilities = [solver.compute(correlation_matrix, asset_vector, a_return) for a_return in returns_vector]
-
-    returns_volatilities = list(zip(returns_vector, volatilities))
-    return render_template("admin/risk_return.html", user=g.user, tickers=aggregated_portfolio['ticker'].tolist(),
-                           correlation_matrix=correlation_matrix_list, covariance_matrix=covariance_matrix_list,
-                           returns_volatilities=returns_volatilities, sharpe_ratio=sharpe_ratio)
+    return render_template('admin/risk_return.html', risk_return_data=risk_return_data)
