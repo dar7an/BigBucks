@@ -29,6 +29,8 @@ def get_last_price(stock_symbol: str) -> Optional[float]:
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
+        if data is None or data.get("Error Message") is not None:
+            return None
         if data:
             day = data["Meta Data"]["3. Last Refreshed"]
             return float(data['Time Series (Daily)'][day]["4. close"])
