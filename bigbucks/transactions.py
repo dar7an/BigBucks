@@ -180,9 +180,11 @@ def update_portfolio_data(user_id: int):
         update_stock_data(stock['ticker'])
 
 
-def calculate_stock_metrics(db, stock):
+def calculate_stock_metrics(stock, risk_free_rate):
     ticker = stock['ticker']
     quantity = stock['quantity']
+
+    db = get_db()
 
     # Retrieve historical price data for the stock (last 3 years)
     historical_data = db.execute("""
@@ -207,7 +209,6 @@ def calculate_stock_metrics(db, stock):
     beta = np.cov(returns, np.full(len(returns), market_returns))[0][1] / np.var(np.full(len(returns), market_returns))
 
     # Calculate Sharpe and Treynor ratios
-    risk_free_rate = get_federal_funds_rate()
     mean_returns = np.mean(returns)
     excess_returns = returns - risk_free_rate
     sharpe_ratio = np.mean(excess_returns) / np.std(returns)
