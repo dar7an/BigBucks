@@ -2,7 +2,7 @@ from typing import Optional, List, Dict
 from .db import get_db
 from .config import API_KEY
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def has_sufficient_balance(user_id: int, amount: float) -> bool:
@@ -67,8 +67,9 @@ def ticker_in_portfolio(user_id: int, ticker: str) -> bool:
     """Check if the ticker is already in the user's portfolio."""
     db = get_db()
     num_rows = \
-    db.execute('SELECT count(*) FROM PortfolioObjects WHERE userID = ? and ticker = ?', (user_id, ticker,)).fetchone()[
-        0]
+        db.execute('SELECT count(*) FROM PortfolioObjects WHERE userID = ? and ticker = ?',
+                   (user_id, ticker,)).fetchone()[
+            0]
     return num_rows > 0
 
 
@@ -94,3 +95,58 @@ def remove_portfolio_object(user_id: int, ticker: str, quantity: int):
     db.commit()
     db.execute('DELETE FROM PortfolioObjects WHERE quantity <= 0')
     db.commit()
+
+
+def update_stock_data(ticker):
+    # Set the endpoint and parameters for the API call
+    url = "https://www.alphavantage.co/query"
+    params = {
+        "function": "TIME_SERIES_DAILY_ADJUSTED",
+        "symbol": ticker,
+        "outputsize": "full",
+        "apikey": API_KEY
+    }
+
+    # Make the API request
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    # Parse the JSON data
+    time_series = data['Time Series (Daily)']
+    records = []
+    five_years_ago = datetime.now() - timedelta(days=5 * 365)
+    for date, values in time_series.items():
+        record_date = datetime.strptime(date, '%Y-%m-%d')
+        if record_date >= five_years_ago:  # Only include data within the last 5 years
+            record = (
+                ticker,
+                date,
+                values['1. open'],
+                values['2. high'],
+                values['3. low'],
+                values['4. close'],
+                values['5. adjusted close'],
+                values['6. volume']
+            )
+            records.append(record)
+
+    # Connect to the database
+    db = get_db()
+    cursor = db.cursor()
+
+    # Get the most recent date from the database
+    cursor.execute("SELECT MAX(closing_date) FROM HistoricPriceData WHERE ticker = ?", (ticker,))
+    last_date = cursor.fetchone()[0]
+    last_date = datetime.strptime(last_date, '%Y-%m-%d') if last_date else datetime.now() - timedelta(days=5 * 365)
+
+    # Filter new records to be inserted
+    new_records = [record for record in records if datetime.strptime(record[1], '%Y-%m-%d') > last_date]
+
+    # Insert new records into the database
+    if new_records:
+        cursor.executemany('''
+            INSERT INTO HistoricPriceData 
+            (ticker, closing_date, open_price, high_price, low_price, close_price, adj_close_price, volume) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', new_records)
+        db.commit()
