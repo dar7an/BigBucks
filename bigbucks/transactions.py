@@ -150,3 +150,21 @@ def update_stock_data(ticker):
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', new_records)
         db.commit()
+
+
+def delete_stock_data(ticker):
+    # Connect to the database
+    db = get_db()
+    cursor = db.cursor()
+
+    # Check if any user still owns the stock
+    cursor.execute("SELECT COUNT(*) FROM PortfolioObjects WHERE ticker = ?", (ticker,))
+    count = cursor.fetchone()[0]
+
+    if count > 0:
+        # If any user still owns the stock, do not delete the historical data
+        pass
+    else:
+        # Delete all historical data for the given ticker
+        cursor.execute("DELETE FROM HistoricPriceData WHERE ticker = ?", (ticker,))
+        db.commit()
