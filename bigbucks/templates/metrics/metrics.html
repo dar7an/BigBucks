@@ -8,12 +8,13 @@
 
 <body>
 <nav>
-    <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
+    <h1><a href="{{ url_for('home') }}">BigBucks</a></h1>
     <ul>
         {% if g.user %}
-            <li><a href="{{ url_for('homepage') }}">Home</a></li>
-            <li><a href="{{ url_for('buySell.buySell') }}">Trade</a></li>
-            <li><a href="{{ url_for('stock.index') }}">Search</a></li>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('metrics.display_matrices') }}" class="current-page">Metrics</a></li>
+            <li><a href="{{ url_for('trade') }}">Trade</a></li>
+            <li><a href="{{ url_for('search') }}">Search</a></li>
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
@@ -24,18 +25,15 @@
 </nav>
 
 <section class="content">
-    <form action="{{ url_for('homepage') }}" method="GET">
-        <button type="submit">Back</button>
-    </form>
 
-    <div class="content">
+    <div class="section-box">
         <h2>Under Progress</h2>
         <h3>Chart 1</h3>
         <h3>Chart 2</h3>
         <h3>Chart 3</h3>
     </div>
 
-    <div class="content">
+    <div class="section-box">
         <h2>Correlation Matrix</h2>
         <table class="table-wrapper">
             <tr>
@@ -55,7 +53,7 @@
         </table>
     </div>
 
-    <div class="content">
+    <div class="section-box">
         <h2>Covariance Matrix</h2>
         <table class="table-wrapper">
             <tr>
@@ -75,14 +73,14 @@
         </table>
     </div>
 
-    <div class="content">
+    <div class="section-box">
         <h2>Sharpe Ratios</h2>
         {% for ratio in sharpe_ratio %}
             <h4>{{ ratio }}</h4>
         {% endfor %}
     </div>
 
-    <div class="content">
+    <div class="section-box">
         <h2>Efficient Frontier</h2>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <canvas id="myChart">
