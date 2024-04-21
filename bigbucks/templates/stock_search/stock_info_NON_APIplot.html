@@ -67,14 +67,22 @@
         <div class="section-box">
             <h2>Chart</h2>
             <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
-            <script>
-                const stockSymbolFromFlask = "{{ stock_symbol }}";
-                window.onload = (event) => {
-                    fetchConfigAndMakePlotAPI(stockSymbolFromFlask);
-                };
-            </script>
             <div id="myChart"></div>
         </div>
+        <div class="section-box">
+            <h2>Comparision with SPY</h2>
+            <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
+            <div id="comparisonChart"></div>
+        </div>
+
+        <script>
+            const stockSymbolFromFlask = "{{ stock_symbol }}";
+            const SPYSymbolFromFlask= "{{ spy_symbol }}";
+            window.onload = (event) => {
+                fetchConfigAndMakePlotAPI(stockSymbolFromFlask);
+                fetchConfigAndMakePlotCompSPY(stockSymbolFromFlask, SPYSymbolFromFlask);
+            };
+        </script>
 
     {% else %}
         <p>Stock data unavailable</p>

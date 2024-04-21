@@ -26,7 +26,7 @@ def stock_info():
     if get_stock_data_db(stock_symbol) != "null":
         return render_template('stock_search/stock_info_NON_APIplot.html', stock_symbol=stock_symbol,
                                corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
-                               news=get_news(stock_symbol), stock_data=get_stock_data_db(stock_symbol))
+                               news=get_news(stock_symbol), stock_data=get_stock_data_db(stock_symbol), spy_symbol = 'SPY')
     else:
         if stock_exists(stock_symbol):
             pass
@@ -35,7 +35,7 @@ def stock_info():
 
         return render_template('stock_search/stock_info_APIplot.html', stock_symbol=stock_symbol,
                                corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
-                               news=get_news(stock_symbol))
+                               news=get_news(stock_symbol), spy_symbol = 'SPY')
 
 
 def get_global_quote(stock_symbol):
