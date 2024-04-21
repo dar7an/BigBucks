@@ -65,14 +65,20 @@
         </div>
 
         <div class="section-box">
-            <h2>Chart</h2>
             <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
             <div id="myChart"></div>
         </div>
         <div class="section-box">
-            <h2>Comparision with SPY</h2>
             <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
             <div id="comparisonChart"></div>
+        </div>
+        <div class="section-box">
+            <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
+            <div id="dailyChangeChart"></div>
+        </div>
+        <div class="section-box">
+            <script src="{{ url_for('static', filename='include/stock.js') }}"></script>
+            <div id="scatterChart">
         </div>
 
         <script>
@@ -81,6 +87,8 @@
             window.onload = (event) => {
                 fetchConfigAndMakePlotAPI(stockSymbolFromFlask);
                 fetchConfigAndMakePlotCompSPY(stockSymbolFromFlask, SPYSymbolFromFlask);
+                fetchConfigAndMakeDailyChangePlot(stockSymbolFromFlask, SPYSymbolFromFlask);
+                fetchConfigAndMakeScatterPlot(stockSymbolFromFlask, SPYSymbolFromFlask);
             };
         </script>
 
