@@ -70,7 +70,7 @@
             <script>
                 const stockSymbolFromFlask = "{{ stock_symbol }}";
                 window.onload = (event) => {
-                    makePlotAPI(stockSymbolFromFlask);
+                    fetchConfigAndMakePlotAPI(stockSymbolFromFlask);
                 };
             </script>
             <div id="myChart"></div>
@@ -81,14 +81,6 @@
     {% endif %}
 
 </section>
-
-<script src="{{ url_for('static', filename='include/stock.js') }}"></script>
-<script>
-    const stockSymbolFromFlask = "{{ stock_symbol }}";
-    window.onload = (event) => {
-        makePlotAPI(stockSymbolFromFlask);
-    };
-</script>
 
 </body>
 </html>
