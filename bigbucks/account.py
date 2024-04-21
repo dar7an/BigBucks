@@ -1,10 +1,12 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from .db import get_db
+from .home import login_required
 
 bp = Blueprint("account", __name__, url_prefix="/account")
 
 
 @bp.route("/", methods=["GET", "POST"])
+@login_required
 def account():
     if request.method == "POST":
         email = request.form["email"]
