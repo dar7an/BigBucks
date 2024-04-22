@@ -39,7 +39,7 @@
                 <tr>
                     <th>{{ tickers[loop.index0] }}</th>
                     {% for value in row %}
-                        <td>{{ value }}</td>
+                        <td>{{ value|round(5) }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -59,7 +59,7 @@
                 <tr>
                     <th>{{ tickers[loop.index0] }}</th>
                     {% for value in row %}
-                        <td>{{ value }}</td>
+                        <td>{{ value|round(5) }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
