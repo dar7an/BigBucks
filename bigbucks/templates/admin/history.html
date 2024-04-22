@@ -41,8 +41,8 @@
             <tr>
                 <td>{{ record['ticker'] }}</td>
                 <td>{{ record['name'] }}</td>
-                <td>{{ record['total_shares_held'] }}</td>
-                <td>{{ record['price_per_share'] }}</td>
+                <td>{{ record['total_shares_held']|int }}</td>
+                <td>{{ "%0.5f"|format(record['price_per_share']) }}</td>
             </tr>
         {% endfor %}
     </table>

@@ -42,8 +42,8 @@
             <tr>
                 <td>{{ record['ticker'] }}</td>
                 <td>{{ record['name'] }}</td>
-                <td>{{ record['shares_bought'] }}</td>
-                <td>{{ record['shares_sold'] }}</td>
+                <td>{{ record['shares_bought']|int }}</td>
+                <td>{{ record['shares_sold']|int }}</td>
             </tr>
         {% endfor %}
     </table>

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{% block title %}Admin{% endblock %} - Summary</title>
+    <title>{% block title %}Admin{% endblock %} - Analysis</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
@@ -42,15 +42,15 @@
         </div>
         <div class="section-box-item">
             <h4>Beta</h4>
-            <p>{{ portfolio_metrics['beta'] }}</p>
+            <p>{{ "%0.5f"|format(portfolio_metrics['beta']) }}</p>
         </div>
         <div class="section-box-item">
             <h4>Sharpe Ratio</h4>
-            <p>{{ portfolio_metrics['sharpe_ratio'] }}</p>
+            <p>{{ "%0.5f"|format(portfolio_metrics['sharpe_ratio']) }}</p>
         </div>
         <div class="section-box-item">
             <h4>Treynor Ratio</h4>
-            <p>{{ portfolio_metrics['treynor_ratio'] }}</p>
+            <p>{{ "%0.5f"|format(portfolio_metrics['treynor_ratio']) }}</p>
         </div>
     </div>
 
@@ -69,9 +69,9 @@
             <tr>
                 <td>{{ data.ticker }}</td>
                 <td>{{ data.quantity }}</td>
-                <td>{{ data.beta }}</td>
-                <td>{{ data.sharpe_ratio }}</td>
-                <td>{{ data.treynor_ratio }}</td>
+                <td>{{ "%0.5f"|format(data.beta) }}</td>
+                <td>{{ "%0.5f"|format(data.sharpe_ratio) }}</td>
+                <td>{{ "%0.5f"|format(data.treynor_ratio) }}</td>
             </tr>
         {% endfor %}
         </tbody>

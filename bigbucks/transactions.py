@@ -257,7 +257,7 @@ def calculate_portfolio_metrics(stock_metrics, risk_free_rate):
     # Process each stock's metrics
     for metrics in stock_metrics:
         # Extract required data
-        current_price = metrics['current_price']  # Assume current price is part of metrics
+        current_price = metrics['current_price']
         total_quantity = metrics['quantity']
         stock_value = total_quantity * current_price
         total_value += stock_value
