@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}BigBucks{% endblock %} - Stock Information with API</title>
+    <title>{% block title %}BigBucks{% endblock %} - Search with Database</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
@@ -35,7 +35,7 @@
         <button type="submit">Back</button>
     </form>
 
-    {% if overview and corestock and news %}
+    {% if overview and global_quote and news %}
 
         <div class="section-box">
             <h2>Stock Information</h2>
@@ -43,38 +43,45 @@
             <p>Company Name: {{ overview['Name'] }}</p>
             <p>Sector: {{ overview['Sector'] }}</p>
             <p>Industry: {{ overview['Industry'] }}</p>
-            <p>Market Cap: {{ overview['MarketCapitilzation'] }}</p>
+            <p>Market Cap: {{ overview['MarketCapitalization'] }}</p>
             <p>PE Ratio: {{ overview['PERatio'] }}</p>
             <p>EPS: {{ overview['EPS'] }}</p>
             <p>Dividend: {{ overview['DividendPerShare'] }}</p>
             <p>Dividend Yield: {{ overview['DividendYield'] }}</p>
             <p>Stock Exchange: {{ overview['Exchange'] }}</p>
-            <p>52 Week High: {{ overview['52WeekHigh'] }}</p>
-            <p>52 Week Low: {{ overview['52WeekLow'] }}</p>
-            <p>Price: {{ corestock['Global Quote']['05. price'] }}</p>
-            <p>Previous Close: {{ corestock['Global Quote']['08. previous close'] }}</p>
-            <p>Open: {{ corestock['Global Quote']['02. open'] }}</p>
-            <p>Volume: {{ corestock['Global Quote']['06. volume'] }}</p>
+            <p>52-Week High: {{ overview['52WeekHigh'] }}</p>
+            <p>52-Week Low: {{ overview['52WeekLow'] }}</p>
+            <p>Price: {{ global_quote['Global Quote']['05. price'] }}</p>
+            <p>Previous Close: {{ global_quote['Global Quote']['08. previous close'] }}</p>
+            <p>Open: {{ global_quote['Global Quote']['02. open'] }}</p>
+            <p>Volume: {{ global_quote['Global Quote']['06. volume'] }}</p>
         </div>
 
         <div class="section-box">
             <h2>Relevant News</h2>
             {% for source in news['feed'][:5] %}
-                <p>Title: <a href="{{ source['url'] }}" target="_blank">{{ source['title'] }}</a></p>
-                <p>Summary: {{ source['summary'] }}</p>
+                <div>
+                    <h4><a href="{{ source['url'] }}" class="link" target="_blank">{{ source['title'] }}</a></h4>
+                    <p>{{ source['summary'] }}</p>
+                </div>
             {% endfor %}
         </div>
 
         <div class="section-box">
-            <h2>Chart</h2>
-            <script src="{{ url_for('static', filename='/stock.js') }}"></script>
-            <script>
-                const stockSymbolFromFlask = "{{ stock_symbol }}";
-                window.onload = (event) => {
-                    makePlotAPI(stockSymbolFromFlask);
-                };
-            </script>
-            <div id="myChart"></div>
+            <script src="{{ url_for('static', filename='stock.js') }}"></script>
+            <div id="plotchart"></div>
+        </div>
+        <div class="section-box">
+            <script src="{{ url_for('static', filename='stock.js') }}"></script>
+            <div id="DailyChangeScatterChart"></div>
+        </div>
+        <div class="section-box">
+            <script src="{{ url_for('static', filename='stock.js') }}"></script>
+            <div id="autocorrelationChart"></div>
+        </div>
+        <div class="section-box">
+            <script src="{{ url_for('static', filename='stock.js') }}"></script>
+            <div id="returnHistogram"></div>
         </div>
 
     {% else %}
@@ -83,11 +90,14 @@
 
 </section>
 
-<script src="{{ url_for('static', filename='/stock.js') }}"></script>
 <script>
     const stockSymbolFromFlask = "{{ stock_symbol }}";
+    const SPYSymbolFromFlask = "{{ spy_symbol }}";
     window.onload = (event) => {
-        makePlotAPI(stockSymbolFromFlask);
+        fetchConfigAndMakePlotAPI(stockSymbolFromFlask);
+        fetchConfigAndMakeDailyChangeScatterPlot(stockSymbolFromFlask);
+        fetchConfigAndPlotAutocorrelation(stockSymbolFromFlask);
+        fetchConfigAndMakeReturnHistogram(stockSymbolFromFlask)
     };
 </script>
 

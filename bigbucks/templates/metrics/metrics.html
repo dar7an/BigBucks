@@ -27,24 +27,17 @@
 <section class="content">
 
     <div class="section-box">
-        <h2>Under Progress</h2>
-        <h3>Chart 1</h3>
-        <h3>Chart 2</h3>
-        <h3>Chart 3</h3>
-    </div>
-
-    <div class="section-box">
         <h2>Correlation Matrix</h2>
         <table class="table-wrapper">
             <tr>
                 <th></th> <!-- Empty cell for the corner of the table -->
                 {% for ticker in tickers %}
-                    <th>{{ ticker }}</th> <!-- Column headers -->
+                    <th>{{ ticker }}</th>
                 {% endfor %}
             </tr>
             {% for row in correlation_matrix %}
                 <tr>
-                    <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
+                    <th>{{ tickers[loop.index0] }}</th>
                     {% for value in row %}
                         <td>{{ value }}</td>
                     {% endfor %}
@@ -59,12 +52,12 @@
             <tr>
                 <th></th> <!-- Empty cell for the corner of the table -->
                 {% for ticker in tickers %}
-                    <th>{{ ticker }}</th> <!-- Column headers -->
+                    <th>{{ ticker }}</th>
                 {% endfor %}
             </tr>
             {% for row in covariance_matrix %}
                 <tr>
-                    <th>{{ tickers[loop.index0] }}</th> <!-- Row header -->
+                    <th>{{ tickers[loop.index0] }}</th>
                     {% for value in row %}
                         <td>{{ value }}</td>
                     {% endfor %}
@@ -74,70 +67,72 @@
     </div>
 
     <div class="section-box">
-        <h2>Sharpe Ratios</h2>
-        {% for ratio in sharpe_ratio %}
-            <h4>{{ ratio }}</h4>
-        {% endfor %}
+        <h2>Sharpe Ratio</h2>
+        <h4>{{ sharpe_ratio }}</h4>
     </div>
 
     <div class="section-box">
         <h2>Efficient Frontier</h2>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <canvas id="myChart">
-            <script>
-                const ctx = document.getElementById('myChart').getContext('2d');
-                const myChart = new Chart(ctx, {
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            label: 'Efficient Frontier',
-                            data: [
-                                {% for return, volatility in returns_volatilities %}
-                                    {x: {{ volatility }}, y: {{ return }}},
-                                {% endfor %}
-                            ],
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1,
-                            showLine: true,
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Volatility',
-                                    color: '#333' // Change color to match your page's styling
-                                },
-                                grid: {
-                                    color: '#999' // Change grid color to match your page's styling
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: 'Return',
-                                    color: '#333' // Change color to match your page's styling
-                                },
-                                grid: {
-                                    color: '#999' // Change grid color to match your page's styling
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    color: '#333' // Change legend color to match your page's styling
-                                }
-                            }
-                        }
-                    }
-                });
-            </script>
-        </canvas>
+        <canvas id="myChart"></canvas>
     </div>
 </section>
+
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Efficient Frontier',
+                data: [
+                    {% for return, volatility in returns_volatilities %}
+                        {x: {{ volatility }}, y: {{ return }}},
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(33, 206, 153, 0.2)',
+                borderColor: '#21ce99',
+                borderWidth: 1,
+                showLine: true,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Volatility',
+                        color: '#333'
+                    },
+                    grid: {
+                        color: '#ddd'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Return',
+                        color: '#333'
+                    },
+                    grid: {
+                        color: '#ddd'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#333' // Change legend color to match your page's styling
+                    }
+                }
+            },
+            font: {
+                family: "'Helvetica Neue', Helvetica, Arial, sans-serif"
+            }
+        }
+    });
+</script>
+
 </body>
 </html>

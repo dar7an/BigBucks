@@ -32,15 +32,16 @@
 
 <section class="content">
     <h1>Search</h1>
-
     <div class="section-box">
         <form method="post" action="{{ url_for('search.stock_info') }}">
             <label for="stock_symbol">Ticker</label>
             <input name="stock_symbol" id="stock_symbol" required>
-            <button type="submit">Search</button>
+            <button type="submit" name="action" value="search">Search Stock</button>
+            <button type="submit" name="action" value="compare">Compare Stock Performance to SPY</button>
         </form>
     </div>
 
 </section>
+
 </body>
 </html>
