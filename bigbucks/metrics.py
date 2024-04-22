@@ -1,9 +1,10 @@
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for
+import pandas as pd
+from flask import Blueprint, g, render_template
+
 from .db import get_db
 from .home import login_required
-from .solver import Solver, Asset
 from .search import get_10_year_treasury
-import pandas as pd
+from .solver import Solver, Asset
 
 bp = Blueprint("metrics", __name__, url_prefix="/metrics")
 
@@ -29,7 +30,7 @@ def display_matrices():
         asset_vector.append(asset)
 
     df = pd.concat(price_data, axis=1, keys=[asset.ticker for asset in asset_vector])
-    returns = df.pct_change()
+    returns = df.pct_change(fill_method=None)
     correlation_matrix = pd.DataFrame(returns.corr())
     covariance_matrix = pd.DataFrame(returns.cov())
     correlation_matrix_list = correlation_matrix.values.tolist()

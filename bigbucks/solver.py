@@ -1,19 +1,19 @@
 import numpy as np
-import pandas as pd
+
 
 class Asset:
     def __init__(self, ticker, data):
         self.ticker = ticker
         self.data = data
-        self.returns = 100*(self.data.pct_change())
+        self.returns = 100 * (self.data.pct_change())
 
     def get_rate(self):
-        return self.returns.mean()
+        return self.returns.mean().item()
 
     def get_dev(self):
         return self.returns.std()
 
-    
+
 class Solver():
     def compute(self, covariance_matrix, asset_vector, portfolio_return):
         self.r_p = portfolio_return

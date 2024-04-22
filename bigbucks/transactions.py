@@ -205,6 +205,9 @@ def calculate_stock_metrics(stock, risk_free_rate):
     # Market returns (placeholder)
     market_returns = np.mean(returns)
 
+    # Calculate Standard Deviation
+    std_dev = np.std(returns)
+
     # Calculate beta
     beta = np.cov(returns, np.full(len(returns), market_returns))[0][1] / np.var(np.full(len(returns), market_returns))
 
@@ -215,35 +218,66 @@ def calculate_stock_metrics(stock, risk_free_rate):
     treynor_ratio = mean_returns / beta
 
     return {
-        'user_id': stock['userID'],
         'ticker': ticker,
         'quantity': quantity,
-        'federal_funds_rate': risk_free_rate,
         'beta': beta,
         'sharpe_ratio': sharpe_ratio,
-        'treynor_ratio': treynor_ratio
+        'treynor_ratio': treynor_ratio,
+        'current_price': adj_close_prices[-1],
+        'mean_returns': mean_returns,
+        'std_dev': std_dev
     }
 
 
-def get_federal_funds_rate():
-    """Fetch the Federal Funds Rate from Alpha Vantage API and calculate the average over the last three years."""
-    url = f"https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&interval=daily&apikey={API_KEY}"
+def calculate_portfolio_metrics(stock_metrics, risk_free_rate):
+    # Initialize accumulators for weighted metrics
+    total_value = 0
+    weighted_beta = 0
+    weighted_returns = 0
+    total_sharpe_numerator = 0
+    total_sharpe_denominator = 0
+
+    # Process each stock's metrics
+    for metrics in stock_metrics:
+        # Extract required data
+        current_price = metrics['current_price']  # Assume current price is part of metrics
+        total_quantity = metrics['quantity']
+        stock_value = total_quantity * current_price
+        total_value += stock_value
+
+        # Accumulate weighted metrics
+        weighted_beta += metrics['beta'] * stock_value
+        weighted_returns += metrics['mean_returns'] * stock_value
+        total_sharpe_numerator += (metrics['mean_returns'] - risk_free_rate) * total_quantity
+        total_sharpe_denominator += np.power(metrics['std_dev'], 2) * total_quantity
+
+    if total_value == 0:
+        return None
+
+    # Normalize weighted sums
+    portfolio_beta = weighted_beta / total_value
+    portfolio_mean_returns = weighted_returns / total_value
+    portfolio_sharpe_ratio = total_sharpe_numerator / np.sqrt(total_sharpe_denominator)
+    portfolio_treynor_ratio = portfolio_mean_returns / portfolio_beta
+
+    return {
+        'beta': portfolio_beta,
+        'sharpe_ratio': portfolio_sharpe_ratio,
+        'treynor_ratio': portfolio_treynor_ratio
+    }
+
+
+def get_risk_free_rate():
+    """Fetch the latest 10-Year Treasury Constant Maturity Rate from Alpha Vantage API."""
+    url = f"https://www.alphavantage.co/query?function=TREASURY_YIELD&interval=daily&apikey={API_KEY}"
     response = requests.get(url)
 
     if response.status_code == 200:
         data = response.json()
-        current_year = datetime.now().year
 
-        # Filter and calculate the average of the last three years
-        rates = []
-        for item in data['data']:
-            year = datetime.strptime(item['date'], "%Y-%m-%d").year
-            if current_year - 3 <= year <= current_year:
-                rates.append(float(item['value']))
-
-        if rates:
-            average_rate = sum(rates) / len(rates)
-            return average_rate / 100  # Convert percent to decimal
+        if data['data']:
+            latest_rate = float(data['data'][0]['value'])
+            return latest_rate / 100  # Convert percent to decimal
         else:
             return None
     else:

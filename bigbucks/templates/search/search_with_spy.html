@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BigBucks{% endblock %} - Stock Information with SPY</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+
+<nav>
+    <h1><a href="{{ url_for('trade') }}">BigBucks</a></h1>
+    <ul>
+        {% if g.user %}
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('metrics.display_matrices') }}">Metrics</a></li>
+            <li><a href="{{ url_for('trade') }}">Trade</a></li>
+            <li><a href="{{ url_for('search') }}" class="current-page">Search</a></li>
+            <li><a href="{{ url_for('account.account') }}">Account</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
+        {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<section class="content">
+
+    <form action="{{ url_for('search') }}" method="GET">
+        <button type="submit">Back</button>
+    </form>
+
+    <div class="section-box">
+        <div id="comparisonChartSPY"></div>
+    </div>
+
+    <div class="section-box">
+        <div id="dailyChangeChartSPY"></div>
+    </div>
+
+    <div class="section-box">
+        <div id="scatterChartSPY"></div>
+    </div>
+
+</section>
+
+<script src="{{ url_for('static', filename='stock.js') }}"></script>
+<script>
+    const stockSymbolFromFlask = "{{ stock_symbol }}";
+    const SPYSymbolFromFlask = "{{ spy_symbol }}";
+    window.onload = (event) => {
+        Promise.all([
+            fetchConfigAndMakePlotCompSPY(stockSymbolFromFlask, SPYSymbolFromFlask),
+            fetchConfigAndMakeDailyChangePlotSPY(stockSymbolFromFlask, SPYSymbolFromFlask),
+            fetchConfigAndMakeDailyChangeScatterPlotSPY(stockSymbolFromFlask, SPYSymbolFromFlask)
+        ]);
+    };
+</script>
+
+</body>
+</html>

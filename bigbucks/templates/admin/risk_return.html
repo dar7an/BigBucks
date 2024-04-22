@@ -25,36 +25,53 @@
 
 <section class="content">
 
-    <div class="content">
-        <h2>Risk-Return Analysis</h2>
-        <h4>Time Period: 3 years</h4>
-        <h4>Risk Free Rate: {{ risk_free_rate }}</h4>
+    <h1>Risk-Return Analysis</h1>
 
-        <table class="table-wrapper">
-            <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Ticker</th>
-                <th>Quantity</th>
-                <th>Beta</th>
-                <th>Sharpe Ratio</th>
-                <th>Treynor Ratio</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for data in risk_return_data %}
-                <tr>
-                    <td>{{ data.user_id }}</td>
-                    <td>{{ data.ticker }}</td>
-                    <td>{{ data.quantity }}</td>
-                    <td>{{ data.beta }}</td>
-                    <td>{{ data.sharpe_ratio }}</td>
-                    <td>{{ data.treynor_ratio }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="section-container">
+        <div class="section-box-item">
+            <h4>Time Period</h4>
+            <p>3 YR</p>
+        </div>
+        <div class="section-box-item">
+            <h4>Risk Free Rate</h4>
+            <p>{{ risk_free_rate * 100 }}%</p>
+        </div>
+        <div class="section-box-item">
+            <h4>Beta</h4>
+            <p>{{ portfolio_metrics['beta'] }}</p>
+        </div>
+        <div class="section-box-item">
+            <h4>Sharpe Ratio</h4>
+            <p>{{ portfolio_metrics['sharpe_ratio'] }}</p>
+        </div>
+        <div class="section-box-item">
+            <h4>Treynor Ratio</h4>
+            <p>{{ portfolio_metrics['treynor_ratio'] }}</p>
+        </div>
     </div>
+
+    <table class="table-wrapper">
+        <thead>
+        <tr>
+            <th>Ticker</th>
+            <th>Quantity</th>
+            <th>Beta</th>
+            <th>Sharpe Ratio</th>
+            <th>Treynor Ratio</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in risk_return_data %}
+            <tr>
+                <td>{{ data.ticker }}</td>
+                <td>{{ data.quantity }}</td>
+                <td>{{ data.beta }}</td>
+                <td>{{ data.sharpe_ratio }}</td>
+                <td>{{ data.treynor_ratio }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 </section>
 

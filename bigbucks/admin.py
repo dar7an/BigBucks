@@ -5,7 +5,7 @@ from datetime import datetime
 from .db import get_db
 from .home import login_required
 from .transactions import get_company_name, update_portfolio_data, get_current_portfolio, calculate_stock_metrics, \
-    get_federal_funds_rate
+    get_risk_free_rate, calculate_portfolio_metrics
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -85,15 +85,22 @@ def risk_return():
     users = get_users()
 
     # Calculate risk-return metrics for each user's portfolio
-    risk_return_data = []
-    risk_free_rate = get_federal_funds_rate()  # Risk-free rate
+    stock_metrics = []
+    portfolio_metrics = {}
+    risk_free_rate = get_risk_free_rate()  # Risk-free rate
     for user in users:
         user_id = user['userID']
-        update_portfolio_data(user_id)  # Update stock data for the user's portfolio
         portfolio = get_current_portfolio(user_id)
+        update_portfolio_data(user_id)  # Update stock data for the user's portfolio
 
         for stock in portfolio:
             stock_data = calculate_stock_metrics(stock, risk_free_rate)
-            risk_return_data.append(stock_data)
+            stock_metrics.append(stock_data)
 
-    return render_template('admin/risk_return.html', risk_return_data=risk_return_data, risk_free_rate=risk_free_rate)
+    # Calculate average beta, Sharpe ratio, and Treynor ratio
+    portfolio_metrics = calculate_portfolio_metrics(stock_metrics, risk_free_rate)
+
+    return render_template('admin/risk_return.html',
+                           risk_return_data=stock_metrics,
+                           risk_free_rate=risk_free_rate,
+                           portfolio_metrics=portfolio_metrics)
