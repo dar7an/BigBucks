@@ -39,6 +39,10 @@ def stock_info():
                                    corestock=get_global_quote(stock_symbol), overview=get_overview(stock_symbol),
                                    news=get_news(stock_symbol), spy_symbol = 'SPY')
     else:
+        if stock_exists(stock_symbol):
+            pass
+        else:
+            insert_stock_data_db(stock_symbol)
         return render_template('stock_search/stock_SPY.html', stock_symbol=stock_symbol, spy_symbol = 'SPY')
 
 def get_global_quote(stock_symbol):
@@ -109,12 +113,9 @@ def insert_stock_data_db(stock_symbol):
     db = get_db()
     data = get_trading_history_daily(stock_symbol)
     if data:
+        db.execute("DELETE FROM HistoricPriceData WHERE ticker = ?", (stock_symbol,))
         for date, date_data in data["Time Series (Daily)"].items():
             close_price = date_data["4. close"]
-            print(stock_symbol)
-            print(date)
-            print(close_price)
-            db.execute("DELETE FROM HistoricPriceData WHERE ticker = ?", (stock_symbol,))
             db.execute(
                 "INSERT INTO HistoricPriceData (ticker, closing_date, open_price, "
                 "high_price, low_price, close_price, adj_close_price, volume) "

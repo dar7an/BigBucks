@@ -24,9 +24,13 @@ def buySell():
 
         else:
             if stock_exists(ticker):
+                #Troubleshooting, remove later
+                print("Stock Exists")
                 pass
             else: 
                 insert_stock_data_db(ticker)
+                #Troubleshooting,remove later
+                print("Inserting Stock Data")
                 
             total_price = unit_price * quantity
             if buySell == 'buy':

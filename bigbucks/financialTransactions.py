@@ -77,7 +77,6 @@ def add_portfolio_object(userID, ticker, quantity):
             'VALUES(?, ?, ?)',
             (userID, ticker, quantity)
         )
-
     db.commit()
 
 

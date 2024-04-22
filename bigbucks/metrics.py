@@ -27,8 +27,9 @@ def display_matrices():
         asset = Asset(ticker,data)  
         asset_vector.append(asset)
 
+
     df = pd.concat(price_data, axis=1, keys=[asset.ticker for asset in asset_vector])
-    returns = df.pct_change()
+    returns = df.pct_change(fill_method=None)
     correlation_matrix = pd.DataFrame(returns.corr())
     covariance_matrix = pd.DataFrame(returns.cov())
     correlation_matrix_list = correlation_matrix.values.tolist()

@@ -8,7 +8,7 @@ class Asset:
         self.returns = 100*(self.data.pct_change())
 
     def get_rate(self):
-        return self.returns.mean()
+        return self.returns.mean().item()
 
     def get_dev(self):
         return self.returns.std()
