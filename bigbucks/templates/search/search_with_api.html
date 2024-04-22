@@ -39,22 +39,72 @@
 
         <div class="section-box">
             <h2>Stock Information</h2>
-            <p>Stock Symbol: {{ overview['Symbol'] }}</p>
-            <p>Company Name: {{ overview['Name'] }}</p>
-            <p>Sector: {{ overview['Sector'] }}</p>
-            <p>Industry: {{ overview['Industry'] }}</p>
-            <p>Market Cap: {{ overview['MarketCapitalization'] }}</p>
-            <p>PE Ratio: {{ overview['PERatio'] }}</p>
-            <p>EPS: {{ overview['EPS'] }}</p>
-            <p>Dividend: {{ overview['DividendPerShare'] }}</p>
-            <p>Dividend Yield: {{ overview['DividendYield'] }}</p>
-            <p>Stock Exchange: {{ overview['Exchange'] }}</p>
-            <p>52-Week High: {{ overview['52WeekHigh'] }}</p>
-            <p>52-Week Low: {{ overview['52WeekLow'] }}</p>
-            <p>Price: {{ global_quote['Global Quote']['05. price'] }}</p>
-            <p>Previous Close: {{ global_quote['Global Quote']['08. previous close'] }}</p>
-            <p>Open: {{ global_quote['Global Quote']['02. open'] }}</p>
-            <p>Volume: {{ global_quote['Global Quote']['06. volume'] }}</p>
+            <div class="section-container">
+                <div class="section-box-item">
+                    <h4>Stock Symbol</h4>
+                    <p>{{ overview['Symbol'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Stock Name</h4>
+                    <p>{{ overview['Name'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Stock Sector</h4>
+                    <p>{{ overview['Sector'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Stock Industry</h4>
+                    <p>{{ overview['Industry'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Market Cap</h4>
+                    <p>{{ overview['MarketCapitalization'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>PE Ratio</h4>
+                    <p>{{ overview['PERatio'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>EPS</h4>
+                    <p>{{ overview['EPS'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Dividend</h4>
+                    <p>{{ overview['DividendPerShare'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Dividend Yield</h4>
+                    <p>{{ overview['DividendYield'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Stock Exchange</h4>
+                    <p>{{ overview['Exchange'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>52-Week High</h4>
+                    <p>{{ overview['52WeekHigh'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>52-Week Low</h4>
+                    <p>{{ overview['52WeekLow'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Price</h4>
+                    <p>{{ global_quote['Global Quote']['05. price'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Previous Close</h4>
+                    <p>{{ global_quote['Global Quote']['08. previous close'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Open</h4>
+                    <p>{{ global_quote['Global Quote']['02. open'] }}</p>
+                </div>
+                <div class="section-box-item">
+                    <h4>Volume</h4>
+                    <p>{{ global_quote['Global Quote']['06. volume'] }}</p>
+                </div>
+            </div>
         </div>
 
         <div class="section-box">
