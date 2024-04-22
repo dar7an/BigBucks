@@ -188,35 +188,50 @@ def calculate_stock_metrics(stock, risk_free_rate):
 
     db = get_db()
 
-    # Retrieve historical price data for the stock (last 3 years)
+    # Query for the stock's historical data
     historical_data = db.execute("""
         SELECT closing_date, adj_close_price
         FROM HistoricPriceData
-        WHERE ticker = ? AND closing_date >= DATE('now', '-3 years')
+        WHERE ticker = ? AND closing_date >= DATE('now', '-1 year')
         ORDER BY closing_date
     """, (ticker,)).fetchall()
 
     if not historical_data:
+        print("Error in historical_data")
+        return None
+
+    # Query for the SPY (market index) historical data
+    market_data = db.execute("""
+        SELECT adj_close_price
+        FROM HistoricPriceData
+        WHERE ticker = 'SPY' AND closing_date >= DATE('now', '-1 year')
+        ORDER BY closing_date
+    """).fetchall()
+
+    if not market_data:
+        print("Error in market_data")
         return None
 
     adj_close_prices = np.array([data['adj_close_price'] for data in historical_data])
+    market_prices = np.array([data['adj_close_price'] for data in market_data])
 
-    # Calculate daily returns
+    # Calculate daily returns for both stock and SPY
     returns = np.diff(adj_close_prices) / adj_close_prices[:-1]
+    market_returns = np.diff(market_prices) / market_prices[:-1]
 
-    # Market returns (placeholder)
-    market_returns = np.mean(returns)
-
-    # Calculate Standard Deviation
+    # Calculate Standard Deviation of stock returns
     std_dev = np.std(returns)
 
-    # Calculate beta
-    beta = np.cov(returns, np.full(len(returns), market_returns))[0][1] / np.var(np.full(len(returns), market_returns))
+    # Calculate beta using covariance between stock returns and market returns
+    if len(returns) != len(market_returns):
+        print("Mismatch in returns data length")
+        return None
+    beta = np.cov(returns, market_returns)[0][1] / np.var(market_returns)
 
     # Calculate Sharpe and Treynor ratios
     mean_returns = np.mean(returns)
     excess_returns = returns - risk_free_rate
-    sharpe_ratio = np.mean(excess_returns) / np.std(returns)
+    sharpe_ratio = np.mean(excess_returns) / std_dev
     treynor_ratio = mean_returns / beta
 
     return {

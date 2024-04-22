@@ -20,7 +20,7 @@ def display_matrices():
                                   , db, params=(g.user['userID'],))
 
     # Check if the portfolio is empty
-    if portfolio.empty:
+    if len(portfolio) < 2:
         flash('Portfolio is currently empty. Please add stocks to view metrics.')
         return redirect(url_for('trade.trade'))
 

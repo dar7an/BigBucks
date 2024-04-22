@@ -5,7 +5,7 @@ from .transactions import (
     ticker_in_portfolio, remove_portfolio_object, update_stock_data, delete_stock_data
 )
 from .home import login_required
-from .search import insert_stock_data_db, stock_exists
+from .search import stock_exists
 
 bp = Blueprint("trade", __name__)
 
@@ -34,7 +34,7 @@ def trade():
         return render_template("trade.html", user=g.user)
 
     if not stock_exists(ticker):
-        insert_stock_data_db(ticker)
+        update_stock_data(ticker)
 
     total_price = unit_price * quantity
 

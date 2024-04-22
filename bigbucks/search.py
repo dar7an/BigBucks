@@ -5,7 +5,7 @@ import requests
 from flask import (
     Blueprint, flash, g, jsonify, redirect, render_template, request, url_for
 )
-from .transactions import get_last_price
+from .transactions import get_last_price, update_stock_data
 from .config import API_KEY
 from .db import get_db
 import requests
@@ -13,6 +13,7 @@ import json
 import requests
 
 bp = Blueprint('search', __name__)
+
 
 @login_required
 @bp.route('/config')
@@ -46,7 +47,7 @@ def stock_info():
             if stock_exists(stock_symbol):
                 pass
             else:
-                insert_stock_data_db(stock_symbol)
+                update_stock_data(stock_symbol)
 
             return render_template('search/search_with_db.html',
                                    stock_symbol=stock_symbol,
@@ -58,7 +59,7 @@ def stock_info():
         if stock_exists(stock_symbol):
             pass
         else:
-            insert_stock_data_db(stock_symbol)
+            update_stock_data(stock_symbol)
         return render_template('search/search_with_spy.html', stock_symbol=stock_symbol, spy_symbol='SPY')
 
 
@@ -89,13 +90,13 @@ def get_news(stock_symbol):
     return data
 
 
-def get_trading_history_daily(stock_symbol):
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&outputsize=full&apikey=demo'
-    url_with_apikey = url.replace('demo', API_KEY)
-    url_with_symbol = url_with_apikey.replace('IBM', stock_symbol)
-    r = requests.get(url_with_symbol)
-    data = r.json()
-    return data
+# def get_trading_history_daily(stock_symbol):
+#     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&outputsize=full&apikey=demo'
+#     url_with_apikey = url.replace('demo', API_KEY)
+#     url_with_symbol = url_with_apikey.replace('IBM', stock_symbol)
+#     r = requests.get(url_with_symbol)
+#     data = r.json()
+#     return data
 
 
 def get_stock_data_db(stock_symbol):
@@ -126,31 +127,31 @@ def get_stock_data_db(stock_symbol):
     return stock_dict_json
 
 
-def insert_stock_data_db(stock_symbol):
-    db = get_db()
-    data = get_trading_history_daily(stock_symbol)
-    if data:
-        db.execute("DELETE FROM HistoricPriceData WHERE ticker = ?", (stock_symbol,))
-        for date, date_data in data["Time Series (Daily)"].items():
-            close_price = date_data["4. close"]
-            db.execute(
-                "INSERT INTO HistoricPriceData (ticker, closing_date, open_price, "
-                "high_price, low_price, close_price, adj_close_price, volume) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (
-                    stock_symbol,
-                    date,
-                    0,
-                    0,
-                    0,
-                    close_price,
-                    0,
-                    0
-                )
-            )
-        db.commit()
-    else:
-        print(f"Error: 'Time Series (Daily)' key not found in data for stock symbol {stock_symbol}")
+# def insert_stock_data_db(stock_symbol):
+#     db = get_db()
+#
+#     if data:
+#         db.execute("DELETE FROM HistoricPriceData WHERE ticker = ?", (stock_symbol,))
+#         for date, date_data in data["Time Series (Daily)"].items():
+#             close_price = date_data["4. close"]
+#             db.execute(
+#                 "INSERT INTO HistoricPriceData (ticker, closing_date, open_price, "
+#                 "high_price, low_price, close_price, adj_close_price, volume) "
+#                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+#                 (
+#                     stock_symbol,
+#                     date,
+#                     0,
+#                     0,
+#                     0,
+#                     close_price,
+#                     0,
+#                     0
+#                 )
+#             )
+#         db.commit()
+#     else:
+#         print(f"Error: 'Time Series (Daily)' key not found in data for stock symbol {stock_symbol}")
 
 
 def stock_exists(stock_symbol):
@@ -165,16 +166,3 @@ def get_10_year_treasury():
     r = requests.get(url_with_apikey)
     data = r.json()
     return data
-
-
-def get_SPY():
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SPY&outputsize=full&apikey=demo'
-    url_with_apikey = url.replace('demo', API_KEY)
-    r = requests.get(url_with_apikey)
-    data = r.json()
-    return data
-
-
-def update_SPY():
-    insert_stock_data_db('SPY')
-    return None
