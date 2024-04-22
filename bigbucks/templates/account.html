@@ -7,6 +7,11 @@
 </head>
 
 <body>
+
+<div id="flash-messages" style="display: none;">
+    {{ get_flashed_messages() | tojson }}
+</div>
+
 <nav>
     <h1><a href="{{ url_for('home') }}">BigBucks</a></h1>
     <ul>

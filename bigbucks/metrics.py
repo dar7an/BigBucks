@@ -1,5 +1,5 @@
 import pandas as pd
-from flask import Blueprint, g, render_template
+from flask import Blueprint, g, render_template, flash, redirect, url_for
 
 from .db import get_db
 from .home import login_required
@@ -15,8 +15,14 @@ def display_matrices():
     risk_free_rate = get_10_year_treasury()
     risk_free_rate = float(risk_free_rate['data'][0]['value']) * .01
     db = get_db()
+
     portfolio = pd.read_sql_query("SELECT ticker, quantity FROM PortfolioObjects WHERE userID = ?"
                                   , db, params=(g.user['userID'],))
+
+    # Check if the portfolio is empty
+    if portfolio.empty:
+        flash('Portfolio is currently empty. Please add stocks to view metrics.')
+        return redirect(url_for('trade.trade'))
 
     price_data = []
     asset_vector = []
