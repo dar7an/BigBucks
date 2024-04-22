@@ -184,66 +184,80 @@ def update_portfolio_data(user_id: int):
 
 def calculate_stock_metrics(stock, risk_free_rate):
     ticker = stock['ticker']
-    quantity = stock['quantity']
-
+    quantity = stock['total_quantity']
     db = get_db()
+    cursor = db.cursor()
 
-    # Query for the stock's historical data
-    historical_data = db.execute("""
-        SELECT closing_date, adj_close_price
-        FROM HistoricPriceData
-        WHERE ticker = ? AND closing_date >= DATE('now', '-1 year')
-        ORDER BY closing_date
-    """, (ticker,)).fetchall()
+    try:
+        cursor.execute("""
+            SELECT closing_date, adj_close_price
+            FROM HistoricPriceData
+            WHERE ticker = ? AND closing_date >= DATE('now', '-1 year')
+            ORDER BY closing_date
+        """, (ticker,))
+        historical_data = cursor.fetchall()
 
-    if not historical_data:
-        print("Error in historical_data")
+        if not historical_data:
+            print(f"No historical data available for ticker: {ticker}")
+            return None
+
+        cursor.execute("""
+            SELECT closing_date, adj_close_price
+            FROM HistoricPriceData
+            WHERE ticker = 'SPY' AND closing_date >= DATE('now', '-1 year')
+            ORDER BY closing_date
+        """)
+        market_data = cursor.fetchall()
+
+        if not market_data:
+            print("No market data available for SPY")
+            return None
+
+        adj_close_prices = np.array([data[1] for data in historical_data])
+        market_prices = np.array([data[1] for data in market_data])
+
+        if len(adj_close_prices) < 2 or len(market_prices) < 2:
+            print(f"Not enough data points to calculate returns for {ticker} or SPY")
+            return None
+
+        returns = np.diff(adj_close_prices) / adj_close_prices[:-1]
+        market_returns = np.diff(market_prices) / market_prices[:-1]
+
+        if len(returns) != len(market_returns):
+            print("Mismatch in returns data length for stock and SPY")
+            return None
+
+        beta, sharpe_ratio, treynor_ratio = calculate_metrics(returns, market_returns, risk_free_rate)
+
+        return {
+            'ticker': ticker,
+            'quantity': quantity,
+            'beta': beta,
+            'sharpe_ratio': sharpe_ratio,
+            'treynor_ratio': treynor_ratio,
+            'current_price': adj_close_prices[-1],
+            'mean_returns': np.mean(returns),
+            'std_dev': np.std(returns)
+        }
+    except Exception as e:
+        print(f"Error processing stock metrics for {ticker}: {e}")
         return None
+    finally:
+        cursor.close()
 
-    # Query for the SPY (market index) historical data
-    market_data = db.execute("""
-        SELECT adj_close_price
-        FROM HistoricPriceData
-        WHERE ticker = 'SPY' AND closing_date >= DATE('now', '-1 year')
-        ORDER BY closing_date
-    """).fetchall()
 
-    if not market_data:
-        print("Error in market_data")
-        return None
-
-    adj_close_prices = np.array([data['adj_close_price'] for data in historical_data])
-    market_prices = np.array([data['adj_close_price'] for data in market_data])
-
-    # Calculate daily returns for both stock and SPY
-    returns = np.diff(adj_close_prices) / adj_close_prices[:-1]
-    market_returns = np.diff(market_prices) / market_prices[:-1]
-
-    # Calculate Standard Deviation of stock returns
-    std_dev = np.std(returns)
-
-    # Calculate beta using covariance between stock returns and market returns
-    if len(returns) != len(market_returns):
-        print("Mismatch in returns data length")
-        return None
-    beta = np.cov(returns, market_returns)[0][1] / np.var(market_returns)
-
-    # Calculate Sharpe and Treynor ratios
-    mean_returns = np.mean(returns)
-    excess_returns = returns - risk_free_rate
-    sharpe_ratio = np.mean(excess_returns) / std_dev
-    treynor_ratio = mean_returns / beta
-
-    return {
-        'ticker': ticker,
-        'quantity': quantity,
-        'beta': beta,
-        'sharpe_ratio': sharpe_ratio,
-        'treynor_ratio': treynor_ratio,
-        'current_price': adj_close_prices[-1],
-        'mean_returns': mean_returns,
-        'std_dev': std_dev
-    }
+def calculate_metrics(returns, market_returns, risk_free_rate):
+    try:
+        std_dev = np.std(returns)
+        beta = np.cov(returns, market_returns)[0][1] / np.var(market_returns)
+        mean_returns = np.mean(returns)
+        excess_returns = returns - risk_free_rate
+        sharpe_ratio = np.mean(excess_returns) / std_dev
+        treynor_ratio = mean_returns / beta
+        return beta, sharpe_ratio, treynor_ratio
+    except Exception as e:
+        print(f"Error calculating metrics: {e}")
+        return None, None, None
 
 
 def calculate_portfolio_metrics(stock_metrics, risk_free_rate):

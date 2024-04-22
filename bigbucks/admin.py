@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, g
+from flask import Blueprint, render_template, g, redirect, url_for, flash
 from werkzeug.exceptions import abort
 from datetime import datetime
 
@@ -81,26 +81,50 @@ def summary():
 def risk_return():
     check_admin()
 
-    # Get all users
-    users = get_users()
+    # Retrieve all unique tickers and their quantity held across users
+    unique_stocks = get_unique_stocks()
+    if not unique_stocks:
+        flash("Users have not purchased any stocks yet. Please check back later.")
+        return redirect(url_for('admin.history'))
 
-    # Calculate risk-return metrics for each user's portfolio
     stock_metrics = []
-    portfolio_metrics = {}
-    risk_free_rate = get_risk_free_rate()  # Risk-free rate
-    for user in users:
-        user_id = user['userID']
-        portfolio = get_current_portfolio(user_id)
-        update_portfolio_data(user_id)  # Update stock data for the user's portfolio
+    risk_free_rate = get_risk_free_rate()
 
-        for stock in portfolio:
-            stock_data = calculate_stock_metrics(stock, risk_free_rate)
+    for stock in unique_stocks:
+        stock_data = calculate_stock_metrics(stock, risk_free_rate)
+        if stock_data:  # Check if stock_data is not None before appending
             stock_metrics.append(stock_data)
+        else:
+            print(f"Metrics calculation failed for stock: {stock['ticker']}")
 
-    # Calculate average beta, Sharpe ratio, and Treynor ratio
+    if not stock_metrics:  # Check if list is empty
+        flash("No valid stock metrics were calculated.")
+        return redirect(url_for('admin.dashboard'))
+
     portfolio_metrics = calculate_portfolio_metrics(stock_metrics, risk_free_rate)
+    if not portfolio_metrics:
+        flash("Failed to calculate portfolio metrics.")
+        return redirect(url_for('admin.dashboard'))
 
-    return render_template('admin/risk_return.html',
-                           risk_return_data=stock_metrics,
-                           risk_free_rate=risk_free_rate,
+    return render_template('admin/risk_return.html', risk_return_data=stock_metrics, risk_free_rate=risk_free_rate,
                            portfolio_metrics=portfolio_metrics)
+
+
+def get_unique_stocks():
+    """Query database to find all unique stocks in the portfolios and their total quantities using get_db()."""
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute("""
+            SELECT ticker, SUM(quantity) as total_quantity
+            FROM PortfolioObjects
+            GROUP BY ticker
+        """)
+        stocks = cursor.fetchall()
+        return [{'ticker': stock[0], 'total_quantity': stock[1]} for stock in stocks]
+    except Exception as e:
+        # Log the error here
+        print(f"Database error: {e}")
+        return []
+    finally:
+        cursor.close()
