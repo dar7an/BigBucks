@@ -44,12 +44,17 @@
             </tr>
             {% for entry in portfolio %}
                 <tr>
-                    <td>{{ entry.ticker }}</td>
+                    <td>
+                        <a href="{{ url_for('search.search_home', stock_symbol=entry.ticker) }}">
+                            {{ entry.ticker }}
+                        </a>
+                    </td>
                     <td>{{ entry.name }}</td>
                     <td>{{ entry.quantity }}</td>
                     <td>${{ entry.price }}</td>
                 </tr>
             {% endfor %}
+        </table>
         </table>
     </div>
 
