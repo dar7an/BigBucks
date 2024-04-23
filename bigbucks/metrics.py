@@ -40,7 +40,7 @@ def display_matrices():
     # Limiting data calculation to the last five years
     for i in range(len(data_list)):
         data_list[i] = data_list[i].dropna()
-        one_years_ago = (datetime.now() - timedelta(days=5 * 365)).date()
+        one_years_ago = (datetime.now() - timedelta(days= 365)).date()
         data_list[i] = data_list[i][data_list[i].index >= one_years_ago]
 
     # Second loop for creating price_data and asset_vector
