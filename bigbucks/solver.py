@@ -5,10 +5,11 @@ class Asset:
     def __init__(self, ticker, data):
         self.ticker = ticker
         self.data = data
-        self.returns = 100*(self.data.pct_change())
+        self.returns = (self.data.pct_change(fill_method=None))
 
     def get_rate(self):
-        return self.returns.mean().item()
+        total_return = self.returns.sum().item()
+        return total_return
 
     def get_dev(self):
         return self.returns.std()
@@ -69,6 +70,7 @@ class Solver():
     def compute_weights(self):
         weights_temp = np.linalg.solve(self.leftside, self.rightside)
         self.weights = weights_temp[:self.covariance_matrix.shape[0]]
+        return self.weights
 
     def compute_volatility(self):
         sum = 0
@@ -76,3 +78,4 @@ class Solver():
             for j in range(len(self.weights)):
                 sum += self.weights[i] * self.weights[j] * self.covariance_matrix.iloc[i, j]
         self.volatility = np.sqrt(sum)
+        
