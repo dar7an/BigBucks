@@ -39,10 +39,14 @@ def get_last_price(stock_symbol: str) -> Optional[float]:
 
 def get_company_name(stock_symbol: str) -> Optional[str]:
     """Get the company name from the stock symbol."""
-    url = f'https://www.alphavantage.co/query?function=OVERVIEW&symbol={stock_symbol}&apikey={API_KEY}'
+    url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={stock_symbol}&apikey={API_KEY}'
     response = requests.get(url)
     if response.status_code == 200 and (data := response.json()):
-        return data.get("Name")
+        data = data.get("bestMatches")
+        if data:
+            for entry in data:
+                if entry.get("1. symbol") == stock_symbol.upper():
+                    return entry.get("2. name")
     return None
 
 
