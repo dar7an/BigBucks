@@ -35,31 +35,13 @@ def stock_info():
 
     action = request.form['action']
     if action == 'search':
-        if get_stock_data_db(stock_symbol) != "null":
-            return render_template('search/search_with_api.html',
-                                   stock_symbol=stock_symbol,
-                                   global_quote=get_global_quote(stock_symbol),
-                                   overview=get_overview(stock_symbol),
-                                   news=get_news(stock_symbol),
-                                   stock_data=get_stock_data_db(stock_symbol),
-                                   spy_symbol='SPY')
-        else:
-            if stock_exists(stock_symbol):
-                pass
-            else:
-                update_stock_data(stock_symbol)
-
-            return render_template('search/search_with_api.html',
-                                   stock_symbol=stock_symbol,
-                                   global_quote=get_global_quote(stock_symbol),
-                                   overview=get_overview(stock_symbol),
-                                   news=get_news(stock_symbol),
-                                   spy_symbol='SPY')
+        return render_template('search/search_with_api.html',
+                               stock_symbol=stock_symbol,
+                               global_quote=get_global_quote(stock_symbol),
+                               overview=get_overview(stock_symbol),
+                               news=get_news(stock_symbol),
+                               spy_symbol='SPY')
     else:
-        if stock_exists(stock_symbol):
-            pass
-        else:
-            update_stock_data(stock_symbol)
         return render_template('search/search_with_spy.html', stock_symbol=stock_symbol, spy_symbol='SPY')
 
 
