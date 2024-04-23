@@ -49,6 +49,27 @@
         {% endfor %}
     </table>
 
+    <h1>Users</h1>
+    <table class="table-wrapper">
+        <tr>
+            <th>UserID</th>
+            <th>Cash Balance</th>
+            <th>Role</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('admin.display_user_matrices', userID=user.userID) }}">
+                        <strong>{{ user.userID }}</strong>
+                    </a>
+                </td>
+                <td> ${{ user.cashBalance|round(2) }}</td>
+                <td>{{ user.role }}</td>
+                
+            </tr>
+        {% endfor %}
+    </table>
+
 </section>
 
 </body>
