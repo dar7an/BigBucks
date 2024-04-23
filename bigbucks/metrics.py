@@ -4,7 +4,6 @@ from .db import get_db
 from .home import login_required
 from .search import get_10_year_treasury
 from .solver import Solver, Asset
-from .stocksearch import get_10_year_treasury
 import pandas as pd
 import numpy as np
 

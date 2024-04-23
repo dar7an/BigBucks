@@ -99,12 +99,12 @@ def risk_return():
 
     if not stock_metrics:  # Check if list is empty
         flash("No valid stock metrics were calculated.")
-        return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('admin.history'))
 
     portfolio_metrics = calculate_portfolio_metrics(stock_metrics, risk_free_rate)
     if not portfolio_metrics:
         flash("Failed to calculate portfolio metrics.")
-        return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('admin.history'))
 
     return render_template('admin/risk_return.html', risk_return_data=stock_metrics, risk_free_rate=risk_free_rate,
                            portfolio_metrics=portfolio_metrics)
