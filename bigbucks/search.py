@@ -90,15 +90,6 @@ def get_news(stock_symbol):
     return data
 
 
-# def get_trading_history_daily(stock_symbol):
-#     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&outputsize=full&apikey=demo'
-#     url_with_apikey = url.replace('demo', API_KEY)
-#     url_with_symbol = url_with_apikey.replace('IBM', stock_symbol)
-#     r = requests.get(url_with_symbol)
-#     data = r.json()
-#     return data
-
-
 def get_stock_data_db(stock_symbol):
     db = get_db()
     stock_dict = {}
@@ -127,33 +118,6 @@ def get_stock_data_db(stock_symbol):
     return stock_dict_json
 
 
-# def insert_stock_data_db(stock_symbol):
-#     db = get_db()
-#
-#     if data:
-#         db.execute("DELETE FROM HistoricPriceData WHERE ticker = ?", (stock_symbol,))
-#         for date, date_data in data["Time Series (Daily)"].items():
-#             close_price = date_data["4. close"]
-#             db.execute(
-#                 "INSERT INTO HistoricPriceData (ticker, closing_date, open_price, "
-#                 "high_price, low_price, close_price, adj_close_price, volume) "
-#                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-#                 (
-#                     stock_symbol,
-#                     date,
-#                     0,
-#                     0,
-#                     0,
-#                     close_price,
-#                     0,
-#                     0
-#                 )
-#             )
-#         db.commit()
-#     else:
-#         print(f"Error: 'Time Series (Daily)' key not found in data for stock symbol {stock_symbol}")
-
-
 def stock_exists(stock_symbol):
     db = get_db()
     result = db.execute('SELECT * FROM HistoricPriceData WHERE ticker = ?', (stock_symbol,))
@@ -167,12 +131,13 @@ def get_10_year_treasury():
     data = r.json()
     return data
 
+
 @bp.route('/search_home/<stock_symbol>')
 def search_home(stock_symbol):
     return render_template('search/search_with_api.html',
-                        stock_symbol=stock_symbol,
-                        global_quote=get_global_quote(stock_symbol),
-                        overview=get_overview(stock_symbol),
-                        news=get_news(stock_symbol),
-                        stock_data=get_stock_data_db(stock_symbol),
-                        spy_symbol='SPY')
+                           stock_symbol=stock_symbol,
+                           global_quote=get_global_quote(stock_symbol),
+                           overview=get_overview(stock_symbol),
+                           news=get_news(stock_symbol),
+                           stock_data=get_stock_data_db(stock_symbol),
+                           spy_symbol='SPY')
