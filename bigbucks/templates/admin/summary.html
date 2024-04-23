@@ -30,45 +30,48 @@
 
 <section class="content">
 
-    <h1>Market Summary</h1>
-    <h2>{{ current_date }}</h2>
-    <table class="table-wrapper">
-        <tr>
-            <th>Ticker</th>
-            <th>Name</th>
-            <th>Shares Bought</th>
-            <th>Shares Sold</th>
-        </tr>
-        {% for record in summary_data %}
+    <div class="content">
+        <h1>Market Summary</h1>
+        <h2>{{ current_date }}</h2>
+        <table class="table-wrapper">
             <tr>
-                <td>{{ record['ticker'] }}</td>
-                <td>{{ record['name'] }}</td>
-                <td>{{ record['shares_bought']|int }}</td>
-                <td>{{ record['shares_sold']|int }}</td>
+                <th>Ticker</th>
+                <th>Name</th>
+                <th>Shares Bought</th>
+                <th>Shares Sold</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for record in summary_data %}
+                <tr>
+                    <td>{{ record['ticker'] }}</td>
+                    <td>{{ record['name'] }}</td>
+                    <td>{{ record['shares_bought']|int }}</td>
+                    <td>{{ record['shares_sold']|int }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-    <h1>Users</h1>
-    <table class="table-wrapper">
-        <tr>
-            <th>UserID</th>
-            <th>Cash Balance</th>
-            <th>Role</th>
-        </tr>
-        {% for user in users %}
+    <div class="content">
+        <h1>Users</h1>
+        <table class="table-wrapper">
             <tr>
-                <td>
-                    <a href="{{ url_for('admin.display_user_matrices', userID=user.userID) }}">
-                        <strong>{{ user.userID }}</strong>
-                    </a>
-                </td>
-                <td> ${{ user.cashBalance|round(2) }}</td>
-                <td>{{ user.role }}</td>
-                
+                <th>UserID</th>
+                <th>Cash Balance</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for user in users %}
+                {% if user.role == 'user' %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('admin.display_user_matrices', userID=user.userID) }}">
+                                <strong>{{ user.userID }}</strong>
+                            </a>
+                        </td>
+                        <td> ${{ user.cashBalance|round(2) }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
 
 </section>
 
