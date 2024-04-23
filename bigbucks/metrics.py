@@ -83,7 +83,6 @@ def display_matrices():
     portfolio_vol = Solver()
     portfolio_volatility = portfolio_vol.compute(covariance_matrix, asset_vector, total_portfolio_return)
     portfolio_weight = portfolio_vol.compute_weights()
-    print("This is the portfolio weight: " + str(portfolio_weight))
 
     # Calculating Sharpe Ratio
     sharpe_ratio = ((total_portfolio_return - risk_free_rate) / (portfolio_volatility * 100))
