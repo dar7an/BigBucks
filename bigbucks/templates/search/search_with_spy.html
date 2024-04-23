@@ -52,9 +52,10 @@
 
 <script src="{{ url_for('static', filename='stock.js') }}"></script>
 <script>
-    const stockSymbolFromFlask = "{{ stock_symbol }}";
-    const SPYSymbolFromFlask = "{{ spy_symbol }}";
     window.onload = (event) => {
+        window.alert("Loading stock information with SPY may take a few seconds");
+        const stockSymbolFromFlask = "{{ stock_symbol }}";
+        const SPYSymbolFromFlask = "{{ spy_symbol }}";
         Promise.all([
             fetchConfigAndMakePlotCompSPY(stockSymbolFromFlask, SPYSymbolFromFlask),
             fetchConfigAndMakeDailyChangePlotSPY(stockSymbolFromFlask, SPYSymbolFromFlask),
