@@ -31,8 +31,9 @@
 </nav>
 
 <section class="content">
-    <h1>Search</h1>
     <div class="section-box">
+        <h1>Search</h1>
+        <br>
         <form method="post" action="{{ url_for('search.stock_info') }}">
             <label for="stock_symbol">Ticker</label>
             <input name="stock_symbol" id="stock_symbol" required>

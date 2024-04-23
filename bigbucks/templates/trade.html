@@ -37,11 +37,12 @@
 {% endif %}
 
 <section class="content">
-    <h1>Trade</h1>
 
     <div class="section-box">
-        <h2>Invest</h2>
-        <h4>Cash Balance: ${{ "%0.2f"|format(g.user.cashBalance) }}</h4>
+
+        <h2 class="center_text">Cash Balance</h2>
+        <h3 class="center_text">${{ "%0.2f"|format(g.user.cashBalance) }}</h3>
+
         <form method="post">
             <label for="ticker">Ticker</label>
             <input name="ticker" id="ticker" required>

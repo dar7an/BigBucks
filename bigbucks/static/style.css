@@ -244,4 +244,6 @@ a.link {
     white-space: nowrap;
 }
 
-
+.center_text {
+    text-align: center;
+}
