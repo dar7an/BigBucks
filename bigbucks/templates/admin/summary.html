@@ -4,12 +4,17 @@
 <head>
     <title>{% block title %}Admin{% endblock %} - Summary</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='alerts.js') }}"></script>
 </head>
 
 <body>
 
+<div id="flash-messages" style="display: none;">
+    {{ get_flashed_messages() | tojson }}
+</div>
+
 <nav>
-    <h1><a href="{{ url_for('homepage') }}">Big Bucks</a></h1>
+    <h1><a href="{{ url_for('admin.summary') }}">BigBucks</a></h1>
     <ul>
         {% if g.user %}
             <li><a href="{{ url_for('admin.summary') }}" class="current-page">Summary</a></li>
@@ -38,8 +43,8 @@
             <tr>
                 <td>{{ record['ticker'] }}</td>
                 <td>{{ record['name'] }}</td>
-                <td>{{ record['shares_bought'] }}</td>
-                <td>{{ record['shares_sold'] }}</td>
+                <td>{{ record['shares_bought']|int }}</td>
+                <td>{{ record['shares_sold']|int }}</td>
             </tr>
         {% endfor %}
     </table>

@@ -1,5 +1,5 @@
 import numpy as np
-import pandas as pd
+
 
 class Asset:
     def __init__(self, ticker, data):
@@ -14,7 +14,7 @@ class Asset:
     def get_dev(self):
         return self.returns.std()
 
-    
+
 class Solver():
     def compute(self, covariance_matrix, asset_vector, portfolio_return):
         self.r_p = portfolio_return

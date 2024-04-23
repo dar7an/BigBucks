@@ -70,10 +70,10 @@ function regressionLine(x, y) {
     for (let i = 0; i < y.length; i++) {
         sum_x += x[i];
         sum_y += y[i];
-        sum_xy += (x[i]*y[i]);
-        sum_xx += (x[i]*x[i]);
+        sum_xy += (x[i] * y[i]);
+        sum_xx += (x[i] * x[i]);
     }
-    let slope = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+    let slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
     let intercept = (sum_y - slope * sum_x) / n;
     return x.map(val => slope * val + intercept);
 }
@@ -152,7 +152,7 @@ function makeDailyChangeScatterPlot(stockSymbol) {
                 },
                 yaxis: {
                     title: `${stockSymbol} Return`,
-                    range: [-1,1]
+                    range: [-1, 1]
                 }
             };
             let data = [trace];
@@ -162,6 +162,7 @@ function makeDailyChangeScatterPlot(stockSymbol) {
             console.error('Error fetching data from Alpha Vantage:', error);
         });
 }
+
 function makeAutocorrelation(stockSymbol) {
     let stockUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&outputsize=full&apikey=${apiKey}`;
     fetch(stockUrl)
@@ -200,7 +201,7 @@ function makeAutocorrelation(stockSymbol) {
                 },
                 yaxis: {
                     title: 'Today Return',
-                    range: [-1 , 1]
+                    range: [-1, 1]
                 }
             };
             let data = [trace];
@@ -441,7 +442,7 @@ function makeDailyChangeScatterPlotSPY(stockSymbol, spysymbol) {
                 },
                 yaxis: {
                     title: `${stockSymbol} Return`,
-                    range: [-1,1]
+                    range: [-1, 1]
                 }
             };
             let data = [trace1, trace2];

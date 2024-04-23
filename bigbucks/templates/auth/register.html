@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>{% block title %}BigBucks{% endblock %} - Register</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='alerts.js') }}"></script>
 </head>
 
 <body>
+
+<div id="flash-messages" style="display: none;">
+    {{ get_flashed_messages() | tojson }}
+</div>
+
 <nav>
-    <h1><a href="{{ url_for('homepage') }}">Big Bucks</a></h1>
+    <h1><a href="{{ url_for('home.home') }}">BigBucks</a></h1>
     <ul>
         {% if g.user %}
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
@@ -21,7 +26,6 @@
 
 <section class="content">
     <h1>Register</h1>
-
     <div class="section-box">
         <form method="post">
             <label for="username">Username</label>
@@ -34,7 +38,7 @@
             <input name="lastname" id="lastname" required>
 
             <label for="email">Email</label>
-            <input name="email" id="email" required>
+            <input type="email" name="email" id="email" required>
 
             <label for="password">Password</label>
             <input type="password" name="password" id="password" required>
@@ -42,8 +46,7 @@
             <input type="submit" value="Register">
         </form>
     </div>
-
 </section>
+
 </body>
 </html>
-

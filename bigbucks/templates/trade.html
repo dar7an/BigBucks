@@ -4,16 +4,23 @@
 <head>
     <title>{% block title %}BigBucks{% endblock %} - Trade</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='alerts.js') }}"></script>
 </head>
 
 <body>
+
+<div id="flash-messages" style="display: none;">
+    {{ get_flashed_messages() | tojson }}
+</div>
+
 <nav>
-    <h1><a href="{{ url_for('homepage') }}">BigBucks</a></h1>
+    <h1><a href="{{ url_for('home') }}">BigBucks</a></h1>
     <ul>
         {% if g.user %}
-            <li><a href="{{ url_for('homepage') }}">Home</a></li>
-            <li><a href="{{ url_for('buySell.buySell') }}" class="current-page">Trade</a></li>
-            <li><a href="{{ url_for('stock.index') }}">Search</a></li>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('metrics.display_matrices') }}">Metrics</a></li>
+            <li><a href="{{ url_for('trade') }}" class="current-page">Trade</a></li>
+            <li><a href="{{ url_for('search') }}">Search</a></li>
             <li><a href="{{ url_for('account.account') }}">Account</a></li>
             <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
         {% else %}
@@ -23,12 +30,18 @@
     </ul>
 </nav>
 
+{% if error %}
+    <script>
+        alert('{{ error }}');
+    </script>
+{% endif %}
+
 <section class="content">
     <h1>Trade</h1>
 
     <div class="section-box">
         <h2>Invest</h2>
-        <h4>Cash Balance: ${{ g.user.cashBalance }}</h4>
+        <h4>Cash Balance: ${{ "%0.2f"|format(g.user.cashBalance) }}</h4>
         <form method="post">
             <label for="ticker">Ticker</label>
             <input name="ticker" id="ticker" required>

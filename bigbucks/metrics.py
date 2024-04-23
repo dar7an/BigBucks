@@ -1,13 +1,15 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from datetime import datetime, timedelta
 from .db import get_db
-from .homepage import login_required
+from .home import login_required
+from .search import get_10_year_treasury
 from .solver import Solver, Asset
 from .stocksearch import get_10_year_treasury
 import pandas as pd
 import numpy as np
 
 bp = Blueprint("metrics", __name__, url_prefix="/metrics")
+
 
 @bp.route("/metrics", methods=("GET", "POST"))
 @login_required
@@ -18,6 +20,7 @@ def display_matrices():
 
     # Get the user's portfolio
     db = get_db()
+
     portfolio = pd.read_sql_query("SELECT ticker, quantity FROM PortfolioObjects WHERE userID = ?"
                                   , db, params=(g.user['userID'],))
 
@@ -58,7 +61,8 @@ def display_matrices():
     totalvalue = 0
     totalvalue_vector = []
     for ticker in portfolio['ticker']:
-        transaction_value_temp = pd.read_sql_query("SELECT totalPrice FROM Transactions WHERE ticker = ?", db, params=(ticker,))
+        transaction_value_temp = pd.read_sql_query("SELECT totalPrice FROM Transactions WHERE ticker = ?", db,
+                                                   params=(ticker,))
         totalvalue = transaction_value_temp + totalvalue
         totalvalue_vector.append(transaction_value_temp.iloc[0].item())
         
@@ -66,7 +70,7 @@ def display_matrices():
     weight_vector = []
     for transaction_value in totalvalue_vector:
         transaction_weight = transaction_value / totalvalue
-        transaction_weight = transaction_weight.iloc[0,0]
+        transaction_weight = transaction_weight.iloc[0, 0]
         weight_vector.append(transaction_weight)
         
     #Calculating portfolio return and volatility
@@ -96,7 +100,7 @@ def display_matrices():
 
     #Creating a list of tuples for returns and volatilities for effiecent frontier to be plotted
     returns_volatilities = list(zip(returns_vector, volatilities))
-    
+
     return render_template("metrics/metrics.html", user=g.user, tickers=portfolio['ticker'].tolist()
                         , correlation_matrix=correlation_matrix_list, covariance_matrix=covariance_matrix_list
                         , returns_volatilities=returns_volatilities, sharpe_ratio=sharpe_ratio, 
