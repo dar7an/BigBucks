@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <title>{% block title %}Admin{% endblock %} - Analysis</title>
+    <title>{% block title %}BigBucks{% endblock %} - Metrics</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='alerts.js') }}"></script>
 </head>
@@ -14,13 +14,15 @@
 </div>
 
 <nav>
-    <h1><a href="{{ url_for('admin.summary') }}">BigBucks</a></h1>
+    <h1><a href="{{ url_for('home') }}">BigBucks</a></h1>
     <ul>
         {% if g.user %}
-            <li><a href="{{ url_for('admin.summary') }}">Summary</a></li>
-            <li><a href="{{ url_for('admin.history') }}">History</a></li>
-            <li><a href="{{ url_for('admin.risk_return') }}" class="current-page">Analysis</a></li>
-            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('metrics.display_matrices') }}" class="current-page">Metrics</a></li>
+            <li><a href="{{ url_for('trade') }}">Trade</a></li>
+            <li><a href="{{ url_for('search') }}">Search</a></li>
+            <li><a href="{{ url_for('account.account') }}">Account</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
@@ -29,56 +31,119 @@
 </nav>
 
 <section class="content">
+    <form action="{{ url_for('home') }}" method="GET">
+        <button type="submit">Back</button>
+    </form>
 
-    <h1>Risk-Return Analysis</h1>
-
-    <div class="section-container">
-        <div class="section-box-item">
-            <h4>Time Period</h4>
-            <p>1 YR</p>
-        </div>
-        <div class="section-box-item">
-            <h4>Risk Free Rate</h4>
-            <p>{{ risk_free_rate * 100 }}%</p>
-        </div>
-        <div class="section-box-item">
-            <h4>Beta</h4>
-            <p>{{ "%0.5f"|format(portfolio_metrics['beta']) }}</p>
-        </div>
-        <div class="section-box-item">
-            <h4>Sharpe Ratio</h4>
-            <p>{{ "%0.5f"|format(portfolio_metrics['sharpe_ratio']) }}</p>
-        </div>
-        <div class="section-box-item">
-            <h4>Treynor Ratio</h4>
-            <p>{{ "%0.5f"|format(portfolio_metrics['treynor_ratio']) }}</p>
-        </div>
+    <div class="section-box">
+        <h2>Sharpe Ratio</h2>
+        <h4>{{ sharpe_ratio|round(3) }}</h4>
     </div>
 
-    <table class="table-wrapper">
-        <thead>
-        <tr>
-            <th>Ticker</th>
-            <th>Quantity</th>
-            <th>Beta</th>
-            <th>Sharpe Ratio</th>
-            <th>Treynor Ratio</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for data in risk_return_data %}
+    <div class="section-box">
+        <h2>Efficient Frontier</h2>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+        <canvas id="myChart">
+            <script>
+                const ctx = document.getElementById('myChart').getContext('2d');
+                const myChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Efficient Frontier',
+                            data: [
+                                {% for return, volatility in returns_volatilities %}
+                                    {x: {{ volatility }}, y: {{ return }}},
+                                {% endfor %}
+                            ],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            showLine: true,
+                            fill: false
+                        },
+                        {
+                            label: 'Portfolio',
+                            data: [
+                                {x: {{ portfolio_volatility }}, y: {{ portfolio_return }}}
+                            ],
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            showLine: false,
+                            fill: false,
+                            datalabels: {
+                                align: 'end',
+                                anchor: 'end',
+                                color: 'rgba(255, 99, 132, 1)',
+                                font: {
+                                    size: 14
+                                },
+                                formatter: function(value, context) {
+                                    return '← Portfolio';
+                                }
+                            }
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Volatility',
+                                    color: '#333' 
+                                },
+                                grid: {
+                                    color: '#999' 
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Return',
+                                    color: '#333' 
+                                },
+                                grid: {
+                                    color: '#999' 
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#333'
+                                }
+                            },
+                            datalabels: {
+                                color: '#333',
+                                display: function(context) {
+                                    return context.datasetIndex === 1; // Only display for the portfolio dataset
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+        </canvas>
+    </div>
+    <div class="content">
+        <h2>Total Overall Holding Weights</h2>
+        <table class="table-wrapper">
             <tr>
-                <td>{{ data.ticker }}</td>
-                <td>{{ data.quantity }}</td>
-                <td>{{ "%0.5f"|format(data.beta) }}</td>
-                <td>{{ "%0.5f"|format(data.sharpe_ratio) }}</td>
-                <td>{{ "%0.5f"|format(data.treynor_ratio) }}</td>
+                <th>Ticker</th>
+                <th>Weight</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% for ticker, weight in tickers|zip(weight_vector) %}
+                <tr>
+                    <td>{{ ticker }}</td>
+                    <td>{{ weight|round(3) }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 </section>
-
 </body>
 </html>
+

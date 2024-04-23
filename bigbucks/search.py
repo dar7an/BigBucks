@@ -49,7 +49,7 @@ def stock_info():
             else:
                 update_stock_data(stock_symbol)
 
-            return render_template('search/search_with_db.html',
+            return render_template('search/search_with_api.html',
                                    stock_symbol=stock_symbol,
                                    global_quote=get_global_quote(stock_symbol),
                                    overview=get_overview(stock_symbol),
@@ -166,3 +166,13 @@ def get_10_year_treasury():
     r = requests.get(url_with_apikey)
     data = r.json()
     return data
+
+@bp.route('/search_home/<stock_symbol>')
+def search_home(stock_symbol):
+    return render_template('search/search_with_api.html',
+                        stock_symbol=stock_symbol,
+                        global_quote=get_global_quote(stock_symbol),
+                        overview=get_overview(stock_symbol),
+                        news=get_news(stock_symbol),
+                        stock_data=get_stock_data_db(stock_symbol),
+                        spy_symbol='SPY')

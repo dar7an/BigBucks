@@ -81,11 +81,7 @@ def display_matrices():
     print("This is the portfolio weight: " + str(portfolio_weight))
     
     #Calculating Sharpe Ratio
-    print("This is the total portfolio return: " + str(total_portfolio_return))
-    print("This is the risk free rate: " + str(risk_free_rate))
-    print("This is the portfolio volatility: " + str(portfolio_volatility))
     sharpe_ratio = ((total_portfolio_return-risk_free_rate) / (portfolio_volatility*100))
-    print("This is the sharpe ratio: " + str(sharpe_ratio))
     
     #Calculating volatility for different returns, for effiecent frontier to be plotted
     solver = Solver()
@@ -102,6 +98,6 @@ def display_matrices():
 
     return render_template("metrics/metrics.html", user=g.user, tickers=portfolio['ticker'].tolist()
                         , correlation_matrix=correlation_matrix_list, covariance_matrix=covariance_matrix_list
-                        , returns_volatilities=returns_volatilities, sharpe_ratio=sharpe_ratio, 
+                        , returns_volatilities=returns_volatilities, sharpe_ratio=sharpe_ratio.item(), 
                         portfolio_return=total_portfolio_return, portfolio_volatility=portfolio_volatility,
                         weight_vector=weight_vector)
