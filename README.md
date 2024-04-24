@@ -70,6 +70,13 @@ systemctl enable stock.service
 
 systemctl start stock.service
 
+
+##### Note about Virtual Machine
+
+The Duke-hosted virtual machines automatically shut off at 6am every day. If you'd like to access the VM easily through the online address, let our team know, and we can launch and run the virtual machine with our application, and send you the web address for it. Then, simply join the Duke VPN or be on the Duke network, and enter the address in your search bar.
+
+Feel free to reach out with any questions if you are unable to access the VM.
+
 ### Assignment Details
 
 - all source code for the application exists in the bigbucks/ directory
