@@ -3,7 +3,7 @@
 
 ## Project Overview
 
-BigBucks is a stock trading simulation application. It allows users to simulate buying and selling stocks with virtual money. The application uses real-time stock data from the Alpha Advantage API.
+BigBucks is a stock trading simulation application. It allows users to simulate buying and selling stocks with virtual money. The application uses real-time stock data from the AlphaVantage API.
 
 ### Prerequisites
 
@@ -25,7 +25,7 @@ BigBucks is a stock trading simulation application. It allows users to simulate 
 
 3. In bigbucks/config.py, insert Alpha Advantage API Key using the following format:
 
-API_KEY = "<your key here>"
+API_KEY = "YOUR_KEY_HERE"
 
 4. If database instance DOES NOT EXIST YET (meaning no .db file exists in bigbucks/database directory), enter this in the terminal:
 
@@ -56,7 +56,7 @@ UPDATE Users SET role = 'admin' WHERE userID = '<target_user_ID>';
 
 To run the application on a VM, follow these steps:
 
-SSH into the VM, using the following command:
+1. SSH into the VM, using the following command:
 
 ssh YOURNETID@vcm-39911.vm.duke.edu
 
