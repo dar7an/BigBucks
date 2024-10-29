@@ -1,50 +1,94 @@
-# BigBucks
+# BigBucks - Stock Trading Simulator
 
-BigBucks is a stock trading simulation application. It allows users to simulate buying and selling stocks with virtual money. The application uses real-time stock data from the AlphaVantage API.
+A robust web application that simulates stock market trading using real-time data from AlphaVantage API. Practice investing strategies with virtual money in a risk-free environment.
 
-### Prerequisites
+## Features
 
-- Python 3.x
-- Flask
-- SQLite
-- requests
-- pytest
-- Werkzeug
-- numpy
-- pandas
-- click
+- Real-time stock data integration
+- Virtual portfolio management
+- User authentication system
+- Admin dashboard
+- Transaction history tracking
 
-### Running the Application
+## Prerequisites
 
-1. Clone the repository
+```plaintext
+Python 3.x
+Flask
+SQLite
+Requests
+Pytest
+Werkzeug
+NumPy
+Pandas
+Click
+```
 
-2. Enter in terminal: pip install -r requirements.txt
+## Installation
 
-3. In bigbucks/config.py, insert Alpha Advantage API Key using the following format:
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/bigbucks.git
+cd bigbucks
+```
 
-API_KEY = "YOUR_KEY_HERE"
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-4. If database instance DOES NOT EXIST YET (meaning no .db file exists in bigbucks/database directory), enter this in the terminal:
+3. Configure API key:
+```python
+# bigbucks/config.py
+API_KEY = "YOUR_ALPHAVANTAGE_API_KEY"
+```
 
+## Database Setup
+
+Initialize a new database:
+```bash
 flask --app bigbucks init-db
+```
 
-Note: if database errors occur, delete existing .db file and run initialization command again
+**Note:** If you encounter database errors, delete the existing `.db` file and reinitialize.
 
-5. Enter in terminal: flask --app bigbucks run --debug
+## Usage
 
-#### Using the application as a "user"
+Start the development server:
+```bash
+flask --app bigbucks run --debug
+```
 
-1. Register an account
-2. Log in to that account
+### Standard User Access
+1. Navigate to the application URL
+2. Register a new account
+3. Log in to access trading features
 
-#### Using the application as an "admin":
-
-To get admin role:
-
-1. Navigate to the database directory in your terminal
-
-2. Run the following commands:
-
+### Admin Access
+Connect to the database and grant admin privileges:
+```bash
 sqlite3 stock_database.db
+sqlite> UPDATE Users SET role = 'admin' WHERE userID = '<target_user_ID>';
+```
 
-UPDATE Users SET role = 'admin' WHERE userID = '<target_user_ID>';
+## Development
+
+### Testing
+Run the test suite:
+```bash
+pytest
+```
+
+### Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- AlphaVantage API for real-time market data
+- Flask team for the excellent web framework
