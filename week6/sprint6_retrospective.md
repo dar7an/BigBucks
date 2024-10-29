@@ -1,1 +1,0 @@
-This past sprint, we came together one more time to finish off the entire project. What worked well for us this week was that we divided all the remaining requirements into small pieces and created a list of things we knew we needed to get done. This allowed for easy tracking and for everyone to be on the same page of what we should each expect from each other. 
