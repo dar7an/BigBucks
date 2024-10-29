@@ -51,36 +51,3 @@ To get admin role:
 sqlite3 stock_database.db
 
 UPDATE Users SET role = 'admin' WHERE userID = '<target_user_ID>';
-
-### Virtual Machine (VM) Usage
-
-To run the application on a VM, follow these steps:
-
-1. SSH into the VM, using the following command:
-
-ssh YOURNETID@vcm-39911.vm.duke.edu
-
-2. Enter your NetID password 
-
-3. Switch to the service user to run commands 
-
-4. Enable and start the service, using the following commands:
-
-systemctl enable stock.service
-
-systemctl start stock.service
-
-
-##### Note about Virtual Machine
-
-The Duke-hosted virtual machines automatically shut off at 6am every day. If you'd like to access the VM easily through the online address, let our team know, and we can launch and run the virtual machine with our application, and send you the web address for it. Then, simply join the Duke VPN or be on the Duke network, and enter the address in your search bar.
-
-Feel free to reach out with any questions if you are unable to access the VM.
-
-### Assignment Details
-
-- all source code for the application exists in the bigbucks/ directory
-- on the application, charts 14.1-14.4 can be found by searching a stock in the search tab
-- charts 7.1-7.3 can be found by searching a stock on the search tab with "compare to SPY"
-- our manual test cases can be found in the test_cases.md file (approved method by TA)
-- for the Project Topic Assignment, we chose to document our product architecture (see Product Architecture/ directory) and document our GAI usage (see GAI_use_examples.md)
