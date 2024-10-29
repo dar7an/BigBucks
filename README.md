@@ -1,7 +1,4 @@
-# BigBucks Project_Team_18
-- Team Members: Luke, Shiv, Darshan, and Abraham
-
-## Project Overview
+# BigBucks
 
 BigBucks is a stock trading simulation application. It allows users to simulate buying and selling stocks with virtual money. The application uses real-time stock data from the AlphaVantage API.
 
