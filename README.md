@@ -2,6 +2,22 @@
 
 A robust web application that simulates stock market trading using real-time data from AlphaVantage API. Practice investing strategies with virtual money in a risk-free environment.
 
+## Screenshots
+
+### Home Dashboard
+![Home Dashboard](pictures/home.png)
+
+### Stock Search
+![Stock Search](pictures/search.png)
+
+### Stock Comparison
+![Stock Comparison 1](pictures/compare-1.png)
+![Stock Comparison 2](pictures/compare-2.png)
+
+### Portfolio Metrics
+![Portfolio Metrics 1](pictures/metrics-1.png)
+![Portfolio Metrics 2](pictures/metrics-2.png)
+
 ## Features
 
 - Real-time stock data integration
@@ -9,6 +25,8 @@ A robust web application that simulates stock market trading using real-time dat
 - User authentication system
 - Admin dashboard
 - Transaction history tracking
+- Advanced portfolio metrics (correlation matrices, covariance matrices, efficient frontier)
+- Stock comparison against SPY
 
 ## Prerequisites
 
@@ -22,7 +40,6 @@ Werkzeug
 NumPy
 Pandas
 Click
-```
 
 ## Installation
 
