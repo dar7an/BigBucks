@@ -1,209 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% set active = active|default('metrics') %}
+{% block title %}Metrics{% endblock %}
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <p class="eyebrow">Risk and return</p>
+    <h1>{% if subject %}{{ subject.username }}’s book{% else %}Portfolio metrics{% endif %}</h1>
+    <p class="subhead">{{ n_obs }} overlapping sessions · last {{ lookback_days }} days · r<sub>f</sub> {{ rf_annual|pct }} annual</p>
+  </div>
+</header>
+{% if equal_weight_note %}
+  <p class="callout">{{ equal_weight_note }}</p>
+{% endif %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}BigBucks{% endblock %} - Metrics</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='alerts.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-</head>
+<section class="stat-grid" aria-label="Headline metrics">
+  <article class="stat">
+    <p class="stat-label">Sharpe (annualized)</p>
+    <p class="stat-value num">{{ "%.2f"|format(sharpe_ratio) if sharpe_ratio is not none else '—' }}</p>
+    <p class="stat-hint">(mean(r<sub>d</sub>) − r<sub>f</sub>/252) / σ<sub>d</sub> × √252</p>
+  </article>
+  <article class="stat">
+    <p class="stat-label">Expected return</p>
+    <p class="stat-value num">{{ portfolio_return|pct }}</p>
+    <p class="stat-hint">mean daily × 252</p>
+  </article>
+  <article class="stat">
+    <p class="stat-label">Holdings volatility</p>
+    <p class="stat-value num">{{ portfolio_volatility|pct }}</p>
+    <p class="stat-hint">√(w′Σw), annualized</p>
+  </article>
+  <article class="stat">
+    <p class="stat-label">Holding-period return</p>
+    <p class="stat-value num">{{ holding_period_return|pct }}</p>
+    <p class="stat-hint">Π(1 + r<sub>p,t</sub>) − 1 over the window</p>
+  </article>
+</section>
 
-<body>
+<p class="callout">{{ notes }}</p>
 
-<div id="flash-messages" style="display: none;">
-    {{ get_flashed_messages() | tojson }}
-</div>
+<section class="panel">
+  <h2>Mark-to-market weights</h2>
+  <p class="panel-meta">w<sub>i</sub> = q<sub>i</sub>P<sub>i</sub> / Σ q<sub>j</sub>P<sub>j</sub>. Cash is excluded from this mix.</p>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Ticker</th>
+          <th scope="col" class="num">Shares</th>
+          <th scope="col" class="num">Last</th>
+          <th scope="col" class="num">Value</th>
+          <th scope="col" class="num">Weight</th>
+          <th scope="col" class="num">E[r] ann.</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticker in tickers %}
+          <tr>
+            <td>{{ ticker }}</td>
+            <td class="num">{{ quantities[loop.index0]|shares }}</td>
+            <td class="num">{{ last_prices[loop.index0]|usd }}</td>
+            <td class="num">{{ market_values[loop.index0]|usd }}</td>
+            <td class="num">{{ weight_vector[loop.index0]|pct }}</td>
+            <td class="num">{{ expected_returns[loop.index0]|pct }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 
-<nav>
-    <h1><a href="{{ url_for('home') }}">BigBucks</a></h1>
-    <ul>
-        {% if g.user %}
-            <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('metrics.display_matrices') }}" class="current-page">Metrics</a></li>
-            <li><a href="{{ url_for('trade') }}">Trade</a></li>
-            <li><a href="{{ url_for('search') }}">Search</a></li>
-            <li><a href="{{ url_for('account.account') }}">Account</a></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
-        {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
-        {% endif %}
-    </ul>
-</nav>
+<section class="split">
+  <section class="panel">
+    <h2>Correlation</h2>
+    <p class="panel-meta">Daily simple returns, sample correlation.</p>
+    <div class="table-scroll">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            {% for ticker in tickers %}<th scope="col">{{ ticker }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in correlation_matrix %}
+            <tr>
+              <th scope="row">{{ tickers[loop.index0] }}</th>
+              {% for value in row %}
+                <td class="num heat {% if value < 0 %}heat-neg{% else %}heat-pos{% endif %}" style="--mag: {{ value|abs }}">{{ "%.2f"|format(value) }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>Covariance (annualized)</h2>
+    <p class="panel-meta">Daily sample covariance × 252.</p>
+    <div class="table-scroll">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            {% for ticker in tickers %}<th scope="col">{{ ticker }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in covariance_matrix %}
+            <tr>
+              <th scope="row">{{ tickers[loop.index0] }}</th>
+              {% for value in row %}
+                <td class="num">{{ "%.4f"|format(value) }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
 
-<main>
-    <section class="content">
-
-
-        <section class="content">
-            <div class="data-tables">
-                <h2>Correlation Matrix</h2>
-                <table class="table-wrapper">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        {% for ticker in tickers %}
-                            <th>{{ ticker }}</th>
-                        {% endfor %}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for row in correlation_matrix %}
-                        <tr>
-                            <th>{{ tickers[loop.index0] }}</th>
-                            {% for value in row %}
-                                <td>{{ "%0.5f"|format(value) }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="content">
-            <div class="data-tables">
-                <h2>Covariance Matrix</h2>
-                <table class="table-wrapper">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        {% for ticker in tickers %}
-                            <th>{{ ticker }}</th>
-                        {% endfor %}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for row in covariance_matrix %}
-                        <tr>
-                            <th>{{ tickers[loop.index0] }}</th>
-                            {% for value in row %}
-                                <td>{{ "%0.5f"|format(value) }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="content">
-            <h2>Sharpe Ratio</h2>
-            <h4>{{ sharpe_ratio|round(3) }}</h4>
-        </section>
-
-        <section class="content">
-            <h2>Efficient Frontier</h2>
-            <canvas id="myChart"></canvas>
-        </section>
-
-        <section class="content">
-            <div class="data-tables">
-                <h2>Portfolio Weights</h2>
-                <table class="table-wrapper">
-                    <thead>
-                    <tr>
-                        <th>Ticker</th>
-                        <th>Weight</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for ticker, weight in tickers|zip(weight_vector) %}
-                        <tr>
-                            <td>{{ ticker }}</td>
-                            <td>{{ weight|round(3) }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </section>
-</main>
-
+<section class="panel">
+  <h2>Mean-variance frontier</h2>
+  <p class="panel-meta">Unconstrained two-fund. Short sales are allowed. The marked point is your holdings mix, not the min-variance book at the same return.</p>
+  <canvas id="frontier" aria-label="Efficient frontier scatter"></canvas>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='charts.js') }}"></script>
 <script>
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                label: 'Efficient Frontier',
-                data: [
-                    {% for return, volatility in returns_volatilities %}
-                        {x: {{ volatility }}, y: {{ return }}},
-                    {% endfor %}
-                ],
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                showLine: true,
-                fill: false
-            },
-                {
-                    label: 'Portfolio',
-                    data: [
-                        {x: {{ portfolio_volatility }}, y: {{ portfolio_return }}}
-                    ],
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1,
-                    showLine: false,
-                    fill: false,
-                    datalabels: {
-                        align: 'end',
-                        anchor: 'end',
-                        color: 'rgba(255, 99, 132, 1)',
-                        font: {
-                            size: 14
-                        },
-                        formatter: function (value, context) {
-                            return '← Portfolio';
-                        }
-                    }
-                }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Volatility',
-                        color: '#333'
-                    },
-                    grid: {
-                        color: '#999'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Return',
-                        color: '#333'
-                    },
-                    grid: {
-                        color: '#999'
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#333'
-                    }
-                },
-                datalabels: {
-                    color: '#333',
-                    display: function (context) {
-                        return context.datasetIndex === 1; // Only display for the portfolio dataset
-                    }
-                }
-            }
-        }
-    });
+  BigBucksCharts.frontier(
+    {{ returns_volatilities | tojson }},
+    {{ portfolio_volatility | tojson }},
+    {{ portfolio_return | tojson }}
+  );
 </script>
-
-</body>
-</html>
+{% endblock %}

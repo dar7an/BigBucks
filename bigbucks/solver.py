@@ -1,81 +1,71 @@
+"""Unconstrained two-fund mean-variance (Merton 1972).
+
+Solves min w'Σw subject to 1'w = 1 and μ'w = r* via the KKT linear system.
+Short sales are allowed; callers must label that on the chart.
+"""
+
+from __future__ import annotations
+
 import numpy as np
 
 
-class Asset:
-    def __init__(self, ticker, data):
-        self.ticker = ticker
-        self.data = data
-        self.returns = (self.data.pct_change(fill_method=None))
-
-    def get_rate(self):
-        total_return = self.returns.sum().item()
-        return total_return
-
-    def get_dev(self):
-        return self.returns.std()
+class FrontierError(Exception):
+    pass
 
 
-class Solver():
-    def compute(self, covariance_matrix, asset_vector, portfolio_return):
-        self.r_p = portfolio_return
-        self.covariance_matrix = covariance_matrix
-        self.assets_vec = asset_vector
-        self.compute_A()
-        self.compute_b()
-        self.compute_leftside()
-        self.compute_rightside()
-        self.compute_weights()
-        self.compute_volatility()
-        return self.volatility
+def min_variance_weights(
+    cov: np.ndarray, mu: np.ndarray, target_return: float
+) -> tuple[np.ndarray, float]:
+    """Return (weights, sigma) at the unconstrained min-variance mix for r*.
 
-    def compute_A(self):
-        self.A = np.zeros((2, len(self.assets_vec)))
-        for i in range(2):
-            for j in range(len(self.assets_vec)):
-                if i == 0:
-                    self.A[i, j] = 1
-                else:
-                    self.A[i, j] = self.assets_vec[j].get_rate()
-        self.A_T = self.A.transpose()
+    KKT system:
 
-    def compute_b(self):
-        self.b = np.array([1.0, self.r_p])
+        [ Σ   1  μ ] [ w ]   [ 0 ]
+        [ 1'  0  0 ] [ λ ] = [ 1 ]
+        [ μ'  0  0 ] [ γ ]   [ r*]
+    """
+    cov = np.asarray(cov, dtype=float)
+    mu = np.asarray(mu, dtype=float).reshape(-1)
+    n = mu.shape[0]
+    if cov.shape != (n, n):
+        raise FrontierError("Covariance shape does not match expected returns.")
+    kkt = np.zeros((n + 2, n + 2), dtype=float)
+    kkt[:n, :n] = cov
+    kkt[:n, n] = 1.0
+    kkt[:n, n + 1] = mu
+    kkt[n, :n] = 1.0
+    kkt[n + 1, :n] = mu
+    rhs = np.zeros(n + 2, dtype=float)
+    rhs[n] = 1.0
+    rhs[n + 1] = float(target_return)
+    try:
+        sol = np.linalg.solve(kkt, rhs)
+    except np.linalg.LinAlgError as exc:
+        raise FrontierError("Mean-variance system is singular at this target.") from exc
+    weights = sol[:n]
+    variance = float(weights @ cov @ weights)
+    if variance < 0 and variance > -1e-12:
+        variance = 0.0
+    if variance < 0:
+        raise FrontierError("Numerical variance was negative.")
+    return weights, float(np.sqrt(variance))
 
-    def compute_leftside(self):
-        rows = self.covariance_matrix.shape[0] + self.A.shape[0]
-        cols = self.covariance_matrix.shape[1] + self.A_T.shape[1]
-        self.leftside = np.zeros((rows, cols))
-        for i in range(rows):
-            for j in range(cols):
-                if j < self.covariance_matrix.shape[1] and i < self.covariance_matrix.shape[0]:
-                    self.leftside[i, j] = self.covariance_matrix.iloc[i, j]
-                elif j >= self.covariance_matrix.shape[1] and i < self.covariance_matrix.shape[0]:
-                    self.leftside[i, j] = self.A_T[i, j - self.covariance_matrix.shape[0]]
-                elif j < self.covariance_matrix.shape[1] and i >= self.covariance_matrix.shape[0]:
-                    self.leftside[i, j] = self.A[i - self.covariance_matrix.shape[0], j]
-                else:
-                    self.leftside[i, j] = 0.0
 
-    def compute_rightside(self):
-        rightside_rows = len(self.assets_vec) + 2
-        self.rightside = np.zeros((rightside_rows, 1))
-        for i in range(rightside_rows):
-            if i < rightside_rows - 2:
-                self.rightside[i, 0] = 0
-            elif i == rightside_rows - 2:
-                self.rightside[i, 0] = 1.0
-            else:
-                self.rightside[i, 0] = self.r_p
-
-    def compute_weights(self):
-        weights_temp = np.linalg.solve(self.leftside, self.rightside)
-        self.weights = weights_temp[:self.covariance_matrix.shape[0]]
-        return self.weights
-
-    def compute_volatility(self):
-        sum = 0
-        for i in range(len(self.weights)):
-            for j in range(len(self.weights)):
-                sum += self.weights[i] * self.weights[j] * self.covariance_matrix.iloc[i, j]
-        self.volatility = np.sqrt(sum)
-        
+def frontier_curve(
+    cov: np.ndarray, mu: np.ndarray, points: int = 25
+) -> list[tuple[float, float]]:
+    """Grid target returns between min(μ) and max(μ). Drops singular points."""
+    mu = np.asarray(mu, dtype=float).reshape(-1)
+    lo, hi = float(np.min(mu)), float(np.max(mu))
+    if not np.isfinite(lo) or hi - lo < 1e-12:
+        return []
+    targets = np.linspace(lo, hi, points)
+    curve = []
+    for target in targets:
+        try:
+            _, sigma = min_variance_weights(cov, mu, float(target))
+        except FrontierError:
+            continue
+        if np.isfinite(sigma):
+            curve.append((float(sigma), float(target)))
+    return curve

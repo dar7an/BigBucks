@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% set active = 'search' %}
+{% from "macros.html" import pnl_class %}
+{% block title %}{{ quote.ticker }}{% endblock %}
+{% block head %}
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <p class="eyebrow">{{ quote.overview.Exchange }} · {{ quote.as_of }}</p>
+    <h1>{{ quote.ticker }} <span class="name-light">{{ quote.name }}</span></h1>
+    <p class="quote-line">
+      <span class="quote-last num">{{ quote.last|usd }}</span>
+      <span class="num {{ pnl_class(quote.change) }}">{{ quote.change|signed_usd }} ({{ quote.change_pct|signed_pct }})</span>
+    </p>
+  </div>
+  <div class="hero-actions">
+    <a class="button" href="{{ url_for('trade.trade', ticker=quote.ticker) }}">Trade {{ quote.ticker }}</a>
+    <a class="button button-quiet" href="{{ url_for('search.compare', ticker=quote.ticker) }}">Compare with SPY</a>
+  </div>
+</header>
+
+<section class="kpi-grid" aria-label="Key figures">
+  <article class="kpi"><p class="stat-label">Open</p><p class="stat-value num">{{ quote.open|usd }}</p></article>
+  <article class="kpi"><p class="stat-label">Previous close</p><p class="stat-value num">{{ quote.previous|usd }}</p></article>
+  <article class="kpi"><p class="stat-label">Volume</p><p class="stat-value num">{{ quote.volume|compact }}</p></article>
+  <article class="kpi"><p class="stat-label">Market cap</p><p class="stat-value num">{{ quote.overview.MarketCapitalization|compact }}</p></article>
+  <article class="kpi"><p class="stat-label">P/E</p><p class="stat-value num">{% if quote.overview.PERatio %}{{ "%.1f"|format(quote.overview.PERatio) }}{% else %}—{% endif %}</p></article>
+  <article class="kpi"><p class="stat-label">EPS</p><p class="stat-value num">{{ quote.overview.EPS|usd if quote.overview.EPS else '—' }}</p></article>
+  <article class="kpi"><p class="stat-label">Dividend yield</p><p class="stat-value num">{{ quote.overview.DividendYield|pct }}</p></article>
+  <article class="kpi"><p class="stat-label">52-week range</p><p class="stat-value num">{{ quote.overview['52WeekLow']|usd }}–{{ quote.overview['52WeekHigh']|usd }}</p></article>
+  <article class="kpi"><p class="stat-label">Sector</p><p class="stat-value">{{ quote.overview.Sector }}</p></article>
+  <article class="kpi"><p class="stat-label">Industry</p><p class="stat-value">{{ quote.overview.Industry }}</p></article>
+</section>
+
+<section class="panel">
+  <h2>Adjusted close</h2>
+  <p class="panel-meta">Stored history, chronological. Not a live tape.</p>
+  <div id="plotchart" class="chart" role="img" aria-label="Adjusted close for {{ quote.ticker }}"></div>
+</section>
+<section class="panel">
+  <h2>Daily returns</h2>
+  <div id="DailyChangeScatterChart" class="chart" role="img" aria-label="Daily returns for {{ quote.ticker }}"></div>
+</section>
+<section class="split">
+  <section class="panel">
+    <h2>Return histogram</h2>
+    <div id="returnHistogram" class="chart" role="img" aria-label="Histogram of daily returns"></div>
+  </section>
+  <section class="panel">
+    <h2>Today vs yesterday</h2>
+    <div id="autocorrelationChart" class="chart" role="img" aria-label="Autocorrelation scatter of daily returns"></div>
+  </section>
+</section>
+
+{% if quote.news %}
+<section class="panel">
+  <h2>Context</h2>
+  <ul class="news-list">
+    {% for item in quote.news %}
+      <li>
+        <h3>{% if item.url and item.url != '#' %}<a href="{{ item.url }}" rel="noopener noreferrer">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
+        <p>{{ item.summary }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='charts.js') }}"></script>
+<script>
+  BigBucksCharts.quote("{{ quote.ticker }}");
+</script>
+{% endblock %}

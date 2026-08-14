@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% set active = '' %}
+{% block title %}Paper trading{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Graduate-school paper broker</p>
+  <h1 class="display">Practice a real book with virtual cash.</h1>
+  <p class="lede">Start with $1,000,000. Buy and sell whole shares at last close. See mark-to-market weights, an annualized Sharpe ratio, and your mix against an unconstrained mean-variance frontier.</p>
+  <div class="hero-actions">
+    <a class="button" href="{{ url_for('auth.register') }}">Create account</a>
+    <a class="button button-quiet" href="{{ url_for('auth.login') }}">Log in</a>
+  </div>
+</section>
+<section class="feature-grid" aria-label="What you get">
+  <article class="card">
+    <h2>A ledger that balances</h2>
+    <p>Cash and shares move in one database transaction. Quantity must be a whole number of at least 1. No commissions, no tax lots — that is the assignment, not a missing fee schedule.</p>
+  </article>
+  <article class="card">
+    <h2>Numbers that match the labels</h2>
+    <p>Sharpe is annualized from daily simple returns. Weights are quantity × last price. Charts start at t0, not today. The red point on the frontier is your book, not the optimizer’s.</p>
+  </article>
+  <article class="card">
+    <h2>Works without a live key</h2>
+    <p>Fixture prices for AAPL, MSFT, NVDA, GOOGL, AMZN, META, and SPY ship in the database. Point <code>MARKET_DATA_SOURCE</code> at Alpha Vantage when you want a live free daily series.</p>
+  </article>
+</section>
+{% endblock %}

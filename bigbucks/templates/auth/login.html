@@ -1,38 +1,17 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>{% block title %}BigBucks{% endblock %} - Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='alerts.js') }}"></script>
-</head>
-
-<body>
-
-<div id="flash-messages" style="display: none;">
-    {{ get_flashed_messages() | tojson }}
-</div>
-
-<nav>
-    <h1><a href="{{ url_for('home.home') }}">BigBucks</a></h1>
-    <ul>
-        <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-        <li><a href="{{ url_for('auth.login') }}" class="current-page">Log In</a></li>
-    </ul>
-</nav>
-
-<section class="content">
-    <h1>Log In</h1>
-    <div class="section-box">
-        <form method="post">
-            <label for="username">Username</label>
-            <input name="username" id="username" required>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
-            <input type="submit" value="Log In">
-        </form>
-    </div>
+{% extends "base.html" %}
+{% set active = 'login' %}
+{% from "macros.html" import field %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="auth-card">
+  <h1>Log in</h1>
+  <p class="subhead">Use your BigBucks username. Demo teaching accounts are documented in the README.</p>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {{ field('username', 'Username', value=username, required=true, autocomplete='username') }}
+    {{ field('password', 'Password', type='password', required=true, autocomplete='current-password') }}
+    <button type="submit">Log in</button>
+  </form>
+  <p class="form-footer">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
 </section>
-
-</body>
-</html>
+{% endblock %}

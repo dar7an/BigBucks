@@ -1,66 +1,84 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{% block title %}BigBucks{% endblock %} - Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% extends "base.html" %}
+{% set active = 'home' %}
+{% from "macros.html" import pnl_class %}
+{% block title %}Portfolio{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <p class="eyebrow">Portfolio</p>
+    <h1>Hello, {{ g.user['first_name'] }}</h1>
+    <p class="subhead">Mark to market on last close{% if snap.positions and snap.positions[0].as_of %} · as of {{ snap.positions[0].as_of }}{% endif %}.</p>
+  </div>
+  <a class="button" href="{{ url_for('trade.trade') }}">Place an order</a>
+</header>
 
-<body>
-
-<div id="flash-messages" style="display: none;">
-    {{ get_flashed_messages() | tojson }}
-</div>
-
-<nav>
-    <h1><a href="{{ url_for('home') }}">BigBucks</a></h1>
-    <ul>
-        {% if g.user %}
-            <li><a href="{{ url_for('home') }}" class="current-page">Home</a></li>
-            <li><a href="{{ url_for('metrics.display_matrices') }}">Metrics</a></li>
-            <li><a href="{{ url_for('trade') }}">Trade</a></li>
-            <li><a href="{{ url_for('search') }}">Search</a></li>
-            <li><a href="{{ url_for('account.account') }}">Account</a></li>
-            <li><a href="{{ url_for('auth.login') }}" class="hover-logout">Log Out</a></li>
-        {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
-        {% endif %}
-    </ul>
-</nav>
-
-<section class="content">
-
-    <div class="content">
-        <h2 class="center_text">Cash Balance</h2>
-        <h3 class="center_text">${{ "%0.2f"|format(g.user.cashBalance) }}</h3>
-    </div>
-
-    <div class="content">
-        <h2>Your Portfolio</h2>
-        <table class="table-wrapper">
-            <tr>
-                <th>Ticker</th>
-                <th>Name</th>
-                <th>Number of Shares</th>
-                <th>Price Per Share</th>
-            </tr>
-            {% for entry in portfolio %}
-                <tr>
-                    <td>
-                        <a href="{{ url_for('search.search_home', stock_symbol=entry.ticker) }}">
-                            {{ entry.ticker }}
-                        </a>
-                    </td>
-                    <td>{{ entry.name }}</td>
-                    <td>{{ entry.quantity }}</td>
-                    <td>${{ entry.price }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-        </table>
-    </div>
-
+<section class="stat-grid" aria-label="Account summary">
+  <article class="stat">
+    <p class="stat-label">Equity</p>
+    <p class="stat-value num">{{ snap.equity|usd }}</p>
+  </article>
+  <article class="stat">
+    <p class="stat-label">Cash</p>
+    <p class="stat-value num">{{ snap.cash|usd }}</p>
+  </article>
+  <article class="stat">
+    <p class="stat-label">Holdings</p>
+    <p class="stat-value num">{{ snap.invested|usd }}</p>
+  </article>
+  <article class="stat">
+    <p class="stat-label">Total P&amp;L</p>
+    <p class="stat-value num {{ pnl_class(snap.total_pnl) }}">{{ snap.total_pnl|signed_usd }}</p>
+    <p class="stat-hint num {{ pnl_class(snap.total_pnl) }}">{{ snap.total_pnl_pct|signed_pct }} vs {{ snap.starting_cash|usd }} start</p>
+  </article>
 </section>
-</body>
-</html>
 
+<section class="panel">
+  <div class="panel-head">
+    <h2>Holdings</h2>
+    {% if snap.positions %}
+      <p class="panel-meta">Day P&amp;L <span class="num {{ pnl_class(snap.day_pnl) }}">{{ snap.day_pnl|signed_usd }}</span></p>
+    {% endif %}
+  </div>
+  {% if snap.positions %}
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Ticker</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="num">Shares</th>
+            <th scope="col" class="num">Last</th>
+            <th scope="col" class="num">Market value</th>
+            <th scope="col" class="num">Avg cost</th>
+            <th scope="col" class="num">Unrealized</th>
+            <th scope="col" class="num">Day P&amp;L</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in snap.positions %}
+            <tr>
+              <td><a href="{{ url_for('search.quote', ticker=p.ticker) }}">{{ p.ticker }}</a></td>
+              <td>{{ p.name }}</td>
+              <td class="num">{{ p.quantity|shares }}</td>
+              <td class="num">{{ p.last|usd }}</td>
+              <td class="num">{{ p.market_value|usd }}</td>
+              <td class="num">{{ p.avg_cost|usd }}</td>
+              <td class="num {{ pnl_class(p.unrealized) }}">{{ p.unrealized|signed_usd }}</td>
+              <td class="num {{ pnl_class(p.day_pnl) }}">{{ p.day_pnl|signed_usd }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty">
+      <h3>No holdings yet</h3>
+      <p>Search a ticker, then buy whole shares at last close. Your cash stays {{ snap.cash|usd }} until the first fill.</p>
+      <div class="hero-actions">
+        <a class="button" href="{{ url_for('search.search') }}">Search a ticker</a>
+        <a class="button button-quiet" href="{{ url_for('trade.trade') }}">Place an order</a>
+      </div>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

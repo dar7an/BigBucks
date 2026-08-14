@@ -1,0 +1,33 @@
+{% macro flashes() %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack" role="status" aria-live="polite">
+        {% for category, message in messages %}
+          <p class="flash flash-{{ category if category in ['error', 'success'] else 'info' }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+{% endmacro %}
+
+{% macro field(name, label, type='text', value='', required=false, autocomplete='', hint='', error='', extra='') %}
+  <div class="field">
+    <label for="{{ name }}">{{ label }}</label>
+    <input
+      type="{{ type }}"
+      id="{{ name }}"
+      name="{{ name }}"
+      value="{{ value }}"
+      {% if required %}required{% endif %}
+      {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+      {% if error %}aria-invalid="true" aria-describedby="{{ name }}-error"{% elif hint %}aria-describedby="{{ name }}-hint"{% endif %}
+      {{ extra|safe }}
+    >
+    {% if hint %}<p class="hint" id="{{ name }}-hint">{{ hint }}</p>{% endif %}
+    {% if error %}<p class="field-error" id="{{ name }}-error">{{ error }}</p>{% endif %}
+  </div>
+{% endmacro %}
+
+{% macro pnl_class(value) -%}
+  {%- if value is none -%}{% elif value > 0 %}is-gain{% elif value < 0 %}is-loss{% endif -%}
+{%- endmacro %}

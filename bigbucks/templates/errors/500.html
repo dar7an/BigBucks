@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Something broke{% endblock %}
+{% block content %}
+<section class="empty error-page">
+  <p class="eyebrow">500</p>
+  <h1>The server hit an error</h1>
+  <p>Refresh and try again. If it keeps happening, check the Flask logs.</p>
+  <a class="button" href="{{ url_for('home.index') }}">Go to BigBucks</a>
+</section>
+{% endblock %}

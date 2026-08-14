@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% set active = 'history' %}
+{% block title %}History{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <p class="eyebrow">Journal</p>
+    <h1>Your fills</h1>
+    <p class="subhead">Newest first. Each row is one atomic buy or sell.</p>
+  </div>
+</header>
+{% if trades %}
+  <div class="table-scroll panel">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">When</th>
+          <th scope="col">Side</th>
+          <th scope="col">Ticker</th>
+          <th scope="col" class="num">Shares</th>
+          <th scope="col" class="num">Price</th>
+          <th scope="col" class="num">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in trades %}
+          <tr>
+            <td>{{ t.created_at }}</td>
+            <td class="{{ 'is-gain' if t.side == 'buy' else 'is-loss' }}">{{ t.side }}</td>
+            <td><a href="{{ url_for('search.quote', ticker=t.ticker) }}">{{ t.ticker }}</a></td>
+            <td class="num">{{ t.quantity|shares }}</td>
+            <td class="num">{{ t.unit_price|usd }}</td>
+            <td class="num">{{ t.total_price|usd }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="empty panel">
+    <h3>No fills yet</h3>
+    <p>Place a buy to open the journal. History stays after you sell the last share.</p>
+    <a class="button" href="{{ url_for('trade.trade') }}">Place an order</a>
+  </div>
+{% endif %}
+{% endblock %}

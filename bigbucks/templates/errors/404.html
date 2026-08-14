@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page not found{% endblock %}
+{% block content %}
+<section class="empty error-page">
+  <p class="eyebrow">404</p>
+  <h1>That page is not here</h1>
+  <p>Check the address, or go back to the portfolio.</p>
+  <a class="button" href="{{ url_for('home.index') }}">Go to BigBucks</a>
+</section>
+{% endblock %}

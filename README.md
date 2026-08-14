@@ -1,111 +1,82 @@
-# BigBucks - Stock Trading Simulator
+# BigBucks
 
-A robust web application that simulates stock market trading using real-time data from AlphaVantage API. Practice investing strategies with virtual money in a risk-free environment.
+Paper trading for a methods course: $1,000,000 virtual cash, a real ledger, Markowitz-style metrics, and SPY comparison charts. It is **not** a brokerage. There are no commissions, taxes, or after-hours prints. Fills are last close, whole shares only.
 
-## Screenshots
+A fresh clone runs without an Alpha Vantage key. Fixture prices for AAPL, MSFT, NVDA, GOOGL, AMZN, META, and SPY are seeded into SQLite.
 
-### Home Dashboard
-![Home Dashboard](pictures/home.png)
+## Run
 
-### Stock Search
-![Stock Search](pictures/search.png)
-
-### Stock Comparison
-![Stock Comparison 1](pictures/compare-1.png)
-![Stock Comparison 2](pictures/compare-2.png)
-
-### Portfolio Metrics
-![Portfolio Metrics 1](pictures/metrics-1.png)
-![Portfolio Metrics 2](pictures/metrics-2.png)
-
-## Features
-
-- Real-time stock data integration
-- Virtual portfolio management
-- User authentication system
-- Admin dashboard
-- Transaction history tracking
-- Advanced portfolio metrics (correlation matrices, covariance matrices, efficient frontier)
-- Stock comparison against SPY
-
-## Prerequisites
-
-```plaintext
-Python 3.x
-Flask
-SQLite
-Requests
-Pytest
-Werkzeug
-NumPy
-Pandas
-Click
-
-## Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/bigbucks.git
-cd bigbucks
-```
-
-2. Install dependencies:
-```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-3. Configure API key:
-```python
-# bigbucks/config.py
-API_KEY = "YOUR_ALPHAVANTAGE_API_KEY"
-```
-
-## Database Setup
-
-Initialize a new database:
-```bash
+cp .env.example .env   # optional; defaults work for local fixture mode
 flask --app bigbucks init-db
-```
-
-**Note:** If you encounter database errors, delete the existing `.db` file and reinitialize.
-
-## Usage
-
-Start the development server:
-```bash
 flask --app bigbucks run --debug
 ```
 
-### Standard User Access
-1. Navigate to the application URL
-2. Register a new account
-3. Log in to access trading features
+Open http://127.0.0.1:5000
 
-### Admin Access
-Connect to the database and grant admin privileges:
+Teaching logins created by `init-db` (change these if you share the machine):
+
+| Username | Password   | Role  |
+| -------- | ---------- | ----- |
+| alice    | alicepass  | user  |
+| admin    | adminpass  | admin |
+
+Grant admin to someone else:
+
 ```bash
-sqlite3 stock_database.db
-sqlite> UPDATE Users SET role = 'admin' WHERE userID = '<target_user_ID>';
+flask --app bigbucks make-admin alice
 ```
 
-## Development
+## Environment
 
-### Testing
-Run the test suite:
+See `.env.example`. Nothing secret is committed.
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `SECRET_KEY` | `dev-change-me` | Flask session signing. Set a long random value before networking this. |
+| `MARKET_DATA_SOURCE` | `fixture` | `fixture` uses seeded history. `alphavantage` uses free `TIME_SERIES_DAILY`. |
+| `ALPHA_VANTAGE_API_KEY` | empty | Required only for live mode. Never sent to the browser. |
+| `RISK_FREE_RATE` | `0.043` | Annual decimal used in Sharpe (10-year Treasury proxy). |
+| `STARTING_CASH` | `1000000` | Virtual cash on registration. |
+| `SEED_DEMO_USERS` | `1` | Seed alice/admin on `init-db`. |
+
+Live mode uses the **free** daily series, not premium `TIME_SERIES_DAILY_ADJUSTED`. Adjusted close is stored as close. Quotes and charts always read `historic_prices`; login does not refresh the vendor.
+
+## Formulas
+
+Implemented once in `bigbucks/analytics.py` and used by both the user Metrics page and admin views.
+
+**Daily return** — \(r_t = P_t / P_{t-1} - 1\) on adjusted close, dates sorted ascending.
+
+**Weight** — \(w_i = q_i P_i / \sum q_j P_j\) (mark to market). Cash is excluded from the mix.
+
+**Holding-period return** — \(\prod (1+r_{p,t}) - 1\), not a sum of daily returns.
+
+**Annualized expected return** — \(\mathrm{mean}(r_d) \times 252\).
+
+**Holdings volatility** — \(\sqrt{w'\Sigma w}\) with \(\Sigma = \mathrm{Cov}(r_d)\times 252\) (pandas sample cov, ddof=1). This is the plotted “Your book” point. It is **not** the min-variance mix at the same return.
+
+**Sharpe (annualized)** —
+
+\[
+\frac{\mathrm{mean}(r_d) - r_f/252}{\mathrm{std}(r_d, \mathrm{ddof}=1)}\times\sqrt{252}
+\]
+
+**Cumulative vs SPY** — \(P_t / P_0 - 1\) on the first overlapping date. Charts are chronological.
+
+**Frontier** — unconstrained two-fund mean-variance (Merton 1972 KKT linear system). Short sales are allowed and labeled.
+
+## Tests
+
 ```bash
 pytest
 ```
 
-### Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Submit a pull request
+CI runs the same suite on Python 3.12 (GitHub Actions).
 
-## License
+## Architecture
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- AlphaVantage API for real-time market data
-- Flask team for the excellent web framework
+Flask 3 app factory and blueprints, Jinja + one CSS file, SQLite, Werkzeug password hashes, Flask-WTF CSRF, parameterized SQL. Market data: `bigbucks/market.py`. Ledger: `bigbucks/ledger.py`. Math: `bigbucks/analytics.py` + `bigbucks/solver.py`.

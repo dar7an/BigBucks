@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}BigBucks{% endblock %} · BigBucks</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="{% if g.user %}{{ url_for('home.dashboard') }}{% else %}{{ url_for('home.index') }}{% endif %}">
+        <span class="brand-mark" aria-hidden="true"></span>
+        BigBucks
+      </a>
+      <ul class="nav-links">
+        {% if g.user %}
+          <li><a href="{{ url_for('home.dashboard') }}" {% if active == 'home' %}aria-current="page"{% endif %}>Portfolio</a></li>
+          <li><a href="{{ url_for('search.search') }}" {% if active == 'search' %}aria-current="page"{% endif %}>Search</a></li>
+          <li><a href="{{ url_for('trade.trade') }}" {% if active == 'trade' %}aria-current="page"{% endif %}>Trade</a></li>
+          <li><a href="{{ url_for('metrics.display_matrices') }}" {% if active == 'metrics' %}aria-current="page"{% endif %}>Metrics</a></li>
+          <li><a href="{{ url_for('history.history') }}" {% if active == 'history' %}aria-current="page"{% endif %}>History</a></li>
+          {% if g.user['role'] == 'admin' %}
+            <li><a href="{{ url_for('admin.summary') }}" {% if active == 'admin' %}aria-current="page"{% endif %}>Admin</a></li>
+          {% endif %}
+          <li><a href="{{ url_for('account.account') }}" {% if active == 'account' %}aria-current="page"{% endif %}>Account</a></li>
+          <li><a class="nav-logout" href="{{ url_for('auth.logout') }}">Log out</a></li>
+        {% else %}
+          <li><a href="{{ url_for('auth.register') }}" {% if active == 'register' %}aria-current="page"{% endif %}>Create account</a></li>
+          <li><a href="{{ url_for('auth.login') }}" {% if active == 'login' %}aria-current="page"{% endif %}>Log in</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+  <main id="main" class="main">
+    {% from "macros.html" import flashes %}
+    {{ flashes() }}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>{{ paper_disclaimer }}</p>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

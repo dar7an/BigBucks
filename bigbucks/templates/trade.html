@@ -1,65 +1,42 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>{% block title %}BigBucks{% endblock %} - Trade</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='alerts.js') }}"></script>
-</head>
-
-<body>
-
-<div id="flash-messages" style="display: none;">
-    {{ get_flashed_messages() | tojson }}
-</div>
-
-<nav>
-    <h1><a href="{{ url_for('home') }}">BigBucks</a></h1>
-    <ul>
-        {% if g.user %}
-            <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('metrics.display_matrices') }}">Metrics</a></li>
-            <li><a href="{{ url_for('trade') }}" class="current-page">Trade</a></li>
-            <li><a href="{{ url_for('search') }}">Search</a></li>
-            <li><a href="{{ url_for('account.account') }}">Account</a></li>
-            <li><a href="{{ url_for('auth.logout') }}" class="hover-logout">Log Out</a></li>
-        {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
-        {% endif %}
-    </ul>
-</nav>
-
-{% if error %}
-    <script>
-        alert('{{ error }}');
-    </script>
-{% endif %}
-
-<section class="content">
-
-    <div class="section-box">
-
-        <h2 class="center_text">Cash Balance</h2>
-        <h3 class="center_text">${{ "%0.2f"|format(g.user.cashBalance) }}</h3>
-
-        <form method="post">
-            <label for="ticker">Ticker</label>
-            <input name="ticker" id="ticker" required>
-
-            <label for="numShares">Number of Shares</label>
-            <input type="number" name="numShares" id="numShares" min="1" step="1" required>
-
-            <label for="buyOrSell">Order Type</label>
-            <select name="buyOrSell" id="buyOrSell" required>
-                <option value="buy">Buy</option>
-                <option value="sell">Sell</option>
-            </select>
-
-            <button type="submit">Submit</button>
-        </form>
+{% extends "base.html" %}
+{% set active = 'trade' %}
+{% from "macros.html" import field %}
+{% block title %}Place an order{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <p class="eyebrow">Trade</p>
+    <h1>Place an order</h1>
+    <p class="subhead">Whole shares at last close. Cash available {{ snap.cash|usd }}.</p>
+  </div>
+</header>
+<section class="split">
+  <form method="post" class="card stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="field">
+      <label for="ticker">Ticker</label>
+      <input id="ticker" name="ticker" value="{{ form.ticker }}" required autocomplete="off" spellcheck="false" list="ticker-list" placeholder="AAPL">
+      <datalist id="ticker-list">
+        {% for t in tickers %}
+          <option value="{{ t }}"></option>
+        {% endfor %}
+      </datalist>
+      <p class="hint">Seeded symbols: {{ tickers|join(', ') }}.</p>
     </div>
-
+    {{ field('numShares', 'Number of shares', type='number', value=form.numShares, required=true, extra='min="1" step="1" inputmode="numeric"') }}
+    <div class="field">
+      <label for="buyOrSell">Side</label>
+      <select id="buyOrSell" name="buyOrSell" required>
+        <option value="buy" {% if form.buyOrSell == 'buy' %}selected{% endif %}>Buy</option>
+        <option value="sell" {% if form.buyOrSell == 'sell' %}selected{% endif %}>Sell</option>
+      </select>
+    </div>
+    <button type="submit">Place order</button>
+  </form>
+  <aside class="card muted-card">
+    <h2>How fills work</h2>
+    <p>Orders fill at the last adjusted close in HistoricPriceData. Buys debit cash; sells credit it. A fill is all-or-nothing — if cash or shares are short, nothing posts.</p>
+    <p>There are no commissions, slippage, or after-hours prints. That is intentional for this course simulator.</p>
+  </aside>
 </section>
-</body>
-</html>
+{% endblock %}
